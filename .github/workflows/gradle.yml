@@ -23,7 +23,7 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
 
-# gradle caching - 빌드 시간 향상
+  # gradle caching - 빌드 시간 향상
     - name: Gradle Caching
       uses: actions/cache@v3
       with:
@@ -33,6 +33,9 @@ jobs:
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
         restore-keys: |
           ${{ runner.os }}-gradle-
+
+    - name: Run chmod to make gradlew executable
+      run: chmod +x ./gradlew
 
     # 2. Spring Boot 애플리케이션 빌드
     - name: Build with Gradle
