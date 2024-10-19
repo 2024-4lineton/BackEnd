@@ -12,8 +12,8 @@ permissions:
 
 jobs:
   # Spring Boot 애플리케이션을 빌드하여 도커허브에 푸시하는 과정
-  build:
-    runs-on: self-hosted
+  build-docker-image:
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     # 1. Java 21 세팅
@@ -39,13 +39,10 @@ jobs:
 
     # 2. Spring Boot 애플리케이션 빌드
     - name: Build with Gradle
-      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+      uses: gradle/gradle-build-action@v1
       with:
-        arguments: build
+        arguments: clean bootJar
 
-    - name: Execute Jar File
-      run: sudo kill -9 `sudo lsof -t -i:8080` & sudo java -jar /home/ubuntu/actions-runner/_work/linode-github-action-test/linode-github-action-test/build/libs/linode-github-action-test-0.0.1-SNAPSHOT.jar &
- 
     # 3. Docker 이미지 빌드
     - name: docker image build
       run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/helfoome:v1 .
@@ -60,3 +57,26 @@ jobs:
     # 5. Docker Hub 이미지 푸시
     - name: docker Hub push
       run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/helfoome:v1
+  
+  # 위 과정에서 푸시한 이미지를 ec2에서 풀받아서 실행시키는 과정 
+  run-docker-image-on-ec2:
+    # build-docker-image (위)과정이 완료되어야 실행됩니다.
+    needs: build-docker-image
+    runs-on: self-hosted
+
+    steps:
+      # 1. 최신 이미지를 풀받습니다
+      - name: docker pull
+        run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/helfoome
+
+      # 2. 기존의 컨테이너를 중지시킵니다
+      - name: docker stop container
+        run: sudo docker stop $(sudo docker ps -q) 2>/dev/null || true
+
+      # 3. 최신 이미지를 컨테이너화하여 실행시킵니다
+      - name: docker run new container
+        run: sudo docker run --name helfoome --rm -d -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/helfoome
+
+      # 4. 미사용 이미지를 정리합니다
+      - name: delete old docker image
+        run: sudo docker system prune -f
