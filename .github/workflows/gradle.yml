@@ -36,6 +36,15 @@ jobs:
 
     - name: Run chmod to make gradlew executable
       run: chmod +x ./gradlew
+    #이부분 추가-수빈-
+    - name: Make application.properties
+      run: |
+        mkdir -p ./src/main/resources
+        cd ./src/main/resources
+        touch ./application.properties
+          
+        echo "${{ secrets.properties }}" >> ./application.properties
+      shell: bash
 
     # 2. Spring Boot 애플리케이션 빌드
     - name: Build with Gradle
