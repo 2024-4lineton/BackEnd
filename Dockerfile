@@ -1,3 +1,4 @@
+# JDK21
 FROM openjdk:21
 
 # 인자 설정, jar 파일 복제
