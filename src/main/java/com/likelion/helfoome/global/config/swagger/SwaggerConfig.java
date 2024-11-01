@@ -30,7 +30,7 @@ public class SwaggerConfig {
 
     Server prodServer = new Server();
     prodServer.setUrl(
-        "http://ec2-43-202-187-24.ap-northeast-2.compute.amazonaws.com/swagger-ui/index.html");
+        "http://ec2-43-202-187-24.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/index.html");
     prodServer.setDescription("Production Server");
 
     return new OpenAPI()
