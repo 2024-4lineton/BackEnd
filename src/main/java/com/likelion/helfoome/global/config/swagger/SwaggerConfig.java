@@ -1,4 +1,4 @@
-package com.likelion.helfoome.config.swagger;
+package com.likelion.helfoome.global.config.swagger;
 
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +14,7 @@ import io.swagger.v3.oas.models.servers.Server;
 
 // Swagger 접속 주소
 // http://localhost:8080/swagger-ui/index.html#/
-// https://ipaddress:8080/swagger-ui/index.html
+// https://43.202.187.24:8080/swagger-ui/index.html
 
 @Configuration
 public class SwaggerConfig {
@@ -28,13 +28,14 @@ public class SwaggerConfig {
     localServer.setUrl(contextPath);
     localServer.setDescription("Local Server");
 
-    //    Server prodServer = new Server();
-    //    prodServer.setUrl("https://서버url");
-    //    prodServer.setDescription("Production Server");
+    Server prodServer = new Server();
+    prodServer.setUrl(
+        "http://ec2-43-202-187-24.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/index.html");
+    prodServer.setDescription("Production Server");
 
     return new OpenAPI()
         .addServersItem(localServer)
-        //        .addServersItem(prodServer)
+        .addServersItem(prodServer)
         .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
         .components(
             new Components()
