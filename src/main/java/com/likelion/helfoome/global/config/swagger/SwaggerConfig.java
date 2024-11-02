@@ -30,7 +30,7 @@ public class SwaggerConfig {
 
     Server prodServer = new Server();
     prodServer.setUrl(
-        "https://metalog.store:8080/swagger-ui/index.html");
+        "https://metalog.store:8080");
     prodServer.setDescription("Production Server");
 
     return new OpenAPI()
