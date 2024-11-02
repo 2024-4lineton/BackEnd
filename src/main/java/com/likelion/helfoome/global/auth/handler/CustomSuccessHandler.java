@@ -28,7 +28,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
   private static final String REFRESH_TOKEN_COOKIE = "RefreshToken";
   private static final String DEFAULT_ROLE = "ROLE_USER";
   private static final String REDIRECT_URL =
-      "http://ec2-43-202-187-24.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/index.html";
+      "https://metalog.store/swagger-ui/index.html";
   private static final int COOKIE_MAX_AGE = 60 * 60; // 1시간
 
   @Override
@@ -69,7 +69,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     cookie.setMaxAge(COOKIE_MAX_AGE);
     cookie.setHttpOnly(true);
     cookie.setPath("/"); // 쿠키 적용 경로 설정
-    // cookie.setSecure(true); // HTTPS 환경에서만 사용할 경우 설정
+    cookie.setSecure(true); // HTTPS 환경에서만 사용할 경우 설정
 
     return cookie;
   }
