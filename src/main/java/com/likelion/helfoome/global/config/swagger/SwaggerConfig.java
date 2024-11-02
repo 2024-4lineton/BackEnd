@@ -18,7 +18,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
 // https://43.202.187.24:8080/swagger-ui/index.html
 @OpenAPIDefinition(
     servers = {
-        @Server(url = "https://metalog.store", description = "개발 서버"),
+        @Server(url = "https://metalog.store:8080", description = "개발 서버"),
         @Server(url = "http://localhost:8080", description = "로컬 서버")
     })
 @Configuration
