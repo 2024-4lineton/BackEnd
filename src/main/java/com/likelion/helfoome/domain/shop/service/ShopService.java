@@ -21,7 +21,7 @@ public class ShopService {
   private final ShopRepository shopRepository;
   private final UserRepository userRepository;
 
-  // 로그인된 이메일과 사업자 번호로 검색해서 해당 가게가 존재하는지 확인
+  // 전송받은 사업자 번호 또는 현재 사용자의 가게가 DB에 존재하는지 확인
   public String checkShopExist(String email, String taxId) {
     Optional<ShopEntity> existingShop = shopRepository.findByUser_Email(email);
     Optional<ShopEntity> existingTaxId = shopRepository.findByTaxId(taxId);

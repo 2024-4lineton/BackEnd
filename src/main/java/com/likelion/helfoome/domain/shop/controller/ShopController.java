@@ -26,7 +26,7 @@ public class ShopController {
   private final ShopService shopService;
   private final JwtUtil jwtUtil;
 
-  @Operation(summary = "사업자 번호 유효성 검사", description = "전송된 사업자 번호 또는 현재 사용자의 가게가 DB에 존재하는지 확인")
+  @Operation(summary = "사업자 번호 유효성 검사", description = "전송된 사업자 번호 또는 사용자의 가게가 DB에 존재하는지 확인")
   @PostMapping("/register/taxId")
   public ResponseEntity<?> validateTaxId(
       @RequestHeader("Authorization") String bearerToken, @RequestBody TaxIdRequest request) {
