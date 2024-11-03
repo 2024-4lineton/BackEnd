@@ -5,10 +5,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.likelion.helfoome.domain.Img.entity.ProductImg;
-import com.likelion.helfoome.domain.Img.repository.ProductImgRepository;
+import com.likelion.helfoome.domain.Img.service.ImgService;
 import com.likelion.helfoome.domain.shop.dto.ProductRequest;
 import com.likelion.helfoome.domain.shop.entity.Product;
 import com.likelion.helfoome.domain.shop.entity.Shop;
@@ -25,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductService {
 
   private final ProductRepository productRepository;
-  private final ProductImgRepository productImgRepository;
+  private final ImgService imgService;
   private final ShopRepository shopRepository;
   private final S3Service s3Service;
 
@@ -46,16 +44,8 @@ public class ProductService {
     product.setDescription(productRequest.getDescription());
     product.setPrice(productRequest.getPrice());
     productRepository.save(product);
-
     // S3에 이미지 업로드 및 ProductImg 엔티티 생성
-    for (MultipartFile image : productRequest.getImages()) {
-      String imageUrl = s3Service.upload(image, "productImages");
-      ProductImg productImg = new ProductImg();
-      productImg.setProduct(product);
-      productImg.setProductImageName(image.getOriginalFilename());
-      productImg.setProductImageUrl(imageUrl);
-      productImgRepository.save(productImg);
-    }
+    imgService.uploadProductImg(productRequest.getImages(), product);
 
     return product;
   }
