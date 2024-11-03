@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.likelion.helfoome.domain.shop.dto.ShopRegisterRequest;
-import com.likelion.helfoome.domain.shop.entity.ShopEntity;
+import com.likelion.helfoome.domain.shop.entity.Shop;
 import com.likelion.helfoome.domain.shop.repository.ShopRepository;
 import com.likelion.helfoome.domain.user.entity.User;
 import com.likelion.helfoome.domain.user.repository.UserRepository;
@@ -23,8 +23,8 @@ public class ShopService {
 
   // 전송받은 사업자 번호 또는 현재 사용자의 가게가 DB에 존재하는지 확인
   public String checkShopExist(String email, String taxId) {
-    Optional<ShopEntity> existingShop = shopRepository.findByUser_Email(email);
-    Optional<ShopEntity> existingTaxId = shopRepository.findByTaxId(taxId);
+    Optional<Shop> existingShop = shopRepository.findByUser_Email(email);
+    Optional<Shop> existingTaxId = shopRepository.findByTaxId(taxId);
 
     if (existingShop.isPresent() || existingTaxId.isPresent()) {
       return "Already existing shop. Please check your shop or Tax ID.";
@@ -37,7 +37,7 @@ public class ShopService {
     User user =
         userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
 
-    ShopEntity newShop = new ShopEntity();
+    Shop newShop = new Shop();
     newShop.setUser(user);
     newShop.setShopName(request.getShopName());
     newShop.setShopType(request.getShopType());

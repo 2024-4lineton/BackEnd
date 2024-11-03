@@ -6,13 +6,13 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.likelion.helfoome.domain.shop.entity.ShopEntity;
+import com.likelion.helfoome.domain.shop.entity.Shop;
 
 @Repository
-public interface ShopRepository extends JpaRepository<ShopEntity, Long> {
-  Optional<ShopEntity> findByTaxId(String taxId);
+public interface ShopRepository extends JpaRepository<Shop, Long> {
+  Optional<Shop> findByTaxId(String taxId);
 
-  Optional<ShopEntity> findByUser_Email(String email);
+  Optional<Shop> findByUser_Email(String email);
 
-  List<ShopEntity> findByShopType(Integer shopType);
+  List<Shop> findByShopType(Integer shopType);
 }
