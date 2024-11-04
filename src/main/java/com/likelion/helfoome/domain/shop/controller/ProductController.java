@@ -24,7 +24,7 @@ public class ProductController {
 
   private final ProductService productService;
 
-  @PostMapping
+  @PostMapping("/new-product")
   public ResponseEntity<Product> createProduct(@RequestBody ProductRequest productRequestDto) {
     if (productRequestDto.getImages() == null || productRequestDto.getImages().isEmpty()) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
