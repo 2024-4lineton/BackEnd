@@ -65,7 +65,7 @@ public class SecurityConfig {
                         "/v3/api-docs/**",
                         "/api/users/**",
                         "/api/shop/**",
-                        "/api/product/**")
+                        "/api/product")
                     .permitAll()
                     .requestMatchers("/api/v1/user/*")
                     .hasRole("USER || SELLER")
