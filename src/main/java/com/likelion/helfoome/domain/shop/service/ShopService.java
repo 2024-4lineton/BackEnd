@@ -29,7 +29,7 @@ public class ShopService {
     if (existingShop.isPresent() || existingTaxId.isPresent()) {
       return "Already existing shop. Please check your shop or Tax ID.";
     }
-    return null;
+    return "Verified Tax ID.";
   }
 
   // 쿠키로 현재 사용자 email 받아와서 가게 생성
@@ -41,14 +41,14 @@ public class ShopService {
     newShop.setUser(user);
     newShop.setShopName(request.getShopName());
     newShop.setShopType(request.getShopType());
-    newShop.setCategory(request.getCategory());
+    newShop.setMarketName(request.getMarketName());
     newShop.setTaxId(request.getTaxId());
     newShop.setBusinessHours(request.getBusinessHours());
     newShop.setDayOff(request.getDayOff());
     newShop.setShopAddr(request.getShopAddr());
     newShop.setShopContact(request.getShopContact());
     newShop.setShopImageName(request.getShopImageName());
-    newShop.setShopImageURL(request.getShpImageURL());
+    newShop.setShopImageURL(request.getShopImageURL());
 
     shopRepository.save(newShop);
     return "Store has been successfully registered.";
