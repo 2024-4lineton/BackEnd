@@ -29,8 +29,8 @@ public class Shop extends BaseTimeEntity {
   @Column(name = "shopType", nullable = false)
   private Integer shopType;
 
-  @Column(name = "category", nullable = false)
-  private Integer category;
+  @Column(name = "marketName", nullable = false)
+  private String marketName;
 
   @Column(name = "taxId", nullable = false, unique = true)
   private String taxId;
@@ -52,7 +52,4 @@ public class Shop extends BaseTimeEntity {
 
   @Column(name = "shopImageURL")
   private String shopImageURL;
-
-  @Column(name = "marketName", nullable = false)
-  private String marketName;
 }

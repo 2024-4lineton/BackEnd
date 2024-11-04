@@ -59,7 +59,13 @@ public class SecurityConfig {
         .authorizeHttpRequests(
             request ->
                 request
-                    .requestMatchers("/", "/swagger-ui/**", "/v3/api-docs/**")
+                    .requestMatchers(
+                        "/",
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**",
+                        "/api/users/**",
+                        "/api/shop/**",
+                        "/api/product/**")
                     .permitAll()
                     .requestMatchers("/api/v1/user/*")
                     .hasRole("USER || SELLER")

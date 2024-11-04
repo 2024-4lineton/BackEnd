@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 public class ShopRegisterRequest {
   private String shopName;
   private Integer shopType;
-  private Integer category;
+  private String marketName;
   private String taxId;
   private String businessHours;
   private String dayOff;
   private String shopAddr;
   private String shopContact;
   private String shopImageName;
-  private String shpImageURL;
+  private String shopImageURL;
 }
