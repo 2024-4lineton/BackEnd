@@ -1,4 +1,4 @@
-package com.likelion.helfoome.global.config.S3;
+package com.likelion.helfoome.global.config.s3;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

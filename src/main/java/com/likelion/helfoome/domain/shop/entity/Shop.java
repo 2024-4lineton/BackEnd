@@ -19,7 +19,7 @@ public class Shop extends BaseTimeEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
-  @OneToOne
+  @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
   private User user;
 

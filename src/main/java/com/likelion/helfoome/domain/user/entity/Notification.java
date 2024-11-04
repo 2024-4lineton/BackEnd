@@ -7,7 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 import com.likelion.helfoome.global.common.BaseTimeEntity;
@@ -20,16 +20,19 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "stamp")
-public class Stamp extends BaseTimeEntity {
+@Table(name = "notification")
+public class Notification extends BaseTimeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @OneToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
   private User user;
 
-  @Column(name = "total", nullable = false)
-  private Integer total;
+  @Column(name = "title", nullable = false)
+  private String title;
+
+  @Column(name = "content", nullable = false)
+  private String content;
 }
