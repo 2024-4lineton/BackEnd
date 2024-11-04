@@ -2,14 +2,12 @@ package com.likelion.helfoome.domain.shop.dto;
 
 import java.util.List;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class ProductRequest {
+public class ProductResponse {
 
   private Long shopId;
   private String productName;
@@ -19,5 +17,5 @@ public class ProductRequest {
   private String discountPercent;
   private int quantity;
   private boolean isSelling;
-  private List<MultipartFile> images;
+  private List<String> imageUrls;
 }
