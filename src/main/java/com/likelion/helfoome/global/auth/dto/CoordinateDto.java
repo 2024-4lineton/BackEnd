@@ -10,5 +10,4 @@ public class CoordinateDto {
   private String x;
   private String y;
   private String error;
-
 }

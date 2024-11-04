@@ -16,6 +16,7 @@ public class DistanceService {
 
   @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
   private String apiKey;
+
   private String addrSearchUrl = "https://dapi.kakao.com/v2/local/search/address.json";
   private final String coordTransformUrl = "https://dapi.kakao.com/v2/local/geo/transcoord.json";
 
@@ -23,27 +24,28 @@ public class DistanceService {
     CoordinateDto coor1 = getCoordinate(addr1);
     CoordinateDto coor2 = getCoordinate(addr2);
 
-    //오류가 있으면 오류 출력하고 null반환
+    // 오류가 있으면 오류 출력하고 null반환
     if (coor1.getError() != null || coor2.getError() != null) {
       System.out.println(
-          "좌표 변환중 문제 생김: " + (coor1.getError() != null ? coor1.getError() : "") +
-              (coor2.getError() != null ? coor2.getError() : ""));
+          "좌표 변환중 문제 생김: "
+              + (coor1.getError() != null ? coor1.getError() : "")
+              + (coor2.getError() != null ? coor2.getError() : ""));
       return null;
     }
 
-    //x, y 값을 double로 변환
+    // x, y 값을 double로 변환
     double x1 = Double.parseDouble(coor1.getX());
     double y1 = Double.parseDouble(coor1.getY());
     double x2 = Double.parseDouble(coor2.getX());
     double y2 = Double.parseDouble(coor2.getY());
 
-    //두점사이 거리 공식임
+    // 두점사이 거리 공식임
     double distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 
     return Math.round(distance);
   }
-  
-  //이 아래가 온갖 API호출하는 부분임
+
+  // 이 아래가 온갖 API호출하는 부분임
 
   public CoordinateDto getCoordinate(String addr) {
     CoordinateDto coordinateDto = new CoordinateDto();
@@ -53,12 +55,12 @@ public class DistanceService {
       headers.set("Authorization", "KakaoAK " + apiKey);
       HttpEntity<String> entity = new HttpEntity<>(headers);
 
-      //첫 번째 API 호출(주소 검색을 통해 x, y 위도 경도 얻기)
+      // 첫 번째 API 호출(주소 검색을 통해 x, y 위도 경도 얻기)
       String url = addrSearchUrl + "?query=" + addr;
-      ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity,
-          String.class);
+      ResponseEntity<String> response =
+          restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
-      //첫 번째 응답 파싱
+      // 첫 번째 응답 파싱
       ObjectMapper objectMapper = new ObjectMapper();
       JsonNode root = objectMapper.readTree(response.getBody());
       JsonNode documents = root.path("documents");
@@ -68,13 +70,13 @@ public class DistanceService {
         String x = firstDocument.path("x").asText();
         String y = firstDocument.path("y").asText();
 
-        //두 번째 API 호출(변환된 좌표 얻기)
+        // 두 번째 API 호출(변환된 좌표 얻기)
         String transUrl =
             coordTransformUrl + "?x=" + x + "&y=" + y + "&input_coord=WGS84&output_coord=WTM";
-        ResponseEntity<String> transResponse = restTemplate.exchange(transUrl, HttpMethod.GET,
-            entity, String.class);
+        ResponseEntity<String> transResponse =
+            restTemplate.exchange(transUrl, HttpMethod.GET, entity, String.class);
 
-        //두 번째 응답 파싱
+        // 두 번째 응답 파싱
         JsonNode transRoot = objectMapper.readTree(transResponse.getBody());
         JsonNode transDocuments = transRoot.path("documents");
 
