@@ -19,5 +19,6 @@ public class ProductRequest {
   private String discountPercent;
   private int quantity;
   private boolean isSelling;
+  private String realAddr;
   private List<MultipartFile> images;
 }

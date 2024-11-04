@@ -53,6 +53,12 @@ public class ProductService {
     product.setQuantity(productRequest.getQuantity());
     product.setDiscountPercent(product.getDiscountPercent());
     product.setSelling(true);
+    // tlqkf가게 주소 아니고 다른주소로 정할수도 있다길래 이 부분 추가
+    if (productRequest.getRealAddr() == null) {
+      product.setRealAddr(shop.getShopAddr());
+    } else {
+      product.setRealAddr(productRequest.getRealAddr());
+    }
     productRepository.save(product);
     // S3에 이미지 업로드 및 ProductImg 엔티티 생성
     imgService.uploadProductImg(productRequest.getImages(), product);

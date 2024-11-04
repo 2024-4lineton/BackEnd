@@ -50,4 +50,7 @@ public class Product extends BaseTimeEntity {
 
   @Column(name = "isSelling", nullable = false)
   private boolean isSelling;
+
+  @Column(name = "realAddr", nullable = false)
+  private String realAddr;
 }
