@@ -38,4 +38,19 @@ public class Product extends BaseTimeEntity {
 
   @Column(name = "price", nullable = false)
   private String price;
+
+  @Column(name = "discountPrice", nullable = false)
+  private String discountPrice;
+
+  @Column(name = "discountPercent", nullable = false)
+  private String discountPercent;
+
+  @Column(name = "quantity", nullable = false)
+  private int quantity;
+
+  @Column(name = "isSelling", nullable = false)
+  private boolean isSelling;
+
+  @Column(name = "realAddr", nullable = false)
+  private String realAddr;
 }

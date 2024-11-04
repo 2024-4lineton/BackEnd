@@ -1,13 +1,18 @@
 package com.likelion.helfoome.domain.shop.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.likelion.helfoome.domain.Img.entity.ProductImg;
+import com.likelion.helfoome.domain.Img.repository.ProductImgRepository;
 import com.likelion.helfoome.domain.Img.service.ImgService;
 import com.likelion.helfoome.domain.shop.dto.ProductRequest;
+import com.likelion.helfoome.domain.shop.dto.ProductResponse;
 import com.likelion.helfoome.domain.shop.entity.Product;
 import com.likelion.helfoome.domain.shop.entity.Shop;
 import com.likelion.helfoome.domain.shop.repository.ProductRepository;
@@ -23,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductService {
 
   private final ProductRepository productRepository;
+  private final ProductImgRepository productImgRepository;
   private final ImgService imgService;
   private final ShopRepository shopRepository;
   private final S3Service s3Service;
@@ -43,10 +49,43 @@ public class ProductService {
     product.setProductName(productRequest.getProductName());
     product.setDescription(productRequest.getDescription());
     product.setPrice(productRequest.getPrice());
+    product.setDiscountPrice(productRequest.getDiscountPrice());
+    product.setQuantity(productRequest.getQuantity());
+    product.setDiscountPercent(product.getDiscountPercent());
+    product.setSelling(true);
+    // tlqkf가게 주소 아니고 다른주소로 정할수도 있다길래 이 부분 추가
+    if (productRequest.getRealAddr() == null) {
+      product.setRealAddr(shop.getShopAddr());
+    } else {
+      product.setRealAddr(productRequest.getRealAddr());
+    }
     productRepository.save(product);
     // S3에 이미지 업로드 및 ProductImg 엔티티 생성
     imgService.uploadProductImg(productRequest.getImages(), product);
-
     return product;
+  }
+
+  public ProductResponse getProductDetail(Long productId) {
+    Product product =
+        productRepository
+            .findById(productId)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid productID"));
+    List<ProductImg> productImgs = productImgRepository.findByProductId(product);
+    List<String> productImgUrls = new ArrayList<>();
+    for (ProductImg productImg : productImgs) {
+      productImgUrls.add(productImg.getProductImageUrl());
+    }
+
+    ProductResponse productResponse = new ProductResponse();
+    productResponse.setProductName(product.getProductName());
+    productResponse.setDescription(product.getDescription());
+    productResponse.setPrice(product.getPrice());
+    product.setDiscountPrice(product.getDiscountPrice());
+    productResponse.setQuantity(product.getQuantity());
+    productResponse.setDiscountPercent(product.getDiscountPercent());
+    productResponse.setSelling(false);
+    productResponse.setImageUrls(productImgUrls);
+
+    return productResponse;
   }
 }
