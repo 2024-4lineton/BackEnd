@@ -1,4 +1,4 @@
-package com.likelion.helfoome.global.S3.service;
+package com.likelion.helfoome.global.distance;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -10,7 +10,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.likelion.helfoome.global.auth.dto.CoordinateDto;
 
 @Service
 public class DistanceService {

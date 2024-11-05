@@ -1,4 +1,4 @@
-package com.likelion.helfoome.global.auth.dto;
+package com.likelion.helfoome.global.distance;
 
 import lombok.Getter;
 import lombok.Setter;

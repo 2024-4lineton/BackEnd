@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
   private final CustomOAuth2UserService customOAuth2UserService;
   private final CustomSuccessHandler customSuccessHandler;
   private final JwtFilter jwtFilter;
@@ -69,7 +70,8 @@ public class SecurityConfig {
                         "/v3/api-docs/**",
                         "/api/users/**",
                         "/api/shop/**",
-                        "/api/product/**")
+                        "/api/product/**",
+                        "/api/distance")
                     .permitAll()
                     .requestMatchers("/api/v1/user/*")
                     .hasRole("USER || SELLER")
