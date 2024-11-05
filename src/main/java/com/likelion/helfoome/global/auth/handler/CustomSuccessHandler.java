@@ -25,7 +25,6 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
   private final UserRepository userRepository;
 
   private static final String AUTHORIZATION_COOKIE = "Authorization";
-  private static final String REFRESH_TOKEN_COOKIE = "RefreshToken";
   private static final String DEFAULT_ROLE = "ROLE_USER";
   private static final String REDIRECT_URL = "https://metalog.store/swagger-ui/index.html";
   private static final int COOKIE_MAX_AGE = 60 * 60; // 1시간
@@ -56,15 +55,14 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     userRepository.save(user);
 
     // 쿠키 설정 및 추가
-    response.addCookie(createCookie(AUTHORIZATION_COOKIE, accessToken));
-    response.addCookie(createCookie(REFRESH_TOKEN_COOKIE, refreshToken));
+    response.addCookie(createCookie(accessToken));
 
     // 인증 성공 후 리다이렉트
     response.sendRedirect(REDIRECT_URL);
   }
 
-  private Cookie createCookie(String name, String value) {
-    Cookie cookie = new Cookie(name, value);
+  private Cookie createCookie(String value) {
+    Cookie cookie = new Cookie(CustomSuccessHandler.AUTHORIZATION_COOKIE, value);
     cookie.setMaxAge(COOKIE_MAX_AGE);
     cookie.setHttpOnly(true);
     cookie.setPath("/"); // 쿠키 적용 경로 설정
