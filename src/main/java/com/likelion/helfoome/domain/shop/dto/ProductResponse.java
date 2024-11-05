@@ -15,7 +15,7 @@ public class ProductResponse {
   private String price;
   private String discountPrice;
   private String discountPercent;
-  private int quantity;
-  private boolean isSelling;
+  private Integer quantity;
+  private Boolean isSelling;
   private List<String> imageUrls;
 }

@@ -52,7 +52,7 @@ public class ProductService {
     product.setDiscountPrice(productRequest.getDiscountPrice());
     product.setQuantity(productRequest.getQuantity());
     product.setDiscountPercent(product.getDiscountPercent());
-    product.setSelling(true);
+    product.setIsSelling(true);
     // tlqkf가게 주소 아니고 다른주소로 정할수도 있다길래 이 부분 추가
     if (productRequest.getRealAddr() == null) {
       product.setRealAddr(shop.getShopAddr());
@@ -83,7 +83,7 @@ public class ProductService {
     product.setDiscountPrice(product.getDiscountPrice());
     productResponse.setQuantity(product.getQuantity());
     productResponse.setDiscountPercent(product.getDiscountPercent());
-    productResponse.setSelling(false);
+    productResponse.setIsSelling(false);
     productResponse.setImageUrls(productImgUrls);
 
     return productResponse;

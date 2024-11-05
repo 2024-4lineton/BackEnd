@@ -47,10 +47,10 @@ public class Product extends BaseTimeEntity {
   private String discountPercent;
 
   @Column(name = "quantity", nullable = false)
-  private int quantity;
+  private Integer quantity;
 
   @Column(name = "isSelling", nullable = false)
-  private boolean isSelling;
+  private Boolean isSelling;
 
   @Column(name = "realAddr", nullable = false)
   private String realAddr;
