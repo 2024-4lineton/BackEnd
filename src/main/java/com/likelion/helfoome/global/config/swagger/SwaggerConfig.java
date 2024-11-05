@@ -29,7 +29,7 @@ public class SwaggerConfig {
     localServer.setDescription("Local Server");
 
     Server prodServer = new Server();
-    prodServer.setUrl("https://metalog.store/swagger-ui/index.html");
+    prodServer.setUrl("https://metalog.store");
     prodServer.setDescription("Production Server");
 
     return new OpenAPI()
