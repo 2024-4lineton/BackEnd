@@ -1,5 +1,6 @@
 package com.likelion.helfoome.global.config;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import org.springframework.context.annotation.Bean;
@@ -37,14 +38,17 @@ public class SecurityConfig {
                       CorsConfiguration configuration = new CorsConfiguration();
 
                       configuration.setAllowedOrigins(
-                          Collections.singletonList("http://localhost:3000"));
+                          Arrays.asList(
+                              "http://localhost:3000",
+                              "http://localhost:8080",
+                              "https://metalog.store"));
                       configuration.setAllowedMethods(Collections.singletonList("*"));
                       configuration.setAllowCredentials(true);
                       configuration.setAllowedHeaders(Collections.singletonList("*"));
+
                       configuration.setMaxAge(3600L);
 
-                      configuration.setExposedHeaders(Collections.singletonList("Set-Cookie"));
-                      configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+                      configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authorization"));
 
                       return configuration;
                     }))
