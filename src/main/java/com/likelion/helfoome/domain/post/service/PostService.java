@@ -228,7 +228,6 @@ public class PostService {
         }
         break;
       case "community":
-        Optional<Community> community = communityRepository.findById(postId);
         if (community.isPresent()) {
           response =
               new PostResponse(
@@ -249,7 +248,6 @@ public class PostService {
         }
         break;
       case "demand":
-        Optional<Demand> demand = demandRepository.findById(postId);
         if (demand.isPresent()) {
           response =
               new PostResponse(
@@ -270,7 +268,6 @@ public class PostService {
         }
         break;
       case "supply":
-        Optional<Supply> supply = supplyRepository.findById(postId);
         if (supply.isPresent()) {
           response =
               new PostResponse(
@@ -291,7 +288,6 @@ public class PostService {
         }
         break;
       default:
-        log.warn("No post id found: {}", postId);
     }
 
     return response;
