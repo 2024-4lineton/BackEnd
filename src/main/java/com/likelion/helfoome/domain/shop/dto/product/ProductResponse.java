@@ -1,4 +1,4 @@
-package com.likelion.helfoome.domain.shop.dto;
+package com.likelion.helfoome.domain.shop.dto.product;
 
 import java.util.List;
 
