@@ -10,9 +10,12 @@ import com.likelion.helfoome.domain.shop.entity.Shop;
 
 @Repository
 public interface ShopRepository extends JpaRepository<Shop, Long> {
+
   Optional<Shop> findByTaxId(String taxId);
 
   Optional<Shop> findByUser_Email(String email);
 
   List<Shop> findByShopType(Integer shopType);
+
+  List<Shop> findByMarketName(String marketName);
 }
