@@ -21,8 +21,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "article")
-public class Article extends BaseTimeEntity {
+@Table(name = "demand")
+public class Demand extends BaseTimeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -39,7 +39,4 @@ public class Article extends BaseTimeEntity {
 
   @Column(name = "totalLikes", nullable = false)
   private Integer totalLikes;
-
-  @Column(name = "totalComments", nullable = false)
-  private Integer totalComments;
 }

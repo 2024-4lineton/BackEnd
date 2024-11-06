@@ -21,8 +21,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "article")
-public class Article extends BaseTimeEntity {
+@Table(name = "articleComment")
+public class ArticleComment extends BaseTimeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -31,15 +31,10 @@ public class Article extends BaseTimeEntity {
   @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
   private User user;
 
-  @Column(name = "title", nullable = false)
-  private String title;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "articleId", referencedColumnName = "id", nullable = false)
+  private Article article;
 
   @Column(name = "content", nullable = false)
   private String content;
-
-  @Column(name = "totalLikes", nullable = false)
-  private Integer totalLikes;
-
-  @Column(name = "totalComments", nullable = false)
-  private Integer totalComments;
 }

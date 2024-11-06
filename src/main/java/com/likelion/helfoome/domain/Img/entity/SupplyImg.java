@@ -1,4 +1,4 @@
-package com.likelion.helfoome.domain.post.entity;
+package com.likelion.helfoome.domain.Img.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,7 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-import com.likelion.helfoome.domain.user.entity.User;
+import com.likelion.helfoome.domain.post.entity.Supply;
 import com.likelion.helfoome.global.common.BaseTimeEntity;
 
 import lombok.Getter;
@@ -21,25 +21,19 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "article")
-public class Article extends BaseTimeEntity {
+@Table(name = "supplyImg")
+public class SupplyImg extends BaseTimeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
-  private User user;
+  @JoinColumn(name = "supplyId", referencedColumnName = "id", nullable = false)
+  private Supply supply;
 
-  @Column(name = "title", nullable = false)
-  private String title;
+  @Column(name = "supplyImageName", nullable = false)
+  private String supplyImageName;
 
-  @Column(name = "content", nullable = false)
-  private String content;
-
-  @Column(name = "totalLikes", nullable = false)
-  private Integer totalLikes;
-
-  @Column(name = "totalComments", nullable = false)
-  private Integer totalComments;
+  @Column(name = "supplyImageUrl", nullable = false)
+  private String supplyImageUrl;
 }

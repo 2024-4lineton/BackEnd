@@ -1,6 +1,5 @@
 package com.likelion.helfoome.domain.post.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -21,8 +20,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "article")
-public class Article extends BaseTimeEntity {
+@Table(name = "demandLike")
+public class DemandLike extends BaseTimeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -31,15 +30,7 @@ public class Article extends BaseTimeEntity {
   @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
   private User user;
 
-  @Column(name = "title", nullable = false)
-  private String title;
-
-  @Column(name = "content", nullable = false)
-  private String content;
-
-  @Column(name = "totalLikes", nullable = false)
-  private Integer totalLikes;
-
-  @Column(name = "totalComments", nullable = false)
-  private Integer totalComments;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "demandId", referencedColumnName = "id", nullable = false)
+  private Demand demand;
 }
