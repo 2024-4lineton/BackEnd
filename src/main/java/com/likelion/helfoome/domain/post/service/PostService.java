@@ -6,6 +6,10 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.likelion.helfoome.domain.Img.entity.ArticleImg;
+import com.likelion.helfoome.domain.Img.entity.CommunityImg;
+import com.likelion.helfoome.domain.Img.entity.DemandImg;
+import com.likelion.helfoome.domain.Img.entity.SupplyImg;
 import com.likelion.helfoome.domain.Img.repository.ArticleImgRepository;
 import com.likelion.helfoome.domain.Img.repository.CommunityImgRepository;
 import com.likelion.helfoome.domain.Img.repository.DemandImgRepository;
@@ -48,39 +52,59 @@ public class PostService {
     switch (postType) {
       case "article":
         Article article = new Article();
+        ArticleImg articleImg = new ArticleImg();
         article.setUser(user);
         article.setTitle(request.getTitle());
         article.setContent(request.getContent());
         article.setTotalLikes(0);
+        articleImg.setArticle(article);
+        articleImg.setArticleImageName(request.getImageName());
+        articleImg.setArticleImageUrl(request.getImageUrl());
 
         articleRepository.save(article);
+        articleImgRepository.save(articleImg);
         break;
       case "community":
         Community community = new Community();
+        CommunityImg communityImg = new CommunityImg();
         community.setUser(user);
         community.setTitle(request.getTitle());
         community.setContent(request.getContent());
         community.setTotalLikes(0);
+        communityImg.setCommunity(community);
+        communityImg.setCommunityImageName(request.getImageName());
+        communityImg.setCommunityImageUrl(request.getImageUrl());
 
         communityRepository.save(community);
+        communityImgRepository.save(communityImg);
         break;
       case "demand":
         Demand demand = new Demand();
+        DemandImg demandImg = new DemandImg();
         demand.setUser(user);
         demand.setTitle(request.getTitle());
         demand.setContent(request.getContent());
         demand.setTotalLikes(0);
+        demandImg.setDemand(demand);
+        demandImg.setDemandImageName(request.getImageName());
+        demandImg.setDemandImageUrl(request.getImageUrl());
 
         demandRepository.save(demand);
+        demandImgRepository.save(demandImg);
         break;
       case "supply":
         Supply supply = new Supply();
+        SupplyImg supplyImg = new SupplyImg();
         supply.setUser(user);
         supply.setTitle(request.getTitle());
         supply.setContent(request.getContent());
         supply.setTotalLikes(0);
+        supplyImg.setSupply(supply);
+        supplyImg.setSupplyImageName(request.getImageName());
+        supplyImg.setSupplyImageUrl(request.getImageUrl());
 
         supplyRepository.save(supply);
+        supplyImgRepository.save(supplyImg);
         break;
       default:
         return "글 등록 중 오류가 발생했습니다.";
