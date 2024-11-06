@@ -44,6 +44,11 @@ public class LikeService {
 
     switch (postType) {
       case "article":
+        if (articleLikeRepository
+            .findByArticleIdAndUser_Email(postId, user.getEmail())
+            .isPresent()) {
+          return "이미 좋아요를 누른 게시물입니다.";
+        }
         ArticleLike articleLike = new ArticleLike();
         Article article =
             articleRepository
@@ -57,6 +62,11 @@ public class LikeService {
         articleLikeRepository.save(articleLike);
         break;
       case "community":
+        if (communityLikeRepository
+            .findByCommunityIdAndUser_Email(postId, user.getEmail())
+            .isPresent()) {
+          return "이미 좋아요를 누른 게시물입니다.";
+        }
         CommunityLike communityLike = new CommunityLike();
         Community community =
             communityRepository
@@ -70,6 +80,9 @@ public class LikeService {
         communityLikeRepository.save(communityLike);
         break;
       case "demand":
+        if (demandLikeRepository.findByDemandIdAndUser_Email(postId, user.getEmail()).isPresent()) {
+          return "이미 좋아요를 누른 게시물입니다.";
+        }
         DemandLike demandLike = new DemandLike();
         Demand demand =
             demandRepository
@@ -83,6 +96,9 @@ public class LikeService {
         demandLikeRepository.save(demandLike);
         break;
       case "supply":
+        if (supplyLikeRepository.findBySupplyIdAndUser_Email(postId, user.getEmail()).isPresent()) {
+          return "이미 좋아요를 누른 게시물입니다.";
+        }
         SupplyLike supplyLike = new SupplyLike();
         Supply supply =
             supplyRepository

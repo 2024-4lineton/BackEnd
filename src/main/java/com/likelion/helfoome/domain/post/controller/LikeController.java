@@ -39,7 +39,7 @@ public class LikeController {
 
       String result = likeService.createLike(postType, email, postId);
 
-      if ("좋아요 중 오류가 발생했습니다.".equals(result)) {
+      if ("좋아요 중 오류가 발생했습니다.".equals(result) || "이미 좋아요를 누른 게시물입니다.".equals(result)) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body("좋아요에 실패했습니다.");
       }
 
