@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -59,10 +60,14 @@ public class PostController {
 
   @Operation(summary = "게시물 전체 조회", description = "Post Type으로 게시물 전체 조회")
   @GetMapping("/{postType}")
-  public ResponseEntity<?> getAllPost(@RequestParam String postType) {
+  public ResponseEntity<?> getAllPost(@PathVariable String postType) {
     try {
       List<PostResponse> postResponses = postService.getAllPost(postType);
-      return ResponseEntity.ok(postResponses);
+      if (postResponses.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("게시물이 존재하지 않습니다.");
+      } else {
+        return ResponseEntity.ok(postResponses);
+      }
     } catch (RuntimeException e) {
       log.error("Error during fetching post list in controller /api/post: {}", e.getMessage());
       return ResponseEntity.badRequest().body(e.getMessage());
@@ -71,10 +76,14 @@ public class PostController {
 
   @Operation(summary = "게시물 단일 조회", description = "Post별 id로 게시물 조회")
   @GetMapping("/{postType}/{id}")
-  public ResponseEntity<?> getPostById(@RequestParam String postType, @RequestParam Long id) {
+  public ResponseEntity<?> getPostById(@PathVariable String postType, @PathVariable Long id) {
     try {
       PostResponse postResponse = postService.getPostById(postType, id);
-      return ResponseEntity.ok(postResponse);
+      if (postResponse == null) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("게시물이 존재하지 않습니다.");
+      } else {
+        return ResponseEntity.ok(postResponse);
+      }
     } catch (RuntimeException e) {
       log.error("Error during fetching post in controller /api/post/id: {}", e.getMessage());
       return ResponseEntity.badRequest().body(e.getMessage());

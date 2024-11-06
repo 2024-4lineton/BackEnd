@@ -57,6 +57,7 @@ public class PostService {
         article.setTitle(request.getTitle());
         article.setContent(request.getContent());
         article.setTotalLikes(0);
+        article.setTotalComments(0);
         articleImg.setArticle(article);
         articleImg.setArticleImageName(request.getImageName());
         articleImg.setArticleImageUrl(request.getImageUrl());
@@ -71,6 +72,7 @@ public class PostService {
         community.setTitle(request.getTitle());
         community.setContent(request.getContent());
         community.setTotalLikes(0);
+        community.setTotalComments(0);
         communityImg.setCommunity(community);
         communityImg.setCommunityImageName(request.getImageName());
         communityImg.setCommunityImageUrl(request.getImageUrl());
@@ -131,6 +133,7 @@ public class PostService {
                   article.getTitle(),
                   article.getContent(),
                   article.getTotalLikes(),
+                  article.getTotalComments(),
                   articleImgRepository.findByArticleId(article.getId()).get().getArticleImageName(),
                   articleImgRepository.findByArticleId(article.getId()).get().getArticleImageUrl(),
                   article.getCreatedDate());
@@ -145,6 +148,7 @@ public class PostService {
                   community.getTitle(),
                   community.getContent(),
                   community.getTotalLikes(),
+                  community.getTotalComments(),
                   communityImgRepository
                       .findByCommunityId(community.getId())
                       .get()
@@ -165,6 +169,7 @@ public class PostService {
                   demand.getTitle(),
                   demand.getContent(),
                   demand.getTotalLikes(),
+                  null,
                   demandImgRepository.findByDemandId(demand.getId()).get().getDemandImageName(),
                   demandImgRepository.findByDemandId(demand.getId()).get().getDemandImageUrl(),
                   demand.getCreatedDate());
@@ -179,6 +184,7 @@ public class PostService {
                   supply.getTitle(),
                   supply.getContent(),
                   supply.getTotalLikes(),
+                  null,
                   supplyImgRepository.findBySupplyId(supply.getId()).get().getSupplyImageName(),
                   supplyImgRepository.findBySupplyId(supply.getId()).get().getSupplyImageUrl(),
                   supply.getCreatedDate());
@@ -198,7 +204,7 @@ public class PostService {
 
     PostResponse response = new PostResponse();
 
-    // postType 사용하여 해당하는 게시글 전체 조회
+    // post id에 해당하는 게시글 단일 조회
     switch (postType) {
       case "article":
         Optional<Article> article = articleRepository.findById(id);
@@ -209,6 +215,7 @@ public class PostService {
                   article.get().getTitle(),
                   article.get().getContent(),
                   article.get().getTotalLikes(),
+                  article.get().getTotalComments(),
                   articleImgRepository
                       .findByArticleId(article.get().getId())
                       .get()
@@ -229,6 +236,7 @@ public class PostService {
                   community.get().getTitle(),
                   community.get().getContent(),
                   community.get().getTotalLikes(),
+                  community.get().getTotalComments(),
                   communityImgRepository
                       .findByCommunityId(community.get().getId())
                       .get()
@@ -249,6 +257,7 @@ public class PostService {
                   demand.get().getTitle(),
                   demand.get().getContent(),
                   demand.get().getTotalLikes(),
+                  null,
                   demandImgRepository
                       .findByDemandId(demand.get().getId())
                       .get()
@@ -269,6 +278,7 @@ public class PostService {
                   supply.get().getTitle(),
                   supply.get().getContent(),
                   supply.get().getTotalLikes(),
+                  null,
                   supplyImgRepository
                       .findBySupplyId(supply.get().getId())
                       .get()
@@ -281,7 +291,7 @@ public class PostService {
         }
         break;
       default:
-        log.warn("No post type found: {}", postType);
+        log.warn("No post id found: {}", id);
     }
 
     return response;

@@ -14,6 +14,7 @@ public class PostResponse {
   private String title;
   private String content;
   private Integer totalLikes;
+  private Integer totalComments;
   private String imageName;
   private String imageUrl;
   private LocalDateTime createdAt;
