@@ -4,11 +4,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.likelion.helfoome.domain.post.dto.CommentRequest;
 import com.likelion.helfoome.domain.post.service.CommentService;
 import com.likelion.helfoome.global.auth.jwt.JwtUtil;
 
@@ -30,14 +32,15 @@ public class CommentController {
   public ResponseEntity<?> createLike(
       @PathVariable String postType,
       @RequestParam Long postId,
-      @RequestHeader("Authorization") String bearerToken) {
+      @RequestHeader("Authorization") String bearerToken,
+      @RequestBody CommentRequest request) {
 
     try {
       String token = bearerToken.substring(7);
       Claims claims = jwtUtil.getAllClaimsFromToken(token);
       String email = claims.getId();
 
-      String result = commentService.createComment(postType, email, postId);
+      String result = commentService.createComment(postType, email, postId, request);
 
       if ("댓글 작성 중 오류가 발생했습니다.".equals(result)) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body("댓글 작성에 실패했습니다.");

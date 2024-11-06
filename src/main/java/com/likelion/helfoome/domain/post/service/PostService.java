@@ -199,7 +199,7 @@ public class PostService {
   }
 
   // 특정 게시물 단일 조회
-  public PostResponse getPostById(String postType, Long postId) {
+  public PostResponse getPostById(String postType, Long id) {
     log.info("Post for postType: {}", postType);
 
     PostResponse response = new PostResponse();
@@ -207,7 +207,7 @@ public class PostService {
     // post id에 해당하는 게시글 단일 조회
     switch (postType) {
       case "article":
-        Optional<Article> article = articleRepository.findById(postId);
+        Optional<Article> article = articleRepository.findById(id);
         if (article.isPresent()) {
           response =
               new PostResponse(
@@ -228,6 +228,7 @@ public class PostService {
         }
         break;
       case "community":
+        Optional<Community> community = communityRepository.findById(id);
         if (community.isPresent()) {
           response =
               new PostResponse(
@@ -248,6 +249,7 @@ public class PostService {
         }
         break;
       case "demand":
+        Optional<Demand> demand = demandRepository.findById(id);
         if (demand.isPresent()) {
           response =
               new PostResponse(
@@ -268,6 +270,7 @@ public class PostService {
         }
         break;
       case "supply":
+        Optional<Supply> supply = supplyRepository.findById(id);
         if (supply.isPresent()) {
           response =
               new PostResponse(
@@ -288,6 +291,7 @@ public class PostService {
         }
         break;
       default:
+        log.warn("No post id found: {}", id);
     }
 
     return response;

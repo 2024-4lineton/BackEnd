@@ -2,7 +2,10 @@ package com.likelion.helfoome.domain.post.service;
 
 import org.springframework.stereotype.Service;
 
+import com.likelion.helfoome.domain.post.dto.CommentRequest;
+import com.likelion.helfoome.domain.post.entity.Article;
 import com.likelion.helfoome.domain.post.entity.ArticleComment;
+import com.likelion.helfoome.domain.post.entity.Community;
 import com.likelion.helfoome.domain.post.entity.CommunityComment;
 import com.likelion.helfoome.domain.post.repository.ArticleCommentRepository;
 import com.likelion.helfoome.domain.post.repository.ArticleRepository;
@@ -24,29 +27,38 @@ public class CommentService {
   private final ArticleRepository articleRepository;
   private final CommunityRepository communityRepository;
 
-  public String createComment(String postType, String email, Long postId) {
+  public String createComment(String postType, String email, Long postId, CommentRequest request) {
     User user =
         userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
 
     switch (postType) {
       case "article":
         ArticleComment articleComment = new ArticleComment();
-        articleComment.setUser(user);
-        articleComment.setArticle(
+        Article article =
             articleRepository
                 .findById(postId)
-                .orElseThrow(() -> new RuntimeException("Article not found")));
+                .orElseThrow(() -> new RuntimeException("Article not found"));
+        articleComment.setUser(user);
+        articleComment.setArticle(article);
+        articleComment.setContent(request.getContent());
+        article.setTotalComments(article.getTotalComments() + 1);
 
+        articleRepository.save(article);
         articleCommentRepository.save(articleComment);
         break;
       case "community":
         CommunityComment communityComment = new CommunityComment();
-        communityComment.setUser(user);
-        communityComment.setCommunity(
+        Community community =
             communityRepository
                 .findById(postId)
-                .orElseThrow(() -> new RuntimeException("Community not found")));
+                .orElseThrow(() -> new RuntimeException("Community not found"));
+        communityComment.setUser(user);
+        communityComment.setCommunity(community);
+        communityComment.setContent(request.getContent());
 
+        community.setTotalComments(community.getTotalComments() + 1);
+
+        communityRepository.save(community);
         communityCommentRepository.save(communityComment);
         break;
       default:
