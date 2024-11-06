@@ -34,7 +34,7 @@ public class PostController {
   @Operation(
       summary = "글쓰기",
       description = "Parameter:(article | community | demand | supply), Token 사용자 Header로 받아 글 작성")
-  @PostMapping("/{postType}")
+  @PostMapping
   public ResponseEntity<?> createPost(
       @RequestParam String postType,
       @RequestHeader("Authorization") String bearerToken,
@@ -75,8 +75,8 @@ public class PostController {
   }
 
   @Operation(summary = "게시물 단일 조회", description = "Post별 id로 게시물 조회")
-  @GetMapping("/{postType}/{id}")
-  public ResponseEntity<?> getPostById(@PathVariable String postType, @PathVariable Long id) {
+  @GetMapping("/{id}")
+  public ResponseEntity<?> getPostById(@RequestParam String postType, @PathVariable Long id) {
     try {
       PostResponse postResponse = postService.getPostById(postType, id);
       if (postResponse == null) {
