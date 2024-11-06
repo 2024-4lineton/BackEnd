@@ -39,4 +39,7 @@ public class Article extends BaseTimeEntity {
 
   @Column(name = "totalLikes", nullable = false)
   private Integer totalLikes;
+
+  @Column(name = "totalComments", nullable = false)
+  private Integer totalComments;
 }
