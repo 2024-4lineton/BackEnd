@@ -10,4 +10,6 @@ import lombok.NoArgsConstructor;
 public class PostRequest {
   private String title;
   private String content;
+  private String imageName;
+  private String imageUrl;
 }
