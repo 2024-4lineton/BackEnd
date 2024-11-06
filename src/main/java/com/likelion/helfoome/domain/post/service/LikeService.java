@@ -2,9 +2,13 @@ package com.likelion.helfoome.domain.post.service;
 
 import org.springframework.stereotype.Service;
 
+import com.likelion.helfoome.domain.post.entity.Article;
 import com.likelion.helfoome.domain.post.entity.ArticleLike;
+import com.likelion.helfoome.domain.post.entity.Community;
 import com.likelion.helfoome.domain.post.entity.CommunityLike;
+import com.likelion.helfoome.domain.post.entity.Demand;
 import com.likelion.helfoome.domain.post.entity.DemandLike;
+import com.likelion.helfoome.domain.post.entity.Supply;
 import com.likelion.helfoome.domain.post.entity.SupplyLike;
 import com.likelion.helfoome.domain.post.repository.ArticleLikeRepository;
 import com.likelion.helfoome.domain.post.repository.ArticleRepository;
@@ -41,42 +45,54 @@ public class LikeService {
     switch (postType) {
       case "article":
         ArticleLike articleLike = new ArticleLike();
-        articleLike.setUser(user);
-        articleLike.setArticle(
+        Article article =
             articleRepository
                 .findById(postId)
-                .orElseThrow(() -> new RuntimeException("Article not found")));
+                .orElseThrow(() -> new RuntimeException("Article not found"));
+        articleLike.setUser(user);
+        articleLike.setArticle(article);
+        article.setTotalLikes(article.getTotalLikes() + 1);
 
+        articleRepository.save(article);
         articleLikeRepository.save(articleLike);
         break;
       case "community":
         CommunityLike communityLike = new CommunityLike();
-        communityLike.setUser(user);
-        communityLike.setCommunity(
+        Community community =
             communityRepository
                 .findById(postId)
-                .orElseThrow(() -> new RuntimeException("Community not found")));
+                .orElseThrow(() -> new RuntimeException("Community not found"));
+        communityLike.setUser(user);
+        communityLike.setCommunity(community);
+        community.setTotalLikes(community.getTotalLikes() + 1);
 
+        communityRepository.save(community);
         communityLikeRepository.save(communityLike);
         break;
       case "demand":
         DemandLike demandLike = new DemandLike();
-        demandLike.setUser(user);
-        demandLike.setDemand(
+        Demand demand =
             demandRepository
                 .findById(postId)
-                .orElseThrow(() -> new RuntimeException("Demand not found")));
+                .orElseThrow(() -> new RuntimeException("Demand not found"));
+        demandLike.setUser(user);
+        demandLike.setDemand(demand);
+        demand.setTotalLikes(demand.getTotalLikes() + 1);
 
+        demandRepository.save(demand);
         demandLikeRepository.save(demandLike);
         break;
       case "supply":
         SupplyLike supplyLike = new SupplyLike();
-        supplyLike.setUser(user);
-        supplyLike.setSupply(
+        Supply supply =
             supplyRepository
                 .findById(postId)
-                .orElseThrow(() -> new RuntimeException("Supply not found")));
+                .orElseThrow(() -> new RuntimeException("Supply not found"));
+        supplyLike.setUser(user);
+        supplyLike.setSupply(supply);
+        supply.setTotalLikes(supply.getTotalLikes() + 1);
 
+        supplyRepository.save(supply);
         supplyLikeRepository.save(supplyLike);
         break;
       default:
