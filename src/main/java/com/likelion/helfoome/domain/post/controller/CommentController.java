@@ -58,12 +58,12 @@ public class CommentController {
     }
   }
 
-  @Operation(summary = "게시물 전체 조회", description = "Post Type으로 게시물 전체 조회")
+  @Operation(summary = "게시물 댓글 조회", description = "Post Type에 해당하는 게시물의 댓글 전체 조회")
   @GetMapping("/{postType}/postId")
   public ResponseEntity<?> getAllComment(@PathVariable String postType, @RequestParam Long postId) {
     try {
       List<CommentResponse> responses = commentService.getAllComment(postType, postId);
-      if (responses.isEmpty()) {
+      if (responses == null || responses.isEmpty()) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body("댓글이 존재하지 않습니다.");
       } else {
         return ResponseEntity.ok(responses);
