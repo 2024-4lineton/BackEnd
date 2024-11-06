@@ -159,6 +159,11 @@ public class ProductService {
           productInList.setDiscountPrice(product.getDiscountPrice());
           Long distance = distanceService.getDistance(userAddr, product.getRealAddr());
           productInList.setDistance(distance);
+          productInList.setImgUrl(
+              productImgRepository
+                  .findByProductId(product.getId())
+                  .getFirst()
+                  .getProductImageUrl());
 
           returnProducts.add(productInList);
         }

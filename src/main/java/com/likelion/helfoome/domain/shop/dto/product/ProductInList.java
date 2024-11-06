@@ -22,4 +22,6 @@ public class ProductInList {
   private Integer quantity;
 
   private Long distance;
+
+  private String imgUrl;
 }
