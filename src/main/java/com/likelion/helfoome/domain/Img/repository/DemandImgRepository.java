@@ -5,9 +5,9 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.likelion.helfoome.domain.Img.entity.CommunityImg;
+import com.likelion.helfoome.domain.Img.entity.DemandImg;
 
 @Repository
-public interface CommunityImgRepository extends JpaRepository<CommunityImg, Long> {
-  Optional<CommunityImg> findByCommunityId(Long communityId);
+public interface DemandImgRepository extends JpaRepository<DemandImg, Long> {
+  Optional<DemandImg> findByDemandId(Long id);
 }
