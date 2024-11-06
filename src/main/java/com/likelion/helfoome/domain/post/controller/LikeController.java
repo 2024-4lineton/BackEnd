@@ -26,10 +26,10 @@ public class LikeController {
   private final JwtUtil jwtUtil;
 
   @Operation(summary = "좋아요 누르기", description = "Header로 받은 사용자로 좋아요 생성")
-  @PostMapping("/{postType}/id")
+  @PostMapping("/{postType}/postId")
   public ResponseEntity<?> createLike(
       @PathVariable String postType,
-      @RequestParam Long id,
+      @RequestParam Long postId,
       @RequestHeader("Authorization") String bearerToken) {
 
     try {
@@ -37,7 +37,7 @@ public class LikeController {
       Claims claims = jwtUtil.getAllClaimsFromToken(token);
       String email = claims.getId();
 
-      String result = likeService.createLike(postType, email, id);
+      String result = likeService.createLike(postType, email, postId);
 
       if ("좋아요 중 오류가 발생했습니다.".equals(result)) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body("좋아요에 실패했습니다.");

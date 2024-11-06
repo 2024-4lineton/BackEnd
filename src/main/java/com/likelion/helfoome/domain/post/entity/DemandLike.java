@@ -10,6 +10,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 import com.likelion.helfoome.domain.user.entity.User;
+import com.likelion.helfoome.global.common.BaseTimeEntity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Table(name = "demandLike")
-public class DemandLike {
+public class DemandLike extends BaseTimeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

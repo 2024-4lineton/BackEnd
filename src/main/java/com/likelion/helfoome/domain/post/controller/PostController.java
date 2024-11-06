@@ -75,10 +75,10 @@ public class PostController {
   }
 
   @Operation(summary = "게시물 단일 조회", description = "Post별 id로 게시물 조회")
-  @GetMapping("/{postType}/id")
-  public ResponseEntity<?> getPostById(@PathVariable String postType, @RequestParam Long id) {
+  @GetMapping("/{postType}/postId")
+  public ResponseEntity<?> getPostById(@PathVariable String postType, @RequestParam Long postId) {
     try {
-      PostResponse postResponse = postService.getPostById(postType, id);
+      PostResponse postResponse = postService.getPostById(postType, postId);
       if (postResponse == null) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body("게시물이 존재하지 않습니다.");
       } else {

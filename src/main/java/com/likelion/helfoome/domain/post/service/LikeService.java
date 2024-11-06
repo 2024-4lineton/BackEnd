@@ -34,7 +34,7 @@ public class LikeService {
   private final DemandLikeRepository demandLikeRepository;
   private final SupplyLikeRepository supplyLikeRepository;
 
-  public String createLike(String postType, String email, Long id) {
+  public String createLike(String postType, String email, Long postId) {
     User user =
         userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -44,7 +44,7 @@ public class LikeService {
         articleLike.setUser(user);
         articleLike.setArticle(
             articleRepository
-                .findById(id)
+                .findById(postId)
                 .orElseThrow(() -> new RuntimeException("Article not found")));
 
         articleLikeRepository.save(articleLike);
@@ -54,7 +54,7 @@ public class LikeService {
         communityLike.setUser(user);
         communityLike.setCommunity(
             communityRepository
-                .findById(id)
+                .findById(postId)
                 .orElseThrow(() -> new RuntimeException("Community not found")));
 
         communityLikeRepository.save(communityLike);
@@ -64,7 +64,7 @@ public class LikeService {
         demandLike.setUser(user);
         demandLike.setDemand(
             demandRepository
-                .findById(id)
+                .findById(postId)
                 .orElseThrow(() -> new RuntimeException("Demand not found")));
 
         demandLikeRepository.save(demandLike);
@@ -74,7 +74,7 @@ public class LikeService {
         supplyLike.setUser(user);
         supplyLike.setSupply(
             supplyRepository
-                .findById(id)
+                .findById(postId)
                 .orElseThrow(() -> new RuntimeException("Supply not found")));
 
         supplyLikeRepository.save(supplyLike);

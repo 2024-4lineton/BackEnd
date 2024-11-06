@@ -21,8 +21,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "comment")
-public class Comment extends BaseTimeEntity {
+@Table(name = "communityComment")
+public class CommunityComment extends BaseTimeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
