@@ -51,7 +51,7 @@ jobs:
 
       # 2. Spring Boot 애플리케이션 빌드
       - name: Build with Gradle
-        uses: gradle/gradle-build-action@v3
+        uses: gradle/gradle-build-action@v4
         with:
           arguments: clean bootJar
 
