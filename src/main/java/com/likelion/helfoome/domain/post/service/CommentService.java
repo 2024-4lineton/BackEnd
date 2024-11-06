@@ -1,8 +1,12 @@
 package com.likelion.helfoome.domain.post.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.likelion.helfoome.domain.post.dto.CommentRequest;
+import com.likelion.helfoome.domain.post.dto.CommentResponse;
 import com.likelion.helfoome.domain.post.entity.Article;
 import com.likelion.helfoome.domain.post.entity.ArticleComment;
 import com.likelion.helfoome.domain.post.entity.Community;
@@ -65,5 +69,44 @@ public class CommentService {
         return "댓글 등록 중 오류가 발생했습니다.";
     }
     return "댓글이 정상적으로 등록되었습니다.";
+  }
+
+  // 특정 게시물의 댓글 조회
+  public List<CommentResponse> getAllComment(String postType, Long postId) {
+    log.info("Post List for postId: {}", postId);
+
+    // CommentListResponse를 담을 리스트 생성하고
+    List<CommentResponse> responses = new ArrayList<>();
+    CommentResponse response = new CommentResponse();
+
+    // postType 사용하여 해당하는 게시글 전체 조회
+    switch (postType) {
+      case "article":
+        List<ArticleComment> articleComments = articleCommentRepository.findByArticleId(postId);
+        for (ArticleComment articleComment : articleComments) {
+          response =
+              new CommentResponse(
+                  articleComment.getUser().getNickname(),
+                  articleComment.getContent(),
+                  articleComment.getCreatedDate());
+        }
+        break;
+      case "community":
+        List<CommunityComment> communityComments =
+            communityCommentRepository.findByCommunityId(postId);
+        for (CommunityComment communityComment : communityComments) {
+          response =
+              new CommentResponse(
+                  communityComment.getUser().getNickname(),
+                  communityComment.getContent(),
+                  communityComment.getCreatedDate());
+        }
+        break;
+      default:
+        log.warn("No post Id found: {}", postId);
+    }
+    responses.add(response);
+
+    return responses;
   }
 }
