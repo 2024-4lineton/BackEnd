@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.likelion.helfoome.domain.shop.dto.product.ProductList;
+import com.likelion.helfoome.domain.shop.dto.product.ProductManagingResponse;
 import com.likelion.helfoome.domain.shop.dto.product.ProductRequest;
 import com.likelion.helfoome.domain.shop.dto.product.ProductResponse;
 import com.likelion.helfoome.domain.shop.entity.Product;
@@ -73,5 +74,11 @@ public class ProductController {
         productService.getSortedProductList(userAddr, shopType, sort, page, size, marketName);
 
     return new ResponseEntity<>(productList, HttpStatus.OK);
+  }
+
+  @GetMapping("/manage")
+  public ResponseEntity<ProductManagingResponse> getManaging(@RequestParam Long productId) {
+    ProductManagingResponse response = productService.getProductManaging(productId);
+    return new ResponseEntity<>(response, HttpStatus.OK);
   }
 }

@@ -12,8 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.likelion.helfoome.domain.Img.entity.ProductImg;
 import com.likelion.helfoome.domain.Img.repository.ProductImgRepository;
 import com.likelion.helfoome.domain.Img.service.ImgService;
+import com.likelion.helfoome.domain.order.entity.Order;
+import com.likelion.helfoome.domain.order.repository.OrderRepository;
+import com.likelion.helfoome.domain.shop.dto.product.OrderInList;
 import com.likelion.helfoome.domain.shop.dto.product.ProductInList;
 import com.likelion.helfoome.domain.shop.dto.product.ProductList;
+import com.likelion.helfoome.domain.shop.dto.product.ProductManagingResponse;
 import com.likelion.helfoome.domain.shop.dto.product.ProductRequest;
 import com.likelion.helfoome.domain.shop.dto.product.ProductResponse;
 import com.likelion.helfoome.domain.shop.entity.Product;
@@ -39,6 +43,7 @@ public class ProductService {
   private final S3Service s3Service;
   private final UserRepository userRepository;
   private final DistanceService distanceService;
+  private final OrderRepository orderRepository;
 
   @Transactional
   public Product createProduct(ProductRequest productRequest) throws IOException {
@@ -169,5 +174,24 @@ public class ProductService {
     ProductList productList = new ProductList();
     productList.setProductInList(returnProducts);
     return productList;
+  }
+
+  public ProductManagingResponse getProductManaging(Long productId) {
+
+    ProductManagingResponse response = new ProductManagingResponse();
+    Product product = productRepository.findById(productId).orElseThrow();
+    List<OrderInList> returnOrders = new ArrayList<>();
+    List<Order> orders = orderRepository.findByProductId(productId);
+    response.setProduct(product);
+    for (Order order : orders) {
+      OrderInList orderInList = new OrderInList();
+      orderInList.setOrderId(order.getId());
+      orderInList.setNickname(order.getUser().getNickname());
+      orderInList.setPIN(order.getPIN());
+      orderInList.setOrderTime(order.getCreatedDate());
+      returnOrders.add(orderInList);
+    }
+    response.setOrders(returnOrders);
+    return response;
   }
 }
