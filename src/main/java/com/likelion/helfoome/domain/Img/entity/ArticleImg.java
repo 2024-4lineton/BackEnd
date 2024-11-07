@@ -32,9 +32,9 @@ public class ArticleImg extends BaseTimeEntity {
   @JoinColumn(name = "articleId", referencedColumnName = "id", nullable = false)
   private Article article;
 
-  @Column(name = "articleImageName", nullable = false)
-  private String articleImageName;
+  @Column(name = "articleImgName", nullable = false)
+  private String articleImgName;
 
-  @Column(name = "articleImageUrl", nullable = false)
-  private String articleImageUrl;
+  @Column(name = "articleImgUrl", nullable = false)
+  private String articleImgUrl;
 }

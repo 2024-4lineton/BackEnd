@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.likelion.helfoome.domain.Img.entity.UserProfileImg;
 import com.likelion.helfoome.domain.Img.repository.UserProfileImgRepository;
 import com.likelion.helfoome.domain.user.dto.UserInfoRegisterRequest;
 import com.likelion.helfoome.domain.user.dto.UserInfoResponse;
@@ -24,12 +25,9 @@ public class UserInfoService {
   private final UserProfileImgRepository userProfileImgRepository;
 
   // 첫 로그인 확인
-  public String isFirstLogin(String email) {
+  public Boolean isFirstLogin(String email) {
     userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
-    if (userInfoRepository.findByUser_Email(email).isPresent()) {
-      return "이미 사용자 개인정보가 존재합니다.";
-    }
-    return "첫 번째 로그인 확인";
+    return userInfoRepository.findByUser_Email(email).isPresent();
   }
 
   // 쿠키로 현재 사용자 email 받아와서 사용자 정보 생성
@@ -38,9 +36,10 @@ public class UserInfoService {
         userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
 
     UserInfo newUserInfo = new UserInfo();
+    UserProfileImg newUserProfileImg = new UserProfileImg();
     newUserInfo.setUser(user);
-    newUserInfo.setProfileImgName(request.getProfileImgName());
-    newUserInfo.setProfileImgUrl(request.getProfileImgUrl());
+    newUserProfileImg.setProfileImgName(request.getProfileImgName());
+    newUserProfileImg.setProfileImgUrl(request.getProfileImgUrl());
     newUserInfo.setPhone(request.getPhone());
     newUserInfo.setBirth(request.getBirth());
     newUserInfo.setGender(request.getGender());
@@ -66,12 +65,8 @@ public class UserInfoService {
     if (userInfo.isPresent()) {
       response =
           new UserInfoResponse(
-              userProfileImgRepository
-                  .findByUserInfoId(userInfo.get().getId())
-                  .getProfileImageName(),
-              userProfileImgRepository
-                  .findByUserInfoId(userInfo.get().getId())
-                  .getProfileImageUrl(),
+              userProfileImgRepository.findByUserInfoId(userInfo.get().getId()).getProfileImgName(),
+              userProfileImgRepository.findByUserInfoId(userInfo.get().getId()).getProfileImgUrl(),
               userInfo.get().getPhone(),
               userInfo.get().getBirth(),
               userInfo.get().getGender(),

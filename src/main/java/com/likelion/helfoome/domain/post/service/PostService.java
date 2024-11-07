@@ -59,8 +59,8 @@ public class PostService {
         article.setTotalLikes(0);
         article.setTotalComments(0);
         articleImg.setArticle(article);
-        articleImg.setArticleImageName(request.getImageName());
-        articleImg.setArticleImageUrl(request.getImageUrl());
+        articleImg.setArticleImgName(request.getImageName());
+        articleImg.setArticleImgUrl(request.getImageUrl());
 
         articleRepository.save(article);
         articleImgRepository.save(articleImg);
@@ -74,8 +74,8 @@ public class PostService {
         community.setTotalLikes(0);
         community.setTotalComments(0);
         communityImg.setCommunity(community);
-        communityImg.setCommunityImageName(request.getImageName());
-        communityImg.setCommunityImageUrl(request.getImageUrl());
+        communityImg.setCommunityImgName(request.getImageName());
+        communityImg.setCommunityImgUrl(request.getImageUrl());
 
         communityRepository.save(community);
         communityImgRepository.save(communityImg);
@@ -88,8 +88,8 @@ public class PostService {
         demand.setContent(request.getContent());
         demand.setTotalLikes(0);
         demandImg.setDemand(demand);
-        demandImg.setDemandImageName(request.getImageName());
-        demandImg.setDemandImageUrl(request.getImageUrl());
+        demandImg.setDemandImgName(request.getImageName());
+        demandImg.setDemandImgUrl(request.getImageUrl());
 
         demandRepository.save(demand);
         demandImgRepository.save(demandImg);
@@ -102,8 +102,8 @@ public class PostService {
         supply.setContent(request.getContent());
         supply.setTotalLikes(0);
         supplyImg.setSupply(supply);
-        supplyImg.setSupplyImageName(request.getImageName());
-        supplyImg.setSupplyImageUrl(request.getImageUrl());
+        supplyImg.setSupplyImgName(request.getImageName());
+        supplyImg.setSupplyImgUrl(request.getImageUrl());
 
         supplyRepository.save(supply);
         supplyImgRepository.save(supplyImg);
@@ -134,8 +134,8 @@ public class PostService {
                   article.getContent(),
                   article.getTotalLikes(),
                   article.getTotalComments(),
-                  articleImgRepository.findByArticleId(article.getId()).get().getArticleImageName(),
-                  articleImgRepository.findByArticleId(article.getId()).get().getArticleImageUrl(),
+                  articleImgRepository.findByArticleId(article.getId()).get().getArticleImgName(),
+                  articleImgRepository.findByArticleId(article.getId()).get().getArticleImgUrl(),
                   article.getCreatedDate());
         }
         break;
@@ -152,11 +152,11 @@ public class PostService {
                   communityImgRepository
                       .findByCommunityId(community.getId())
                       .get()
-                      .getCommunityImageName(),
+                      .getCommunityImgName(),
                   communityImgRepository
                       .findByCommunityId(community.getId())
                       .get()
-                      .getCommunityImageUrl(),
+                      .getCommunityImgUrl(),
                   community.getCreatedDate());
         }
         break;
@@ -170,8 +170,8 @@ public class PostService {
                   demand.getContent(),
                   demand.getTotalLikes(),
                   null,
-                  demandImgRepository.findByDemandId(demand.getId()).get().getDemandImageName(),
-                  demandImgRepository.findByDemandId(demand.getId()).get().getDemandImageUrl(),
+                  demandImgRepository.findByDemandId(demand.getId()).get().getDemandImgName(),
+                  demandImgRepository.findByDemandId(demand.getId()).get().getDemandImgUrl(),
                   demand.getCreatedDate());
         }
         break;
@@ -185,8 +185,8 @@ public class PostService {
                   supply.getContent(),
                   supply.getTotalLikes(),
                   null,
-                  supplyImgRepository.findBySupplyId(supply.getId()).get().getSupplyImageName(),
-                  supplyImgRepository.findBySupplyId(supply.getId()).get().getSupplyImageUrl(),
+                  supplyImgRepository.findBySupplyId(supply.getId()).get().getSupplyImgName(),
+                  supplyImgRepository.findBySupplyId(supply.getId()).get().getSupplyImgUrl(),
                   supply.getCreatedDate());
         }
         break;
@@ -219,11 +219,11 @@ public class PostService {
                   articleImgRepository
                       .findByArticleId(article.get().getId())
                       .get()
-                      .getArticleImageName(),
+                      .getArticleImgName(),
                   articleImgRepository
                       .findByArticleId(article.get().getId())
                       .get()
-                      .getArticleImageUrl(),
+                      .getArticleImgUrl(),
                   article.get().getCreatedDate());
         }
         break;
@@ -240,11 +240,11 @@ public class PostService {
                   communityImgRepository
                       .findByCommunityId(community.get().getId())
                       .get()
-                      .getCommunityImageName(),
+                      .getCommunityImgName(),
                   communityImgRepository
                       .findByCommunityId(community.get().getId())
                       .get()
-                      .getCommunityImageUrl(),
+                      .getCommunityImgUrl(),
                   community.get().getCreatedDate());
         }
         break;
@@ -258,14 +258,8 @@ public class PostService {
                   demand.get().getContent(),
                   demand.get().getTotalLikes(),
                   null,
-                  demandImgRepository
-                      .findByDemandId(demand.get().getId())
-                      .get()
-                      .getDemandImageName(),
-                  demandImgRepository
-                      .findByDemandId(demand.get().getId())
-                      .get()
-                      .getDemandImageUrl(),
+                  demandImgRepository.findByDemandId(demand.get().getId()).get().getDemandImgName(),
+                  demandImgRepository.findByDemandId(demand.get().getId()).get().getDemandImgUrl(),
                   demand.get().getCreatedDate());
         }
         break;
@@ -279,14 +273,8 @@ public class PostService {
                   supply.get().getContent(),
                   supply.get().getTotalLikes(),
                   null,
-                  supplyImgRepository
-                      .findBySupplyId(supply.get().getId())
-                      .get()
-                      .getSupplyImageName(),
-                  supplyImgRepository
-                      .findBySupplyId(supply.get().getId())
-                      .get()
-                      .getSupplyImageUrl(),
+                  supplyImgRepository.findBySupplyId(supply.get().getId()).get().getSupplyImgName(),
+                  supplyImgRepository.findBySupplyId(supply.get().getId()).get().getSupplyImgUrl(),
                   supply.get().getCreatedDate());
         }
         break;

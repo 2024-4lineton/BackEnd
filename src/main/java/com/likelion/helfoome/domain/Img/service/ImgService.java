@@ -32,8 +32,8 @@ public class ImgService {
       String productImageUrl = s3Service.upload(productImage, "productImages");
       ProductImg productImg = new ProductImg();
       productImg.setProduct(product);
-      productImg.setProductImageName(productImage.getOriginalFilename());
-      productImg.setProductImageUrl(productImageUrl);
+      productImg.setProductImgName(productImage.getOriginalFilename());
+      productImg.setProductImgUrl(productImageUrl);
       productImgRepository.save(productImg);
     }
   }
