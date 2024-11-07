@@ -145,7 +145,7 @@ public class ProductService {
     List<ProductInList> returnProducts = new ArrayList<>();
     for (Shop shop : shops) {
       List<Product> products;
-      products = productRepository.findAllByShopId(shop.getId());
+      products = productRepository.findByShopIdAndIsSellingTrue(shop.getId());
 
       for (Product product : products) {
         if (distanceService.getDistance(userAddr, product.getRealAddr()) <= 5000) {
