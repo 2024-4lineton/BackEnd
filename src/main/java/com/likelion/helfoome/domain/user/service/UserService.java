@@ -27,8 +27,8 @@ public class UserService {
     List<User> users = userRepository.findAll();
     for (User user : users) {
       response = new UserResponse(user.getEmail(), user.getNickname(), user.getUserRole());
+      responses.add(response);
     }
-    responses.add(response);
 
     return responses;
   }
