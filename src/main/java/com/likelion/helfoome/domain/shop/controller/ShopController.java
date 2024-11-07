@@ -2,6 +2,7 @@ package com.likelion.helfoome.domain.shop.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -23,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RequestMapping("/api/shop")
 public class ShopController {
+
   private final ShopService shopService;
   private final JwtUtil jwtUtil;
 
@@ -55,7 +57,7 @@ public class ShopController {
   @PostMapping("/register")
   public ResponseEntity<?> storeRegister(
       @RequestHeader("Authorization") String bearerToken,
-      @RequestBody ShopRegisterRequest request) {
+      @ModelAttribute ShopRegisterRequest request) {
     try {
       String token = bearerToken.substring(7);
       Claims claims = jwtUtil.getAllClaimsFromToken(token);
