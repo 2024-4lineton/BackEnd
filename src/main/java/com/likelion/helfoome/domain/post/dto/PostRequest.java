@@ -1,5 +1,9 @@
 package com.likelion.helfoome.domain.post.dto;
 
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +14,5 @@ import lombok.NoArgsConstructor;
 public class PostRequest {
   private String title;
   private String content;
-  private String imageName;
-  private String imageUrl;
+  private List<MultipartFile> images;
 }

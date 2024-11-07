@@ -47,8 +47,8 @@ public class ShopService {
     newShop.setDayOff(request.getDayOff());
     newShop.setShopAddr(request.getShopAddr());
     newShop.setShopContact(request.getShopContact());
-    newShop.setShopName(request.getShopImg().getOriginalFilename());
-    String imgUrl = s3Service.upload(request.getShopImg(), "shopImages");
+    newShop.setShopImageName(request.getShopImgName().getOriginalFilename());
+    String imgUrl = s3Service.upload(request.getShopImgUrl(), "shopImages");
     newShop.setShopImageURL(imgUrl);
 
     shopRepository.save(newShop);

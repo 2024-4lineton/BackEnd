@@ -56,4 +56,10 @@ public class UserInfo extends BaseTimeEntity {
 
   @Column(name = "marketingPolicy", nullable = false)
   private Boolean marketingPolicy;
+
+  @Column(name = "profileImageName", nullable = false)
+  private String profileImageName;
+
+  @Column(name = "profileImageURL", nullable = false)
+  private String profileImageURL;
 }

@@ -20,8 +20,6 @@ import com.likelion.helfoome.domain.shop.entity.Product;
 import com.likelion.helfoome.domain.shop.entity.Shop;
 import com.likelion.helfoome.domain.shop.repository.ProductRepository;
 import com.likelion.helfoome.domain.shop.repository.ShopRepository;
-import com.likelion.helfoome.domain.user.repository.UserRepository;
-import com.likelion.helfoome.global.S3.service.S3Service;
 import com.likelion.helfoome.global.distance.DistanceService;
 
 import lombok.RequiredArgsConstructor;
@@ -36,8 +34,6 @@ public class ProductService {
   private final ProductImgRepository productImgRepository;
   private final ImgService imgService;
   private final ShopRepository shopRepository;
-  private final S3Service s3Service;
-  private final UserRepository userRepository;
   private final DistanceService distanceService;
 
   @Transactional

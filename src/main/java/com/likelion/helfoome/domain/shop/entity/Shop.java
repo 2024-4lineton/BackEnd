@@ -47,9 +47,9 @@ public class Shop extends BaseTimeEntity {
   @Column(name = "shopContact", nullable = false, unique = true)
   private String shopContact;
 
-  @Column(name = "shopImageName")
+  @Column(name = "shopImageName", nullable = false)
   private String shopImageName;
 
-  @Column(name = "shopImageURL")
+  @Column(name = "shopImageURL", nullable = false)
   private String shopImageURL;
 }
