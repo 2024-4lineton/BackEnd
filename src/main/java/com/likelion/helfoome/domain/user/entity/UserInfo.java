@@ -30,12 +30,6 @@ public class UserInfo extends BaseTimeEntity {
   @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
   private User user;
 
-  @Column(name = "profileImgName")
-  private String profileImgName;
-
-  @Column(name = "profileImgUrl")
-  private String profileImgUrl;
-
   @Column(name = "phone", nullable = false, unique = true)
   private String phone;
 

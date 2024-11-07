@@ -27,6 +27,23 @@ public class UserInfoController {
   private final UserInfoService userInfoService;
   private final JwtUtil jwtUtil;
 
+  // 사용자 첫 로그인 확인
+  @Operation(summary = "사용자 첫 로그인 확인", description = "사용자 첫 로그인 확인")
+  @PostMapping("/check-first-login")
+  public Boolean userInfoRegister(@RequestHeader("Authorization") String bearerToken) {
+    try {
+      String token = bearerToken.substring(7);
+      Claims claims = jwtUtil.getAllClaimsFromToken(token);
+      String email = claims.getId();
+
+      // 서비스 메서드 호출
+      return userInfoService.isFirstLogin(email);
+    } catch (Exception e) {
+      log.error("Error occurred while checking first login: {}", e.getMessage());
+      return null;
+    }
+  }
+
   // 사용자 정보 등록하기
   @Operation(summary = "사용자 정보 등록", description = "사용자 첫 로그인 후 개인정보 등록")
   @PostMapping("/register")
@@ -39,19 +56,17 @@ public class UserInfoController {
       String email = claims.getId();
 
       // 서비스 메서드 호출
-      String result = userInfoService.isFirstLogin(email);
+      String result = userInfoService.userInfoRegister(email, request);
 
-      if ("이미 사용자 개인정보가 존재합니다.".equals(result)) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
+      if ("개인정보가 정상적으로 등록되었습니다.".equals(result)) {
+        return ResponseEntity.ok(result);
       } else {
-        result = userInfoService.userInfoRegister(email, request);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
       }
-
-      return ResponseEntity.ok(result);
     } catch (Exception e) {
-      log.error("Error occurred while registering the store: {}", e.getMessage());
+      log.error("Error occurred while registering user info: {}", e.getMessage());
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body("Error occurred registering the store: " + e.getMessage());
+          .body("Error occurred registering user info: " + e.getMessage());
     }
   }
 

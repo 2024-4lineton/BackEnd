@@ -30,9 +30,9 @@ public class UserProfileImg {
   @JoinColumn(name = "userInfoId", referencedColumnName = "id", nullable = false)
   private UserInfo userInfo;
 
-  @Column(name = "profileImageName", nullable = false)
-  private String profileImageName;
+  @Column(name = "profileImgName", nullable = false)
+  private String profileImgName;
 
-  @Column(name = "profileImageUrl", nullable = false)
-  private String profileImageUrl;
+  @Column(name = "profileImgUrl", nullable = false)
+  private String profileImgUrl;
 }
