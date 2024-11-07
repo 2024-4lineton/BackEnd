@@ -1,8 +1,12 @@
 package com.likelion.helfoome.global.config;
 
+import com.likelion.helfoome.domain.user.service.UserService;
+import com.likelion.helfoome.global.auth.handler.CustomSuccessHandler;
+import com.likelion.helfoome.global.auth.jwt.JwtFilter;
+import com.likelion.helfoome.global.auth.service.CustomOAuth2UserService;
 import java.util.Arrays;
 import java.util.Collections;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,13 +16,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-
-import com.likelion.helfoome.domain.user.service.UserService;
-import com.likelion.helfoome.global.auth.handler.CustomSuccessHandler;
-import com.likelion.helfoome.global.auth.jwt.JwtFilter;
-import com.likelion.helfoome.global.auth.service.CustomOAuth2UserService;
-
-import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
@@ -71,7 +68,8 @@ public class SecurityConfig {
                         "/api/users/**",
                         "/api/shop/**",
                         "/api/product/**",
-                        "/api/distance")
+                        "/api/distance",
+                        "/api/order/**")
                     .permitAll()
                     .requestMatchers("/api/v1/user/*")
                     .hasRole("USER || SELLER")

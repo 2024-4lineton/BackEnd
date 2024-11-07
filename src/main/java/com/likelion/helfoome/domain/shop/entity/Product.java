@@ -54,4 +54,14 @@ public class Product extends BaseTimeEntity {
 
   @Column(name = "realAddr", nullable = false)
   private String realAddr;
+
+  public void updateQuantity(int newQuantity) {
+    if (newQuantity < 0) {
+      throw new IllegalArgumentException("수량은 0 이상이어야 합니다.");
+    }
+    if (newQuantity == 0) {
+      this.isSelling = false;
+    }
+    this.quantity = newQuantity;
+  }
 }

@@ -1,4 +1,4 @@
-package com.likelion.helfoome.domain.user.entity;
+package com.likelion.helfoome.domain.order.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 import com.likelion.helfoome.domain.shop.entity.Shop;
+import com.likelion.helfoome.domain.user.entity.User;
 import com.likelion.helfoome.global.common.BaseTimeEntity;
 
 import lombok.Getter;
@@ -23,6 +24,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "orders")
 public class Order extends BaseTimeEntity {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -35,6 +37,15 @@ public class Order extends BaseTimeEntity {
   @JoinColumn(name = "shopId", referencedColumnName = "id", nullable = false)
   private Shop shop;
 
+  @Column(name = "productId", nullable = false)
+  private Long productId;
+
+  @Column(name = "productName", nullable = false)
+  private String productName;
+
+  @Column(name = "mainImage", nullable = false)
+  private String mainImage;
+
   @Column(name = "PIN", nullable = false)
   private String PIN;
 
@@ -42,7 +53,7 @@ public class Order extends BaseTimeEntity {
   private Integer orderStatus;
 
   @Column(name = "totalPrice", nullable = false)
-  private Long totalPrice;
+  private String totalPrice;
 
   @Column(name = "totalQuantity", nullable = false)
   private Integer totalQuantity;
