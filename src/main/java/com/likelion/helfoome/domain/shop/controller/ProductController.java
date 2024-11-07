@@ -1,7 +1,15 @@
 package com.likelion.helfoome.domain.shop.controller;
 
+import com.likelion.helfoome.domain.shop.dto.product.ProductList;
+import com.likelion.helfoome.domain.shop.dto.product.ProductManagingResponse;
+import com.likelion.helfoome.domain.shop.dto.product.ProductRequest;
+import com.likelion.helfoome.domain.shop.dto.product.ProductResponse;
+import com.likelion.helfoome.domain.shop.entity.Product;
+import com.likelion.helfoome.domain.shop.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
 import java.io.IOException;
-
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,17 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.likelion.helfoome.domain.shop.dto.product.ProductList;
-import com.likelion.helfoome.domain.shop.dto.product.ProductManagingResponse;
-import com.likelion.helfoome.domain.shop.dto.product.ProductRequest;
-import com.likelion.helfoome.domain.shop.dto.product.ProductResponse;
-import com.likelion.helfoome.domain.shop.entity.Product;
-import com.likelion.helfoome.domain.shop.service.ProductService;
-
-import io.swagger.v3.oas.annotations.Operation;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
@@ -76,6 +73,7 @@ public class ProductController {
     return new ResponseEntity<>(productList, HttpStatus.OK);
   }
 
+  @Operation(summary = "주문 관리", description = "각 상품에 들어온 주문 관리 페이지에 필요한 값들")
   @GetMapping("/manage")
   public ResponseEntity<ProductManagingResponse> getManaging(@RequestParam Long productId) {
     ProductManagingResponse response = productService.getProductManaging(productId);
