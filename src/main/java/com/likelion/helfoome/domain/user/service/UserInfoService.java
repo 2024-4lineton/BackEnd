@@ -27,7 +27,7 @@ public class UserInfoService {
   // 첫 로그인 확인
   public Boolean isFirstLogin(String email) {
     userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
-    return userInfoRepository.findByUser_Email(email).isPresent();
+    return userInfoRepository.findByUser_Email(email).isEmpty();
   }
 
   // 쿠키로 현재 사용자 email 받아와서 사용자 정보 생성
@@ -51,6 +51,7 @@ public class UserInfoService {
     newUserInfo.setMarketingPolicy(request.getMarketingPolicy());
 
     userInfoRepository.save(newUserInfo);
+    userProfileImgRepository.save(newUserProfileImg);
     return "개인정보가 정상적으로 등록되었습니다.";
   }
 
