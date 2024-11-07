@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.likelion.helfoome.domain.shop.dto.product.ProductList;
+import com.likelion.helfoome.domain.shop.dto.product.ProductManagingResponse;
 import com.likelion.helfoome.domain.shop.dto.product.ProductRequest;
 import com.likelion.helfoome.domain.shop.dto.product.ProductResponse;
+import com.likelion.helfoome.domain.shop.dto.product.SellingProductList;
 import com.likelion.helfoome.domain.shop.entity.Product;
 import com.likelion.helfoome.domain.shop.service.ProductService;
 
@@ -73,5 +75,26 @@ public class ProductController {
         productService.getSortedProductList(userAddr, shopType, sort, page, size, marketName);
 
     return new ResponseEntity<>(productList, HttpStatus.OK);
+  }
+
+  @Operation(summary = "주문 관리", description = "각 상품에 들어온 주문 관리 페이지에 필요한 값들")
+  @GetMapping("/manage")
+  public ResponseEntity<ProductManagingResponse> getManaging(@RequestParam Long productId) {
+    ProductManagingResponse response = productService.getProductManaging(productId);
+    return new ResponseEntity<>(response, HttpStatus.OK);
+  }
+
+  @Operation(summary = "판매중인 상품(관리자가 보는)", description = "판매중인 상품 목록 가져오는거")
+  @GetMapping("/selling")
+  public ResponseEntity<SellingProductList> getSelling(@RequestParam Long shopId) {
+    SellingProductList response = productService.getSellingProduct(shopId);
+    return new ResponseEntity<>(response, HttpStatus.OK);
+  }
+
+  @Operation(summary = "판매 종료된 상품(관리자가 보는)", description = "판매 종료인 상품 목록 가져오는거")
+  @GetMapping("/unSelling")
+  public ResponseEntity<SellingProductList> getUnSelling(@RequestParam Long shopId) {
+    SellingProductList response = productService.getUnSellingProduct(shopId);
+    return new ResponseEntity<>(response, HttpStatus.OK);
   }
 }

@@ -12,10 +12,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.likelion.helfoome.domain.Img.entity.ProductImg;
 import com.likelion.helfoome.domain.Img.repository.ProductImgRepository;
 import com.likelion.helfoome.domain.Img.service.ImgService;
+import com.likelion.helfoome.domain.order.entity.Order;
+import com.likelion.helfoome.domain.order.repository.OrderRepository;
+import com.likelion.helfoome.domain.shop.dto.product.OrderInList;
 import com.likelion.helfoome.domain.shop.dto.product.ProductInList;
 import com.likelion.helfoome.domain.shop.dto.product.ProductList;
+import com.likelion.helfoome.domain.shop.dto.product.ProductManagingResponse;
 import com.likelion.helfoome.domain.shop.dto.product.ProductRequest;
 import com.likelion.helfoome.domain.shop.dto.product.ProductResponse;
+import com.likelion.helfoome.domain.shop.dto.product.SellingProductInList;
+import com.likelion.helfoome.domain.shop.dto.product.SellingProductList;
 import com.likelion.helfoome.domain.shop.entity.Product;
 import com.likelion.helfoome.domain.shop.entity.Shop;
 import com.likelion.helfoome.domain.shop.repository.ProductRepository;
@@ -35,6 +41,7 @@ public class ProductService {
   private final ImgService imgService;
   private final ShopRepository shopRepository;
   private final DistanceService distanceService;
+  private final OrderRepository orderRepository;
 
   @Transactional
   public Product createProduct(ProductRequest productRequest) throws IOException {
@@ -163,6 +170,68 @@ public class ProductService {
       }
     }
     ProductList productList = new ProductList();
+    productList.setProductInList(returnProducts);
+    return productList;
+  }
+
+  public ProductManagingResponse getProductManaging(Long productId) {
+
+    ProductManagingResponse response = new ProductManagingResponse();
+    Product product = productRepository.findById(productId).orElseThrow();
+    List<OrderInList> returnOrders = new ArrayList<>();
+    List<Order> orders = orderRepository.findByProductId(productId);
+    response.setProduct(product);
+    for (Order order : orders) {
+      OrderInList orderInList = new OrderInList();
+      orderInList.setOrderId(order.getId());
+      orderInList.setNickname(order.getUser().getNickname());
+      orderInList.setPIN(order.getPIN());
+      orderInList.setOrderTime(order.getCreatedDate());
+      returnOrders.add(orderInList);
+    }
+    response.setOrders(returnOrders);
+    return response;
+  }
+
+  public SellingProductList getSellingProduct(Long shopId) {
+    Shop shop = shopRepository.findById(shopId).orElseThrow();
+    List<SellingProductInList> returnProducts = new ArrayList<>();
+    List<Product> products;
+    products = productRepository.findByShopIdAndIsSellingTrue(shopId);
+    for (Product product : products) {
+      SellingProductInList productInList = new SellingProductInList();
+      productInList.setProductId(product.getId());
+      productInList.setShop(shop.getShopName());
+      productInList.setProductName(product.getProductName());
+      productInList.setQuantity(product.getQuantity());
+      productInList.setOrders(orderRepository.countByProductId(product.getId()));
+      productInList.setImgUrl(
+          productImgRepository.findByProductId(product.getId()).getFirst().getProductImgUrl());
+
+      returnProducts.add(productInList);
+    }
+    SellingProductList productList = new SellingProductList();
+    productList.setProductInList(returnProducts);
+    return productList;
+  }
+
+  public SellingProductList getUnSellingProduct(Long shopId) {
+    Shop shop = shopRepository.findById(shopId).orElseThrow();
+    List<SellingProductInList> returnProducts = new ArrayList<>();
+    List<Product> products;
+    products = productRepository.findByShopIdAndIsSellingFalse(shopId);
+    for (Product product : products) {
+      SellingProductInList productInList = new SellingProductInList();
+      productInList.setProductId(product.getId());
+      productInList.setShop(shop.getShopName());
+      productInList.setProductName(product.getProductName());
+      productInList.setQuantity(product.getQuantity());
+      productInList.setOrders(orderRepository.countByProductId(product.getId()));
+      productInList.setImgUrl(
+          productImgRepository.findByProductId(product.getId()).getFirst().getProductImgUrl());
+      returnProducts.add(productInList);
+    }
+    SellingProductList productList = new SellingProductList();
     productList.setProductInList(returnProducts);
     return productList;
   }
