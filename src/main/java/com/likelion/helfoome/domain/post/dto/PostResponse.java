@@ -1,6 +1,7 @@
 package com.likelion.helfoome.domain.post.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +16,7 @@ public class PostResponse {
   private String content;
   private Integer totalLikes;
   private Integer totalComments;
-  private String imageName;
-  private String imageUrl;
   private LocalDateTime createdAt;
+  private String imageUrl;
+  private List<String> imageUrls;
 }

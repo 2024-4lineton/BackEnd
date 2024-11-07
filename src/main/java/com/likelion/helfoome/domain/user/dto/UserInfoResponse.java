@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserInfoResponse {
-  private String profileImgName;
   private String profileImgUrl;
   private String phone;
   private String birth;

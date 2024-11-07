@@ -1,5 +1,7 @@
 package com.likelion.helfoome.domain.user.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserInfoRegisterRequest {
-  private String profileImgName;
-  private String profileImgUrl;
+  private MultipartFile profileImgName;
+  private MultipartFile profileImgUrl;
   private String phone;
   private String birth;
   private String gender;

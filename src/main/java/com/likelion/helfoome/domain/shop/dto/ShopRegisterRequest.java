@@ -19,5 +19,6 @@ public class ShopRegisterRequest {
   private String dayOff;
   private String shopAddr;
   private String shopContact;
-  private MultipartFile shopImg;
+  private MultipartFile shopImgName;
+  private MultipartFile shopImgUrl;
 }
