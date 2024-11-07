@@ -13,4 +13,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
   boolean existsByPIN(String pin);
 
   List<Order> findByProductId(Long productId);
+
+  Long countByProductId(Long productId);
 }

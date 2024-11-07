@@ -1,15 +1,7 @@
 package com.likelion.helfoome.domain.shop.controller;
 
-import com.likelion.helfoome.domain.shop.dto.product.ProductList;
-import com.likelion.helfoome.domain.shop.dto.product.ProductManagingResponse;
-import com.likelion.helfoome.domain.shop.dto.product.ProductRequest;
-import com.likelion.helfoome.domain.shop.dto.product.ProductResponse;
-import com.likelion.helfoome.domain.shop.entity.Product;
-import com.likelion.helfoome.domain.shop.service.ProductService;
-import io.swagger.v3.oas.annotations.Operation;
 import java.io.IOException;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +10,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.likelion.helfoome.domain.shop.dto.product.ProductList;
+import com.likelion.helfoome.domain.shop.dto.product.ProductManagingResponse;
+import com.likelion.helfoome.domain.shop.dto.product.ProductRequest;
+import com.likelion.helfoome.domain.shop.dto.product.ProductResponse;
+import com.likelion.helfoome.domain.shop.dto.product.SellingProductList;
+import com.likelion.helfoome.domain.shop.entity.Product;
+import com.likelion.helfoome.domain.shop.service.ProductService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
@@ -77,6 +81,20 @@ public class ProductController {
   @GetMapping("/manage")
   public ResponseEntity<ProductManagingResponse> getManaging(@RequestParam Long productId) {
     ProductManagingResponse response = productService.getProductManaging(productId);
+    return new ResponseEntity<>(response, HttpStatus.OK);
+  }
+
+  @Operation(summary = "판매중인 상품(관리자가 보는)", description = "판매중인 상품 목록 가져오는거")
+  @GetMapping("/selling")
+  public ResponseEntity<SellingProductList> getSelling(@RequestParam Long shopId) {
+    SellingProductList response = productService.getSellingProduct(shopId);
+    return new ResponseEntity<>(response, HttpStatus.OK);
+  }
+
+  @Operation(summary = "판매 종료된 상품(관리자가 보는)", description = "판매 종료인 상품 목록 가져오는거")
+  @GetMapping("/unSelling")
+  public ResponseEntity<SellingProductList> getUnSelling(@RequestParam Long shopId) {
+    SellingProductList response = productService.getUnSellingProduct(shopId);
     return new ResponseEntity<>(response, HttpStatus.OK);
   }
 }
