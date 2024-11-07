@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInfoResponse {
+public class UserInfoRegisterRequest {
   private String profileImgName;
   private String profileImgUrl;
   private String phone;
@@ -15,4 +15,8 @@ public class UserInfoResponse {
   private String gender;
   private String activityLocation;
   private String foodCategory;
+  private Boolean ToS;
+  private Boolean privacyPolicy;
+  private Boolean LBS;
+  private Boolean marketingPolicy;
 }

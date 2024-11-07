@@ -1,4 +1,4 @@
-package com.likelion.helfoome.domain.cart.entity;
+package com.likelion.helfoome.domain.Img.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,12 +8,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
-import com.likelion.helfoome.domain.shop.entity.Shop;
 import com.likelion.helfoome.domain.user.entity.UserInfo;
-import com.likelion.helfoome.global.common.BaseTimeEntity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,23 +20,19 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "cart")
-public class Cart extends BaseTimeEntity {
+@Table(name = "userProfileImg")
+public class UserProfileImg {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @OneToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "userInfoId", referencedColumnName = "id", nullable = false)
   private UserInfo userInfo;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "shopId", referencedColumnName = "id", nullable = false)
-  private Shop shop;
+  @Column(name = "profileImageName", nullable = false)
+  private String profileImageName;
 
-  @Column(name = "totalPrice", nullable = false)
-  private Integer totalPrice;
-
-  @Column(name = "totalQuantity", nullable = false)
-  private Integer totalQuantity;
+  @Column(name = "profileImageUrl", nullable = false)
+  private String profileImageUrl;
 }
