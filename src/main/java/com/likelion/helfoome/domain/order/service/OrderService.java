@@ -1,5 +1,9 @@
 package com.likelion.helfoome.domain.order.service;
 
+import java.util.Random;
+
+import org.springframework.stereotype.Service;
+
 import com.likelion.helfoome.domain.Img.entity.ProductImg;
 import com.likelion.helfoome.domain.Img.repository.ProductImgRepository;
 import com.likelion.helfoome.domain.order.dto.OrderRequest;
@@ -9,10 +13,9 @@ import com.likelion.helfoome.domain.shop.entity.Product;
 import com.likelion.helfoome.domain.shop.repository.ProductRepository;
 import com.likelion.helfoome.domain.shop.repository.ShopRepository;
 import com.likelion.helfoome.domain.user.repository.UserRepository;
-import java.util.Random;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
@@ -36,7 +39,7 @@ public class OrderService {
     order.setUser(userRepository.findByEmail(orderRequest.getUserEmail()).orElseThrow());
     order.setShop(shopRepository.findById(orderRequest.getShopId()).orElseThrow());
     order.setProductId(product.getId());
-    order.setMainImage(productImg.getProductImageUrl());
+    order.setMainImage(productImg.getProductImgUrl());
     order.setOrderStatus(0);
     order.setTotalQuantity(orderRequest.getQuantity());
     order.setTotalPrice(
@@ -68,24 +71,24 @@ public class OrderService {
     return pin;
   }
 
-  //주문 확정
+  // 주문 확정
   public void confirmOrder(Long orderId) {
     Order order = orderRepository.findById(orderId).orElseThrow();
     order.setOrderStatus(1);
     orderRepository.save(order);
-    //여기에 스탬프 생성하는 코드 추가해야함
+    // 여기에 스탬프 생성하는 코드 추가해야함
   }
 
-  //주문 취소
+  // 주문 취소
   public void discardOrder(Long orderId) {
     Order order = orderRepository.findById(orderId).orElseThrow();
     order.setOrderStatus(2);
     orderRepository.save(order);
-    //알림도 추가해야하나 사장이 주문 취소하면....?
+    // 알림도 추가해야하나 사장이 주문 취소하면....?
     Product product = productRepository.findById(order.getProductId()).orElseThrow();
     // 주문 취소했으니 작성 헀으면 상품 수량 하나 ++
     product.updateQuantity(product.getQuantity() + 1);
-    //만약 수량이 0개가 돼서 판매 중지가 됐을지도 모르니 체크하고 만약 됐었따면 다시 판매상태로 변경
+    // 만약 수량이 0개가 돼서 판매 중지가 됐을지도 모르니 체크하고 만약 됐었따면 다시 판매상태로 변경
     if (!product.getIsSelling()) {
       product.setIsSelling(true);
     }
