@@ -80,7 +80,7 @@ public class ProductService {
     List<ProductImg> productImgs = productImgRepository.findByProductId(product.getId());
     List<String> productImgUrls = new ArrayList<>();
     for (ProductImg productImg : productImgs) {
-      productImgUrls.add(productImg.getProductImageUrl());
+      productImgUrls.add(productImg.getProductImgUrl());
     }
 
     ProductResponse productResponse = new ProductResponse();
@@ -160,10 +160,7 @@ public class ProductService {
           Long distance = distanceService.getDistance(userAddr, product.getRealAddr());
           productInList.setDistance(distance);
           productInList.setImgUrl(
-              productImgRepository
-                  .findByProductId(product.getId())
-                  .getFirst()
-                  .getProductImageUrl());
+              productImgRepository.findByProductId(product.getId()).getFirst().getProductImgUrl());
 
           returnProducts.add(productInList);
         }

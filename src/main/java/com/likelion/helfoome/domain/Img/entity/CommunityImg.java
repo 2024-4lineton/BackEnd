@@ -32,9 +32,9 @@ public class CommunityImg extends BaseTimeEntity {
   @JoinColumn(name = "communityId", referencedColumnName = "id", nullable = false)
   private Community community;
 
-  @Column(name = "communityImageName", nullable = false)
-  private String communityImageName;
+  @Column(name = "communityImgName", nullable = false)
+  private String communityImgName;
 
-  @Column(name = "communityImageUrl", nullable = false)
-  private String communityImageUrl;
+  @Column(name = "communityImgUrl", nullable = false)
+  private String communityImgUrl;
 }

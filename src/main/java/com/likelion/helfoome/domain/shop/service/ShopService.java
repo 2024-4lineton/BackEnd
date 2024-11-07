@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.likelion.helfoome.domain.Img.service.ImgService;
 import com.likelion.helfoome.domain.shop.dto.ShopRegisterRequest;
 import com.likelion.helfoome.domain.shop.entity.Shop;
 import com.likelion.helfoome.domain.shop.repository.ShopRepository;
@@ -23,18 +22,14 @@ public class ShopService {
 
   private final ShopRepository shopRepository;
   private final UserRepository userRepository;
-  private final ImgService imgService;
   private final S3Service s3Service;
 
   // 전송받은 사업자 번호 또는 현재 사용자의 가게가 DB에 존재하는지 확인
-  public String checkShopExist(String email, String taxId) {
+  public Boolean isTaxIdExist(String email, String taxId) {
     Optional<Shop> existingShop = shopRepository.findByUser_Email(email);
     Optional<Shop> existingTaxId = shopRepository.findByTaxId(taxId);
 
-    if (existingShop.isPresent() || existingTaxId.isPresent()) {
-      return "Already existing shop. Please check your shop or Tax ID.";
-    }
-    return "Verified Tax ID.";
+    return (existingShop.isPresent() || existingTaxId.isPresent());
   }
 
   // 쿠키로 현재 사용자 email 받아와서 가게 생성
@@ -57,6 +52,7 @@ public class ShopService {
     newShop.setShopImageURL(imgUrl);
 
     shopRepository.save(newShop);
-    return "Store has been successfully registered.";
+
+    return "가게가 성공적으로 등록되었습니다.";
   }
 }

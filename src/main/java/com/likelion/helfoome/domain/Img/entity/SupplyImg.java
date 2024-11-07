@@ -31,9 +31,9 @@ public class SupplyImg extends BaseTimeEntity {
   @JoinColumn(name = "supplyId", referencedColumnName = "id", nullable = false)
   private Supply supply;
 
-  @Column(name = "supplyImageName", nullable = false)
-  private String supplyImageName;
+  @Column(name = "supplyImgName", nullable = false)
+  private String supplyImgName;
 
-  @Column(name = "supplyImageUrl", nullable = false)
-  private String supplyImageUrl;
+  @Column(name = "supplyImgUrl", nullable = false)
+  private String supplyImgUrl;
 }

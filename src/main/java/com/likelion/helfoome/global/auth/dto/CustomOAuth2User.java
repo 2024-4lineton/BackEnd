@@ -7,13 +7,13 @@ import java.util.Map;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import com.likelion.helfoome.domain.user.dto.UserInfoResponse;
+import com.likelion.helfoome.domain.user.dto.UserResponse;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class CustomOAuth2User implements OAuth2User {
-  private final UserInfoResponse userInfoResponse;
+  private final UserResponse userResponse;
 
   @Override
   public Map<String, Object> getAttributes() {
@@ -24,17 +24,17 @@ public class CustomOAuth2User implements OAuth2User {
   public Collection<? extends GrantedAuthority> getAuthorities() {
     Collection<GrantedAuthority> collection = new ArrayList<>();
 
-    collection.add((GrantedAuthority) userInfoResponse::getRole);
+    collection.add((GrantedAuthority) userResponse::getRole);
 
     return collection;
   }
 
   @Override
   public String getName() {
-    return userInfoResponse.getNickname();
+    return userResponse.getNickname();
   }
 
   public String getEmail() {
-    return userInfoResponse.getEmail();
+    return userResponse.getEmail();
   }
 }
