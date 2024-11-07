@@ -38,6 +38,7 @@ public class UserInfoService {
     UserInfo newUserInfo = new UserInfo();
     UserProfileImg newUserProfileImg = new UserProfileImg();
     newUserInfo.setUser(user);
+    newUserProfileImg.setUserInfo(newUserInfo);
     newUserProfileImg.setProfileImgName(request.getProfileImgName());
     newUserProfileImg.setProfileImgUrl(request.getProfileImgUrl());
     newUserInfo.setPhone(request.getPhone());
