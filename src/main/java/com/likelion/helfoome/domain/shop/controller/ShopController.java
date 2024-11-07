@@ -50,7 +50,7 @@ public class ShopController {
     }
   }
 
-  // 챌린지 참여하기
+  // 가게 등록하기
   @Operation(summary = "가게 등록", description = "사업자 인증 후 가게 등록")
   @PostMapping("/register")
   public ResponseEntity<?> storeRegister(

@@ -24,7 +24,7 @@ public class User extends BaseTimeEntity {
   @Column(name = "nickname", nullable = false, unique = true)
   private String nickname;
 
-  @Column(name = "refresh_token")
+  @Column(name = "refresh_token", nullable = false, unique = true)
   private String refreshToken;
 
   @Column(name = "role", nullable = false)

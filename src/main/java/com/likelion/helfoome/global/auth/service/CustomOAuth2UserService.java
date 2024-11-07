@@ -8,7 +8,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import com.likelion.helfoome.domain.user.dto.UserInfoResponse;
+import com.likelion.helfoome.domain.user.dto.UserResponse;
 import com.likelion.helfoome.domain.user.entity.User;
 import com.likelion.helfoome.domain.user.repository.UserRepository;
 import com.likelion.helfoome.global.auth.dto.CustomOAuth2User;
@@ -43,9 +43,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     Optional<User> existData = userRepository.findByEmail(email);
 
     // 존재하는 사용자 데이터 설정
-    UserInfoResponse userInfoResponse = new UserInfoResponse();
-    userInfoResponse.setEmail(email);
-    userInfoResponse.setNickname(oAuth2Response.getNickname());
+    UserResponse userResponse = new UserResponse();
+    userResponse.setEmail(email);
+    userResponse.setNickname(oAuth2Response.getNickname());
 
     if (existData.isEmpty()) {
       // 새 사용자 생성 및 저장
@@ -55,7 +55,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
       newUser.setUserRole("ROLE_USER");
 
       userRepository.save(newUser);
-      userInfoResponse.setRole("ROLE_USER");
+      userResponse.setRole("ROLE_USER");
 
     } else {
       // 기존 사용자 업데이트 및 저장
@@ -63,9 +63,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
       existingUser.setNickname(oAuth2Response.getNickname());
       userRepository.save(existingUser);
 
-      userInfoResponse.setRole(existingUser.getUserRole());
+      userResponse.setRole(existingUser.getUserRole());
     }
 
-    return new CustomOAuth2User(userInfoResponse);
+    return new CustomOAuth2User(userResponse);
   }
 }

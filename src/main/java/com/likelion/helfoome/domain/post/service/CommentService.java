@@ -72,7 +72,7 @@ public class CommentService {
   }
 
   // 특정 게시물의 댓글 조회
-  public List<CommentResponse> getAllComment(String postType, Long postId) {
+  public List<CommentResponse> getAllComments(String postType, Long postId) {
     log.info("Post List for postId: {}", postId);
 
     // CommentListResponse를 담을 리스트 생성하고
