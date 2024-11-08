@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +19,9 @@ import com.likelion.helfoome.domain.shop.dto.product.ProductResponse;
 import com.likelion.helfoome.domain.shop.dto.product.SellingProductList;
 import com.likelion.helfoome.domain.shop.entity.Product;
 import com.likelion.helfoome.domain.shop.service.ProductService;
+import com.likelion.helfoome.global.auth.jwt.JwtUtil;
 
+import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductController {
 
   private final ProductService productService;
+  private final JwtUtil jwtUtil;
 
   @Operation(summary = "상품 등록", description = "상품 등록")
   @PostMapping("/new-product")
@@ -65,14 +69,17 @@ public class ProductController {
               + "/marketName은 전통시장인 경우에만 시장 이름 넘겨주면 되고 아니면 걍 null값넣던 뭐 넣던 상관 없어요")
   @GetMapping("/productList")
   public ResponseEntity<ProductList> getProductList(
-      @RequestParam String userAddr,
+      @RequestParam @RequestHeader("Authorization") String bearerToken,
       @RequestParam Integer shopType,
       @RequestParam int sort,
       @RequestParam int page,
       @RequestParam int size,
       @RequestParam String marketName) {
+    String token = bearerToken.substring(7);
+    Claims claims = jwtUtil.getAllClaimsFromToken(token);
+    String email = claims.getId();
     ProductList productList =
-        productService.getSortedProductList(userAddr, shopType, sort, page, size, marketName);
+        productService.getSortedProductList(email, shopType, sort, page, size, marketName);
 
     return new ResponseEntity<>(productList, HttpStatus.OK);
   }
