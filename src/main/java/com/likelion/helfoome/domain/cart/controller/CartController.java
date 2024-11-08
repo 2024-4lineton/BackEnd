@@ -41,7 +41,7 @@ public class CartController {
       // 서비스 메서드 호출
       String result = cartService.createCart(email);
 
-      if ("장바구니가 정상적으로 생성되었습니다.".equals(result)) {
+      if ("장바구니가 정상적으로 등록되었습니다.".equals(result)) {
         return ResponseEntity.ok(result);
       } else {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
