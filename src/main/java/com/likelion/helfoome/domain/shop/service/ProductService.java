@@ -87,11 +87,7 @@ public class ProductService {
         productRepository
             .findById(productId)
             .orElseThrow(() -> new IllegalArgumentException("Invalid productID"));
-    List<ProductImg> productImgs = productImgRepository.findByProductId(product.getId());
-    List<String> productImgUrls = new ArrayList<>();
-    for (ProductImg productImg : productImgs) {
-      productImgUrls.add(productImg.getProductImgUrl());
-    }
+    Optional<ProductImg> productImg = productImgRepository.findByProductId(product.getId());
 
     ProductResponse productResponse = new ProductResponse();
     productResponse.setProductName(product.getProductName());
@@ -101,7 +97,7 @@ public class ProductService {
     productResponse.setQuantity(product.getQuantity());
     productResponse.setDiscountPercent(product.getDiscountPercent());
     productResponse.setIsSelling(false);
-    productResponse.setImageUrls(productImgUrls);
+    productResponse.setProductImgUrl(productImg.get().getProductImgUrl());
 
     return productResponse;
   }
@@ -172,7 +168,7 @@ public class ProductService {
           Long distance = distanceService.getDistance(userAddr, product.getRealAddr());
           productInList.setDistance(distance);
           productInList.setImgUrl(
-              productImgRepository.findByProductId(product.getId()).getFirst().getProductImgUrl());
+              productImgRepository.findByProductId(product.getId()).get().getProductImgUrl());
 
           returnProducts.add(productInList);
         }
@@ -215,7 +211,7 @@ public class ProductService {
       productInList.setQuantity(product.getQuantity());
       productInList.setOrders(orderRepository.countByProductId(product.getId()));
       productInList.setImgUrl(
-          productImgRepository.findByProductId(product.getId()).getFirst().getProductImgUrl());
+          productImgRepository.findByProductId(product.getId()).get().getProductImgUrl());
 
       returnProducts.add(productInList);
     }
@@ -237,7 +233,7 @@ public class ProductService {
       productInList.setQuantity(product.getQuantity());
       productInList.setOrders(orderRepository.countByProductId(product.getId()));
       productInList.setImgUrl(
-          productImgRepository.findByProductId(product.getId()).getFirst().getProductImgUrl());
+          productImgRepository.findByProductId(product.getId()).get().getProductImgUrl());
       returnProducts.add(productInList);
     }
     SellingProductList productList = new SellingProductList();

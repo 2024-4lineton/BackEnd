@@ -35,6 +35,9 @@ public class UserInfoService {
     User user =
         userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
 
+    if (userInfoRepository.findByUser_Email(email).isPresent()) {
+      return "사용자의 개인정보가 이미 존재합니다.";
+    }
     UserInfo newUserInfo = new UserInfo();
     newUserInfo.setUser(user);
     newUserInfo.setPhone(request.getPhone());
