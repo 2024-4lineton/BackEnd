@@ -1,14 +1,5 @@
 package com.likelion.helfoome.domain.shop.service;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.likelion.helfoome.domain.Img.entity.ProductImg;
 import com.likelion.helfoome.domain.Img.repository.ProductImgRepository;
 import com.likelion.helfoome.domain.Img.service.ImgService;
@@ -30,9 +21,15 @@ import com.likelion.helfoome.domain.user.repository.UserInfoRepository;
 import com.likelion.helfoome.domain.user.repository.UserRepository;
 import com.likelion.helfoome.domain.user.service.UserService;
 import com.likelion.helfoome.global.distance.DistanceService;
-
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -67,7 +64,7 @@ public class ProductService {
     product.setPrice(productRequest.getPrice());
     product.setDiscountPrice(productRequest.getDiscountPrice());
     product.setQuantity(productRequest.getQuantity());
-    product.setDiscountPercent(product.getDiscountPercent());
+    product.setDiscountPercent(productRequest.getDiscountPercent());
     product.setIsSelling(true);
     // tlqkf가게 주소 아니고 다른주소로 정할수도 있다길래 이 부분 추가
     if (productRequest.getRealAddr() == null) {
