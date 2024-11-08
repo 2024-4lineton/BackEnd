@@ -67,6 +67,7 @@ public class CartService {
     cart.setCartProductList(cartProductList);
 
     cartRepository.save(cart);
+    cartProductRepository.save(cartProduct);
 
     return "장바구니에 상품이 정상적으로 등록되었습니다.";
   }
