@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.likelion.helfoome.global.common.BaseTimeEntity;
 
 import lombok.Getter;
@@ -28,6 +29,7 @@ public class Product extends BaseTimeEntity {
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
+  @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   @JoinColumn(name = "shopId", referencedColumnName = "id", nullable = false)
   private Shop shop;
 
