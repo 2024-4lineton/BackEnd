@@ -10,8 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserInfoRegisterRequest {
-  private MultipartFile profileImgName;
-  private MultipartFile profileImgUrl;
+  private MultipartFile profileImg;
   private String phone;
   private String birth;
   private String gender;

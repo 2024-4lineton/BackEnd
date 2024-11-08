@@ -46,8 +46,8 @@ public class UserInfoService {
     newUserInfo.setPrivacyPolicy(request.getPrivacyPolicy());
     newUserInfo.setLBS(request.getLBS());
     newUserInfo.setMarketingPolicy(request.getMarketingPolicy());
-    newUserInfo.setProfileImageName(request.getProfileImgName().getOriginalFilename());
-    String imgUrl = s3Service.upload(request.getProfileImgUrl(), "shopImages");
+    newUserInfo.setProfileImageName(request.getProfileImg().getOriginalFilename());
+    String imgUrl = s3Service.upload(request.getProfileImg(), "shopImages");
     newUserInfo.setProfileImageURL(imgUrl);
 
     userInfoRepository.save(newUserInfo);
