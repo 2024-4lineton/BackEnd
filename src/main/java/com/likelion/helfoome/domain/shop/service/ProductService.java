@@ -26,6 +26,9 @@ import com.likelion.helfoome.domain.shop.entity.Product;
 import com.likelion.helfoome.domain.shop.entity.Shop;
 import com.likelion.helfoome.domain.shop.repository.ProductRepository;
 import com.likelion.helfoome.domain.shop.repository.ShopRepository;
+import com.likelion.helfoome.domain.user.repository.UserInfoRepository;
+import com.likelion.helfoome.domain.user.repository.UserRepository;
+import com.likelion.helfoome.domain.user.service.UserService;
 import com.likelion.helfoome.global.distance.DistanceService;
 
 import lombok.RequiredArgsConstructor;
@@ -42,6 +45,9 @@ public class ProductService {
   private final ShopRepository shopRepository;
   private final DistanceService distanceService;
   private final OrderRepository orderRepository;
+  private final UserService userService;
+  private final UserRepository userRepository;
+  private final UserInfoRepository userInfoRepository;
 
   @Transactional
   public Product createProduct(ProductRequest productRequest) throws IOException {
@@ -75,6 +81,7 @@ public class ProductService {
     return product;
   }
 
+  // 상품상세
   public ProductResponse getProductDetail(Long productId) {
     Product product =
         productRepository
@@ -100,7 +107,9 @@ public class ProductService {
   }
 
   public ProductList getSortedProductList(
-      String userAddr, Integer shopType, int sort, int page, int pageSize, String marketName) {
+      String email, Integer shopType, int sort, int page, int pageSize, String marketName) {
+    String userAddr =
+        userInfoRepository.findByUser_Email(email).orElseThrow().getActivityLocation();
     ProductList productList = getProductList(userAddr, shopType, marketName);
 
     // 정렬(sort 0, 1, 2면 각각 단거리, 최저가, 최고할인순)
