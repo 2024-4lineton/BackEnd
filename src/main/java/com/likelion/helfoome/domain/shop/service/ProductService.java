@@ -26,6 +26,9 @@ import com.likelion.helfoome.domain.shop.entity.Product;
 import com.likelion.helfoome.domain.shop.entity.Shop;
 import com.likelion.helfoome.domain.shop.repository.ProductRepository;
 import com.likelion.helfoome.domain.shop.repository.ShopRepository;
+import com.likelion.helfoome.domain.user.repository.UserInfoRepository;
+import com.likelion.helfoome.domain.user.repository.UserRepository;
+import com.likelion.helfoome.domain.user.service.UserService;
 import com.likelion.helfoome.global.distance.DistanceService;
 
 import lombok.RequiredArgsConstructor;
@@ -42,9 +45,12 @@ public class ProductService {
   private final ShopRepository shopRepository;
   private final DistanceService distanceService;
   private final OrderRepository orderRepository;
+  private final UserService userService;
+  private final UserRepository userRepository;
+  private final UserInfoRepository userInfoRepository;
 
   @Transactional
-  public Product createProduct(ProductRequest productRequest) throws IOException {
+  public String createProduct(ProductRequest productRequest) throws IOException {
 
     // Shop 엔티티 조회 (외래키 설정때매)
     Optional<Shop> shopOptional = shopRepository.findById(productRequest.getShopId());
@@ -61,7 +67,7 @@ public class ProductService {
     product.setPrice(productRequest.getPrice());
     product.setDiscountPrice(productRequest.getDiscountPrice());
     product.setQuantity(productRequest.getQuantity());
-    product.setDiscountPercent(product.getDiscountPercent());
+    product.setDiscountPercent(productRequest.getDiscountPercent());
     product.setIsSelling(true);
     // tlqkf가게 주소 아니고 다른주소로 정할수도 있다길래 이 부분 추가
     if (productRequest.getRealAddr() == null) {
@@ -72,9 +78,10 @@ public class ProductService {
     productRepository.save(product);
     // S3에 이미지 업로드 및 ProductImg 엔티티 생성
     imgService.uploadProductImg(productRequest.getImages(), product);
-    return product;
+    return "가게가 성공적으로 등록되었습니다.";
   }
 
+  // 상품상세
   public ProductResponse getProductDetail(Long productId) {
     Product product =
         productRepository
@@ -100,7 +107,9 @@ public class ProductService {
   }
 
   public ProductList getSortedProductList(
-      String userAddr, Integer shopType, int sort, int page, int pageSize, String marketName) {
+      String email, Integer shopType, int sort, int page, int pageSize, String marketName) {
+    String userAddr =
+        userInfoRepository.findByUser_Email(email).orElseThrow().getActivityLocation();
     ProductList productList = getProductList(userAddr, shopType, marketName);
 
     // 정렬(sort 0, 1, 2면 각각 단거리, 최저가, 최고할인순)
@@ -115,8 +124,8 @@ public class ProductService {
                       return Integer.parseInt(p1.getDiscountPrice())
                           - Integer.parseInt(p2.getDiscountPrice());
                     case 2: // 최고할인순 (discountPercent 기준)
-                      return Integer.parseInt(p2.getDiscountPercent().replace("%", ""))
-                          - Integer.parseInt(p1.getDiscountPercent().replace("%", ""));
+                      return Integer.parseInt(p2.getDiscountPercent())
+                          - Integer.parseInt(p1.getDiscountPercent());
                     default:
                       throw new IllegalArgumentException("Invalid sort value: " + sort);
                   }
