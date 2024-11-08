@@ -1,5 +1,14 @@
 package com.likelion.helfoome.domain.shop.service;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.likelion.helfoome.domain.Img.entity.ProductImg;
 import com.likelion.helfoome.domain.Img.repository.ProductImgRepository;
 import com.likelion.helfoome.domain.Img.service.ImgService;
@@ -21,15 +30,9 @@ import com.likelion.helfoome.domain.user.repository.UserInfoRepository;
 import com.likelion.helfoome.domain.user.repository.UserRepository;
 import com.likelion.helfoome.domain.user.service.UserService;
 import com.likelion.helfoome.global.distance.DistanceService;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -47,7 +50,7 @@ public class ProductService {
   private final UserInfoRepository userInfoRepository;
 
   @Transactional
-  public Product createProduct(ProductRequest productRequest) throws IOException {
+  public String createProduct(ProductRequest productRequest) throws IOException {
 
     // Shop 엔티티 조회 (외래키 설정때매)
     Optional<Shop> shopOptional = shopRepository.findById(productRequest.getShopId());
@@ -75,7 +78,7 @@ public class ProductService {
     productRepository.save(product);
     // S3에 이미지 업로드 및 ProductImg 엔티티 생성
     imgService.uploadProductImg(productRequest.getImages(), product);
-    return product;
+    return "가게가 성공적으로 등록되었습니다.";
   }
 
   // 상품상세
@@ -121,8 +124,8 @@ public class ProductService {
                       return Integer.parseInt(p1.getDiscountPrice())
                           - Integer.parseInt(p2.getDiscountPrice());
                     case 2: // 최고할인순 (discountPercent 기준)
-                      return Integer.parseInt(p2.getDiscountPercent().replace("%", ""))
-                          - Integer.parseInt(p1.getDiscountPercent().replace("%", ""));
+                      return Integer.parseInt(p2.getDiscountPercent())
+                          - Integer.parseInt(p1.getDiscountPercent());
                     default:
                       throw new IllegalArgumentException("Invalid sort value: " + sort);
                   }

@@ -28,6 +28,7 @@ public class Product extends BaseTimeEntity {
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
+  // @JsonIgnore
   @JoinColumn(name = "shopId", referencedColumnName = "id", nullable = false)
   private Shop shop;
 
