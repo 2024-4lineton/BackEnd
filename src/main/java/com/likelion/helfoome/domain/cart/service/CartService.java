@@ -36,6 +36,9 @@ public class CartService {
     User user =
         userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
 
+    if (cartRepository.findByUser_Email(email).isPresent()) {
+      return "사용자의 장바구니가 이미 존재합니다.";
+    }
     Cart cart = new Cart();
     cart.setUser(user);
     cart.setCartProductList(new ArrayList<>());
@@ -53,6 +56,7 @@ public class CartService {
             .orElseThrow(() -> new RuntimeException("User's Cart not found"));
     List<CartProduct> cartProductList = cart.getCartProductList();
     CartProduct cartProduct = new CartProduct();
+    cartProduct.setUser(cart.getUser());
     cartProduct.setCart(cart);
     cartProduct.setProduct(
         productRepository
