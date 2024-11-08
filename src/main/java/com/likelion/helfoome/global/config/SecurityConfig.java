@@ -71,7 +71,8 @@ public class SecurityConfig {
                         "/api/users/**",
                         "/api/shop/**",
                         "/api/product/**",
-                        "/api/distance")
+                        "/api/distance",
+                        "/api/order/**")
                     .permitAll()
                     .requestMatchers("/api/v1/user/*")
                     .hasRole("USER || SELLER")

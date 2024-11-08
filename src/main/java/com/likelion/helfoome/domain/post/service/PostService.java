@@ -1,5 +1,6 @@
 package com.likelion.helfoome.domain.post.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import com.likelion.helfoome.domain.Img.repository.ArticleImgRepository;
 import com.likelion.helfoome.domain.Img.repository.CommunityImgRepository;
 import com.likelion.helfoome.domain.Img.repository.DemandImgRepository;
 import com.likelion.helfoome.domain.Img.repository.SupplyImgRepository;
+import com.likelion.helfoome.domain.Img.service.ImgService;
 import com.likelion.helfoome.domain.post.dto.PostRequest;
 import com.likelion.helfoome.domain.post.dto.PostResponse;
 import com.likelion.helfoome.domain.post.entity.Article;
@@ -39,13 +41,14 @@ public class PostService {
   private final DemandRepository demandRepository;
   private final SupplyRepository supplyRepository;
   private final UserRepository userRepository;
+  private final ImgService imgService;
   private final ArticleImgRepository articleImgRepository;
   private final CommunityImgRepository communityImgRepository;
   private final DemandImgRepository demandImgRepository;
   private final SupplyImgRepository supplyImgRepository;
 
   // 게시물 등록
-  public String createPost(String postType, String email, PostRequest request) {
+  public String createPost(String postType, String email, PostRequest request) throws IOException {
     User user =
         userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -59,11 +62,9 @@ public class PostService {
         article.setTotalLikes(0);
         article.setTotalComments(0);
         articleImg.setArticle(article);
-        articleImg.setArticleImageName(request.getImageName());
-        articleImg.setArticleImageUrl(request.getImageUrl());
+        imgService.uploadArticleImg(request.getImages(), article);
 
         articleRepository.save(article);
-        articleImgRepository.save(articleImg);
         break;
       case "community":
         Community community = new Community();
@@ -74,11 +75,9 @@ public class PostService {
         community.setTotalLikes(0);
         community.setTotalComments(0);
         communityImg.setCommunity(community);
-        communityImg.setCommunityImageName(request.getImageName());
-        communityImg.setCommunityImageUrl(request.getImageUrl());
+        imgService.uploadCommunityImg(request.getImages(), community);
 
         communityRepository.save(community);
-        communityImgRepository.save(communityImg);
         break;
       case "demand":
         Demand demand = new Demand();
@@ -88,11 +87,9 @@ public class PostService {
         demand.setContent(request.getContent());
         demand.setTotalLikes(0);
         demandImg.setDemand(demand);
-        demandImg.setDemandImageName(request.getImageName());
-        demandImg.setDemandImageUrl(request.getImageUrl());
+        imgService.uploadDemandImg(request.getImages(), demand);
 
         demandRepository.save(demand);
-        demandImgRepository.save(demandImg);
         break;
       case "supply":
         Supply supply = new Supply();
@@ -102,11 +99,9 @@ public class PostService {
         supply.setContent(request.getContent());
         supply.setTotalLikes(0);
         supplyImg.setSupply(supply);
-        supplyImg.setSupplyImageName(request.getImageName());
-        supplyImg.setSupplyImageUrl(request.getImageUrl());
+        imgService.uploadSupplyImg(request.getImages(), supply);
 
         supplyRepository.save(supply);
-        supplyImgRepository.save(supplyImg);
         break;
       default:
         return "글 등록 중 오류가 발생했습니다.";
@@ -126,6 +121,7 @@ public class PostService {
     switch (postType) {
       case "article":
         List<Article> articles = articleRepository.findAll();
+
         for (Article article : articles) {
           response =
               new PostResponse(
@@ -134,9 +130,12 @@ public class PostService {
                   article.getContent(),
                   article.getTotalLikes(),
                   article.getTotalComments(),
-                  articleImgRepository.findByArticleId(article.getId()).get().getArticleImageName(),
-                  articleImgRepository.findByArticleId(article.getId()).get().getArticleImageUrl(),
-                  article.getCreatedDate());
+                  article.getCreatedDate(),
+                  articleImgRepository
+                      .findByArticleId(article.getId())
+                      .getFirst()
+                      .getArticleImgUrl(),
+                  null);
         }
         break;
       case "community":
@@ -149,15 +148,12 @@ public class PostService {
                   community.getContent(),
                   community.getTotalLikes(),
                   community.getTotalComments(),
+                  community.getCreatedDate(),
                   communityImgRepository
                       .findByCommunityId(community.getId())
-                      .get()
-                      .getCommunityImageName(),
-                  communityImgRepository
-                      .findByCommunityId(community.getId())
-                      .get()
-                      .getCommunityImageUrl(),
-                  community.getCreatedDate());
+                      .getFirst()
+                      .getCommunityImgUrl(),
+                  null);
         }
         break;
       case "demand":
@@ -170,9 +166,9 @@ public class PostService {
                   demand.getContent(),
                   demand.getTotalLikes(),
                   null,
-                  demandImgRepository.findByDemandId(demand.getId()).get().getDemandImageName(),
-                  demandImgRepository.findByDemandId(demand.getId()).get().getDemandImageUrl(),
-                  demand.getCreatedDate());
+                  demand.getCreatedDate(),
+                  demandImgRepository.findByDemandId(demand.getId()).getFirst().getDemandImgUrl(),
+                  null);
         }
         break;
       case "supply":
@@ -185,9 +181,9 @@ public class PostService {
                   supply.getContent(),
                   supply.getTotalLikes(),
                   null,
-                  supplyImgRepository.findBySupplyId(supply.getId()).get().getSupplyImageName(),
-                  supplyImgRepository.findBySupplyId(supply.getId()).get().getSupplyImageUrl(),
-                  supply.getCreatedDate());
+                  supply.getCreatedDate(),
+                  supplyImgRepository.findBySupplyId(supply.getId()).getFirst().getSupplyImgUrl(),
+                  null);
         }
         break;
       default:
@@ -208,7 +204,14 @@ public class PostService {
     switch (postType) {
       case "article":
         Optional<Article> article = articleRepository.findById(id);
+
         if (article.isPresent()) {
+          List<ArticleImg> articleImgs =
+              articleImgRepository.findByArticleId(article.get().getId());
+          List<String> articleImgUrls = new ArrayList<>();
+          for (ArticleImg articleImg : articleImgs) {
+            articleImgUrls.add(articleImg.getArticleImgUrl());
+          }
           response =
               new PostResponse(
                   article.get().getUser().getNickname(),
@@ -216,20 +219,20 @@ public class PostService {
                   article.get().getContent(),
                   article.get().getTotalLikes(),
                   article.get().getTotalComments(),
-                  articleImgRepository
-                      .findByArticleId(article.get().getId())
-                      .get()
-                      .getArticleImageName(),
-                  articleImgRepository
-                      .findByArticleId(article.get().getId())
-                      .get()
-                      .getArticleImageUrl(),
-                  article.get().getCreatedDate());
+                  article.get().getCreatedDate(),
+                  null,
+                  articleImgUrls);
         }
         break;
       case "community":
         Optional<Community> community = communityRepository.findById(id);
         if (community.isPresent()) {
+          List<CommunityImg> communityImgs =
+              communityImgRepository.findByCommunityId(community.get().getId());
+          List<String> communityImgUrls = new ArrayList<>();
+          for (CommunityImg communityImg : communityImgs) {
+            communityImgUrls.add(communityImg.getCommunityImgUrl());
+          }
           response =
               new PostResponse(
                   community.get().getUser().getNickname(),
@@ -237,20 +240,19 @@ public class PostService {
                   community.get().getContent(),
                   community.get().getTotalLikes(),
                   community.get().getTotalComments(),
-                  communityImgRepository
-                      .findByCommunityId(community.get().getId())
-                      .get()
-                      .getCommunityImageName(),
-                  communityImgRepository
-                      .findByCommunityId(community.get().getId())
-                      .get()
-                      .getCommunityImageUrl(),
-                  community.get().getCreatedDate());
+                  community.get().getCreatedDate(),
+                  null,
+                  communityImgUrls);
         }
         break;
       case "demand":
         Optional<Demand> demand = demandRepository.findById(id);
         if (demand.isPresent()) {
+          List<DemandImg> demandImgs = demandImgRepository.findByDemandId(demand.get().getId());
+          List<String> demandImgUrls = new ArrayList<>();
+          for (DemandImg demandImg : demandImgs) {
+            demandImgUrls.add(demandImg.getDemandImgUrl());
+          }
           response =
               new PostResponse(
                   demand.get().getUser().getNickname(),
@@ -258,20 +260,19 @@ public class PostService {
                   demand.get().getContent(),
                   demand.get().getTotalLikes(),
                   null,
-                  demandImgRepository
-                      .findByDemandId(demand.get().getId())
-                      .get()
-                      .getDemandImageName(),
-                  demandImgRepository
-                      .findByDemandId(demand.get().getId())
-                      .get()
-                      .getDemandImageUrl(),
-                  demand.get().getCreatedDate());
+                  demand.get().getCreatedDate(),
+                  null,
+                  demandImgUrls);
         }
         break;
       case "supply":
         Optional<Supply> supply = supplyRepository.findById(id);
         if (supply.isPresent()) {
+          List<SupplyImg> supplyImgs = supplyImgRepository.findBySupplyId(supply.get().getId());
+          List<String> supplyImgUrls = new ArrayList<>();
+          for (SupplyImg supplyImg : supplyImgs) {
+            supplyImgUrls.add(supplyImg.getSupplyImgUrl());
+          }
           response =
               new PostResponse(
                   supply.get().getUser().getNickname(),
@@ -279,15 +280,9 @@ public class PostService {
                   supply.get().getContent(),
                   supply.get().getTotalLikes(),
                   null,
-                  supplyImgRepository
-                      .findBySupplyId(supply.get().getId())
-                      .get()
-                      .getSupplyImageName(),
-                  supplyImgRepository
-                      .findBySupplyId(supply.get().getId())
-                      .get()
-                      .getSupplyImageUrl(),
-                  supply.get().getCreatedDate());
+                  supply.get().getCreatedDate(),
+                  null,
+                  supplyImgUrls);
         }
         break;
       default:

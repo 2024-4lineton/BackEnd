@@ -31,9 +31,9 @@ public class DemandImg extends BaseTimeEntity {
   @JoinColumn(name = "demandId", referencedColumnName = "id", nullable = false)
   private Demand demand;
 
-  @Column(name = "demandImageName", nullable = false)
-  private String demandImageName;
+  @Column(name = "demandImgName", nullable = false)
+  private String demandImgName;
 
-  @Column(name = "demandImageUrl", nullable = false)
-  private String demandImageUrl;
+  @Column(name = "demandImgUrl", nullable = false)
+  private String demandImgUrl;
 }

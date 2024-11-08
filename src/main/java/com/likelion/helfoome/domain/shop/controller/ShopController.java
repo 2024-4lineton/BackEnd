@@ -2,6 +2,7 @@ package com.likelion.helfoome.domain.shop.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -23,54 +24,47 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RequestMapping("/api/shop")
 public class ShopController {
+
   private final ShopService shopService;
   private final JwtUtil jwtUtil;
 
-  @Operation(summary = "사업자 번호 유효성 검사", description = "전송된 사업자 번호 또는 사용자의 가게가 DB에 존재하는지 확인")
-  @PostMapping("/register/taxId")
-  public ResponseEntity<?> validateTaxId(
+  @Operation(
+      summary = "사업자 번호 유효성 검사",
+      description = "전송된 사업자 번호 또는 사용자의 가게가 DB에 존재하는지 확인. 이미 존재할 경우 True, 존재하지 않을 경우 False")
+  @PostMapping("/tax-id-exist")
+  public Boolean isTaxIdExist(
       @RequestHeader("Authorization") String bearerToken, @RequestBody TaxIdRequest request) {
     try {
       String token = bearerToken.substring(7);
       Claims claims = jwtUtil.getAllClaimsFromToken(token);
       String email = claims.getId();
 
-      // 서비스 메서드 호출
-      String result = shopService.checkShopExist(email, request.getTaxId());
-
-      if ("Already existing shop. Please check your shop or Tax ID.".equals(result)) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
-      }
-
-      return ResponseEntity.ok(result);
+      return shopService.isTaxIdExist(email, request.getTaxId());
     } catch (Exception e) {
       log.error("Error during find Tax ID: {}", e.getMessage());
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body("Error validation in Tax Id: " + e.getMessage());
+      return null;
     }
   }
 
-  // 챌린지 참여하기
+  // 가게 등록하기
   @Operation(summary = "가게 등록", description = "사업자 인증 후 가게 등록")
   @PostMapping("/register")
-  public ResponseEntity<?> storeRegister(
+  public ResponseEntity<?> shopRegister(
       @RequestHeader("Authorization") String bearerToken,
-      @RequestBody ShopRegisterRequest request) {
+      @ModelAttribute ShopRegisterRequest request) {
     try {
       String token = bearerToken.substring(7);
       Claims claims = jwtUtil.getAllClaimsFromToken(token);
       String email = claims.getId();
 
       // 서비스 메서드 호출
-      String result = shopService.checkShopExist(email, request.getTaxId());
+      String result = shopService.storeRegister(email, request);
 
-      if ("Already existing shop. Please check your shop or Tax ID.".equals(result)) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
+      if ("가게가 성공적으로 등록되었습니다.".equals(result)) {
+        return ResponseEntity.ok(result);
       } else {
-        result = shopService.storeRegister(email, request);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("가게 등록에 실패하였습니다.");
       }
-
-      return ResponseEntity.ok(result);
     } catch (Exception e) {
       log.error("Error occurred while registering the store: {}", e.getMessage());
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

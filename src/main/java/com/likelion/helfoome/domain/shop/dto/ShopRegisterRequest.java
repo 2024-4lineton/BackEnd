@@ -1,5 +1,7 @@
 package com.likelion.helfoome.domain.shop.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShopRegisterRequest {
+
   private String shopName;
   private Integer shopType;
   private String marketName;
@@ -16,6 +19,5 @@ public class ShopRegisterRequest {
   private String dayOff;
   private String shopAddr;
   private String shopContact;
-  private String shopImageName;
-  private String shopImageURL;
+  private MultipartFile shopImg;
 }

@@ -12,16 +12,23 @@ import org.springframework.transaction.annotation.Transactional;
 import com.likelion.helfoome.domain.Img.entity.ProductImg;
 import com.likelion.helfoome.domain.Img.repository.ProductImgRepository;
 import com.likelion.helfoome.domain.Img.service.ImgService;
+import com.likelion.helfoome.domain.order.entity.Order;
+import com.likelion.helfoome.domain.order.repository.OrderRepository;
+import com.likelion.helfoome.domain.shop.dto.product.OrderInList;
 import com.likelion.helfoome.domain.shop.dto.product.ProductInList;
 import com.likelion.helfoome.domain.shop.dto.product.ProductList;
+import com.likelion.helfoome.domain.shop.dto.product.ProductManagingResponse;
 import com.likelion.helfoome.domain.shop.dto.product.ProductRequest;
 import com.likelion.helfoome.domain.shop.dto.product.ProductResponse;
+import com.likelion.helfoome.domain.shop.dto.product.SellingProductInList;
+import com.likelion.helfoome.domain.shop.dto.product.SellingProductList;
 import com.likelion.helfoome.domain.shop.entity.Product;
 import com.likelion.helfoome.domain.shop.entity.Shop;
 import com.likelion.helfoome.domain.shop.repository.ProductRepository;
 import com.likelion.helfoome.domain.shop.repository.ShopRepository;
+import com.likelion.helfoome.domain.user.repository.UserInfoRepository;
 import com.likelion.helfoome.domain.user.repository.UserRepository;
-import com.likelion.helfoome.global.S3.service.S3Service;
+import com.likelion.helfoome.domain.user.service.UserService;
 import com.likelion.helfoome.global.distance.DistanceService;
 
 import lombok.RequiredArgsConstructor;
@@ -36,9 +43,11 @@ public class ProductService {
   private final ProductImgRepository productImgRepository;
   private final ImgService imgService;
   private final ShopRepository shopRepository;
-  private final S3Service s3Service;
-  private final UserRepository userRepository;
   private final DistanceService distanceService;
+  private final OrderRepository orderRepository;
+  private final UserService userService;
+  private final UserRepository userRepository;
+  private final UserInfoRepository userInfoRepository;
 
   @Transactional
   public Product createProduct(ProductRequest productRequest) throws IOException {
@@ -72,6 +81,7 @@ public class ProductService {
     return product;
   }
 
+  // 상품상세
   public ProductResponse getProductDetail(Long productId) {
     Product product =
         productRepository
@@ -80,7 +90,7 @@ public class ProductService {
     List<ProductImg> productImgs = productImgRepository.findByProductId(product.getId());
     List<String> productImgUrls = new ArrayList<>();
     for (ProductImg productImg : productImgs) {
-      productImgUrls.add(productImg.getProductImageUrl());
+      productImgUrls.add(productImg.getProductImgUrl());
     }
 
     ProductResponse productResponse = new ProductResponse();
@@ -97,7 +107,9 @@ public class ProductService {
   }
 
   public ProductList getSortedProductList(
-      String userAddr, Integer shopType, int sort, int page, int pageSize, String marketName) {
+      String email, Integer shopType, int sort, int page, int pageSize, String marketName) {
+    String userAddr =
+        userInfoRepository.findByUser_Email(email).orElseThrow().getActivityLocation();
     ProductList productList = getProductList(userAddr, shopType, marketName);
 
     // 정렬(sort 0, 1, 2면 각각 단거리, 최저가, 최고할인순)
@@ -145,7 +157,7 @@ public class ProductService {
     List<ProductInList> returnProducts = new ArrayList<>();
     for (Shop shop : shops) {
       List<Product> products;
-      products = productRepository.findAllByShopId(shop.getId());
+      products = productRepository.findByShopIdAndIsSellingTrue(shop.getId());
 
       for (Product product : products) {
         if (distanceService.getDistance(userAddr, product.getRealAddr()) <= 5000) {
@@ -160,16 +172,75 @@ public class ProductService {
           Long distance = distanceService.getDistance(userAddr, product.getRealAddr());
           productInList.setDistance(distance);
           productInList.setImgUrl(
-              productImgRepository
-                  .findByProductId(product.getId())
-                  .getFirst()
-                  .getProductImageUrl());
+              productImgRepository.findByProductId(product.getId()).getFirst().getProductImgUrl());
 
           returnProducts.add(productInList);
         }
       }
     }
     ProductList productList = new ProductList();
+    productList.setProductInList(returnProducts);
+    return productList;
+  }
+
+  public ProductManagingResponse getProductManaging(Long productId) {
+
+    ProductManagingResponse response = new ProductManagingResponse();
+    Product product = productRepository.findById(productId).orElseThrow();
+    List<OrderInList> returnOrders = new ArrayList<>();
+    List<Order> orders = orderRepository.findByProductId(productId);
+    response.setProduct(product);
+    for (Order order : orders) {
+      OrderInList orderInList = new OrderInList();
+      orderInList.setOrderId(order.getId());
+      orderInList.setNickname(order.getUser().getNickname());
+      orderInList.setPIN(order.getPIN());
+      orderInList.setOrderTime(order.getCreatedDate());
+      returnOrders.add(orderInList);
+    }
+    response.setOrders(returnOrders);
+    return response;
+  }
+
+  public SellingProductList getSellingProduct(Long shopId) {
+    Shop shop = shopRepository.findById(shopId).orElseThrow();
+    List<SellingProductInList> returnProducts = new ArrayList<>();
+    List<Product> products;
+    products = productRepository.findByShopIdAndIsSellingTrue(shopId);
+    for (Product product : products) {
+      SellingProductInList productInList = new SellingProductInList();
+      productInList.setProductId(product.getId());
+      productInList.setShop(shop.getShopName());
+      productInList.setProductName(product.getProductName());
+      productInList.setQuantity(product.getQuantity());
+      productInList.setOrders(orderRepository.countByProductId(product.getId()));
+      productInList.setImgUrl(
+          productImgRepository.findByProductId(product.getId()).getFirst().getProductImgUrl());
+
+      returnProducts.add(productInList);
+    }
+    SellingProductList productList = new SellingProductList();
+    productList.setProductInList(returnProducts);
+    return productList;
+  }
+
+  public SellingProductList getUnSellingProduct(Long shopId) {
+    Shop shop = shopRepository.findById(shopId).orElseThrow();
+    List<SellingProductInList> returnProducts = new ArrayList<>();
+    List<Product> products;
+    products = productRepository.findByShopIdAndIsSellingFalse(shopId);
+    for (Product product : products) {
+      SellingProductInList productInList = new SellingProductInList();
+      productInList.setProductId(product.getId());
+      productInList.setShop(shop.getShopName());
+      productInList.setProductName(product.getProductName());
+      productInList.setQuantity(product.getQuantity());
+      productInList.setOrders(orderRepository.countByProductId(product.getId()));
+      productInList.setImgUrl(
+          productImgRepository.findByProductId(product.getId()).getFirst().getProductImgUrl());
+      returnProducts.add(productInList);
+    }
+    SellingProductList productList = new SellingProductList();
     productList.setProductInList(returnProducts);
     return productList;
   }
