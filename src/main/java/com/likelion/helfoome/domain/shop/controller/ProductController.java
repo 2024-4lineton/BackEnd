@@ -17,7 +17,6 @@ import com.likelion.helfoome.domain.shop.dto.product.ProductManagingResponse;
 import com.likelion.helfoome.domain.shop.dto.product.ProductRequest;
 import com.likelion.helfoome.domain.shop.dto.product.ProductResponse;
 import com.likelion.helfoome.domain.shop.dto.product.SellingProductList;
-import com.likelion.helfoome.domain.shop.entity.Product;
 import com.likelion.helfoome.domain.shop.service.ProductService;
 import com.likelion.helfoome.global.auth.jwt.JwtUtil;
 
@@ -37,15 +36,15 @@ public class ProductController {
 
   @Operation(summary = "상품 등록", description = "상품 등록")
   @PostMapping("/new-product")
-  public ResponseEntity<Product> createProduct(@ModelAttribute ProductRequest productRequestDto) {
+  public ResponseEntity<String> createProduct(@ModelAttribute ProductRequest productRequestDto) {
     log.info("enterProductController");
     if (productRequestDto.getImages() == null || productRequestDto.getImages().isEmpty()) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
     log.info("startMakingProduct");
     try {
-      Product product = productService.createProduct(productRequestDto);
-      return new ResponseEntity<>(product, HttpStatus.CREATED);
+      productService.createProduct(productRequestDto);
+      return new ResponseEntity<>("product", HttpStatus.CREATED);
     } catch (IOException e) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }

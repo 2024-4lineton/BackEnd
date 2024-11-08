@@ -50,7 +50,7 @@ public class ProductService {
   private final UserInfoRepository userInfoRepository;
 
   @Transactional
-  public Product createProduct(ProductRequest productRequest) throws IOException {
+  public String createProduct(ProductRequest productRequest) throws IOException {
 
     // Shop 엔티티 조회 (외래키 설정때매)
     Optional<Shop> shopOptional = shopRepository.findById(productRequest.getShopId());
@@ -78,7 +78,7 @@ public class ProductService {
     productRepository.save(product);
     // S3에 이미지 업로드 및 ProductImg 엔티티 생성
     imgService.uploadProductImg(productRequest.getImages(), product);
-    return product;
+    return "가게가 성공적으로 등록되었습니다.";
   }
 
   // 상품상세
