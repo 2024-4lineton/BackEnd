@@ -40,7 +40,9 @@ public class ImgService {
 
   public void uploadProductImg(List<MultipartFile> productImages, Product product)
       throws IOException {
+    log.info("uploadProductImg");
     for (MultipartFile productImage : productImages) {
+      log.info("enterProductImg");
       String productImageUrl = s3Service.upload(productImage, "productImages");
       ProductImg productImg = new ProductImg();
       productImg.setProduct(product);
@@ -48,6 +50,7 @@ public class ImgService {
       productImg.setProductImgUrl(productImageUrl);
       productImgRepository.save(productImg);
     }
+    log.info("endProductImg");
   }
 
   public void uploadArticleImg(List<MultipartFile> articleImages, Article article)
