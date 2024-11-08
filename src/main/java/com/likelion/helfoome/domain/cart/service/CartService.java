@@ -52,8 +52,14 @@ public class CartService {
             .findByUser_Email(email)
             .orElseThrow(() -> new RuntimeException("User's Cart not found"));
     List<CartProduct> cartProductList = cart.getCartProductList();
+    CartProduct cartProduct = new CartProduct();
+    cartProduct.setCart(cart);
+    cartProduct.setProduct(
+        productRepository
+            .findById(request.getProductId())
+            .orElseThrow(() -> new RuntimeException("Product not found")));
 
-    cartProductList.add(request.getCartProduct());
+    cartProductList.add(cartProduct);
     cart.setCartProductList(cartProductList);
 
     cartRepository.save(cart);
