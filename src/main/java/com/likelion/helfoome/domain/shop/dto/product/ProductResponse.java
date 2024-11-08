@@ -1,7 +1,5 @@
 package com.likelion.helfoome.domain.shop.dto.product;
 
-import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,5 +15,5 @@ public class ProductResponse {
   private String discountPercent;
   private Integer quantity;
   private Boolean isSelling;
-  private List<String> imageUrls;
+  private String productImgUrl;
 }

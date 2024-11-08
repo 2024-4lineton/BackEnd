@@ -32,8 +32,7 @@ public class OrderService {
   // 상품 id받아서 shop찾기, user받아서 일단 주문 테이블에 저장
   public String createOrder(OrderRequest orderRequest) {
     Product product = productRepository.findById(orderRequest.getProductId()).orElseThrow();
-    ProductImg productImg =
-        productImgRepository.findByProductId(orderRequest.getProductId()).getFirst();
+    ProductImg productImg = productImgRepository.findByProductId(orderRequest.getProductId()).get();
 
     Order order = new Order();
     order.setUser(userRepository.findByEmail(orderRequest.getUserEmail()).orElseThrow());

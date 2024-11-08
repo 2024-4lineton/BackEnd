@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 import com.likelion.helfoome.domain.shop.entity.Product;
 import com.likelion.helfoome.domain.user.entity.User;
@@ -22,7 +23,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "cartProduct")
+@Table(
+    name = "cartProduct",
+    uniqueConstraints = {@UniqueConstraint(columnNames = {"cartId", "productId"})})
 public class CartProduct extends BaseTimeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

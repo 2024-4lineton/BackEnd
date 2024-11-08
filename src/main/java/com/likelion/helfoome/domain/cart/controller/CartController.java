@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.likelion.helfoome.domain.cart.dto.AddProductRequest;
+import com.likelion.helfoome.domain.cart.dto.CartProductResponse;
 import com.likelion.helfoome.domain.cart.service.CartService;
-import com.likelion.helfoome.domain.shop.dto.product.ProductResponse;
 import com.likelion.helfoome.global.auth.jwt.JwtUtil;
 
 import io.jsonwebtoken.Claims;
@@ -83,7 +83,7 @@ public class CartController {
       Claims claims = jwtUtil.getAllClaimsFromToken(token);
       String email = claims.getId();
 
-      List<ProductResponse> response = cartService.getCartProducts(email);
+      List<CartProductResponse> response = cartService.getCartProducts(email);
       if (response == null) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body("장바구니에 상품이 존재하지 않습니다.");
       } else {

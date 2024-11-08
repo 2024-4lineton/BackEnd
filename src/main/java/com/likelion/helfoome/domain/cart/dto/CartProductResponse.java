@@ -11,5 +11,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CartProductResponse {
 
-  private Long productId;
+  private String shopName;
+  private String productName;
+  private String discountPrice;
+  private Boolean isSelling;
+  private String cartProductImgUrl;
 }
