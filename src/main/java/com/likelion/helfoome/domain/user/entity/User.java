@@ -54,10 +54,6 @@ public class User extends BaseTimeEntity {
   private Stamp stamp;
 
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-  @JoinColumn(name = "notification_id")
-  private Notification notification;
-
-  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
   @JoinColumn(name = "shop_id")
   private Shop shop;
 
@@ -68,6 +64,13 @@ public class User extends BaseTimeEntity {
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
   @JoinColumn(name = "cartProduct_id")
   private CartProduct cartProduct;
+
+  @OneToMany(
+      mappedBy = "user",
+      fetch = FetchType.LAZY,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
+  private List<Notification> notificationList;
 
   @OneToMany(
       mappedBy = "user",
