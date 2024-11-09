@@ -1,5 +1,6 @@
 package com.likelion.helfoome.domain.user.entity;
 
+import com.likelion.helfoome.global.common.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -9,9 +10,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-
-import com.likelion.helfoome.global.common.BaseTimeEntity;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,24 +29,24 @@ public class Stamp extends BaseTimeEntity {
   @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
   private User user;
 
-  @Column(name = "mon", nullable = false)
-  private Boolean mon;
+  @Column(name = "mon")
+  private Boolean mon = false;
 
-  @Column(name = "total", nullable = false)
+  @Column(name = "total")
   private Boolean tue = false;
 
-  @Column(name = "wed", nullable = false)
+  @Column(name = "wed")
   private Boolean wed = false;
 
-  @Column(name = "thu", nullable = false)
+  @Column(name = "thu")
   private Boolean thu = false;
 
-  @Column(name = "fri", nullable = false)
+  @Column(name = "fri")
   private Boolean fri = false;
 
-  @Column(name = "sat", nullable = false)
+  @Column(name = "sat")
   private Boolean sat = false;
 
-  @Column(name = "sun", nullable = false)
+  @Column(name = "sun")
   private Boolean sun = false;
 }
