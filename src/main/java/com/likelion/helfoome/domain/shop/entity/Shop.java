@@ -5,6 +5,7 @@ import com.likelion.helfoome.domain.user.entity.User;
 import com.likelion.helfoome.global.common.BaseTimeEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
