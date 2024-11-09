@@ -18,8 +18,6 @@ import com.likelion.helfoome.domain.shop.repository.ShopRepository;
 import com.likelion.helfoome.domain.user.repository.UserInfoRepository;
 import com.likelion.helfoome.global.S3.service.S3Service;
 import com.likelion.helfoome.global.distance.DistanceService;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,13 +39,11 @@ public class ProductService {
   private final UserInfoRepository userInfoRepository;
   private final S3Service s3Service;
   private final DistanceService distanceService;
-  @PersistenceContext
-  private EntityManager entityManager;
+
 
   @Transactional
   public String createProduct(ProductRequest productRequest) throws IOException {
-    entityManager.flush(); // 현재까지 변경된 내용을 DB에 반영
-    entityManager.clear(); // 영속성 컨텍스트 초기화
+
     System.out.println("Shop ID type: " + productRequest.getShopId().getClass().getName());
     System.out.println("Shop ID from request: " + productRequest.getShopId());
     // Shop 엔티티 조회
