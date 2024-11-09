@@ -89,6 +89,7 @@ public class CommentService {
                   articleComment.getUser().getNickname(),
                   articleComment.getContent(),
                   articleComment.getCreatedDate());
+          responses.add(response);
         }
         break;
       case "community":
@@ -100,12 +101,12 @@ public class CommentService {
                   communityComment.getUser().getNickname(),
                   communityComment.getContent(),
                   communityComment.getCreatedDate());
+          responses.add(response);
         }
         break;
       default:
         log.warn("No post Id found: {}", postId);
     }
-    responses.add(response);
 
     return responses;
   }

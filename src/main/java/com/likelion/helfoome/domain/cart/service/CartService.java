@@ -54,6 +54,10 @@ public class CartService {
         cartRepository
             .findByUser_Email(email)
             .orElseThrow(() -> new RuntimeException("User's Cart not found"));
+
+    if (cartProductRepository.findByProductId(request.getProductId()).isPresent()) {
+      return "이미 장바구니에 존재하는 상품입니다.";
+    }
     List<CartProduct> cartProductList = cart.getCartProductList();
     CartProduct cartProduct = new CartProduct();
 
@@ -64,9 +68,6 @@ public class CartService {
             .orElseThrow(() -> new RuntimeException("Product not found")));
 
     cartProductList.add(cartProduct);
-    cart.setCartProductList(cartProductList);
-
-    cartRepository.save(cart);
     cartProductRepository.save(cartProduct);
 
     return "장바구니에 상품이 정상적으로 등록되었습니다.";
