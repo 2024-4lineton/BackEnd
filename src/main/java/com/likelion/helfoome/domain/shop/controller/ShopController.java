@@ -47,7 +47,7 @@ public class ShopController {
   }
 
   // 가게 등록하기
-  @Operation(summary = "가게 등록", description = "사업자 인증 후 가게 등록")
+  @Operation(summary = "가게 등록", description = "사업자 인증 후 가게 등록(shopType : 0(전통시장) || 1(골목시장) || 2(브랜드)")
   @PostMapping("/register")
   public ResponseEntity<?> shopRegister(
       @RequestHeader("Authorization") String bearerToken,
