@@ -59,7 +59,8 @@ public class Shop extends BaseTimeEntity {
   @Column(name = "shopImageURL", nullable = false)
   private String shopImageURL;
 
-  @OneToOne(mappedBy = "shop", optional = false)
+  @OneToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
   private User user;
 
   @OneToMany(
