@@ -5,7 +5,6 @@ import java.util.List;
 import jakarta.persistence.*;
 
 import com.likelion.helfoome.domain.cart.entity.Cart;
-import com.likelion.helfoome.domain.cart.entity.CartProduct;
 import com.likelion.helfoome.domain.post.entity.Article;
 import com.likelion.helfoome.domain.post.entity.ArticleComment;
 import com.likelion.helfoome.domain.post.entity.ArticleLike;
@@ -60,10 +59,6 @@ public class User extends BaseTimeEntity {
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
   @JoinColumn(name = "cart_id")
   private Cart cart;
-
-  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-  @JoinColumn(name = "cartProduct_id")
-  private CartProduct cartProduct;
 
   @OneToMany(
       mappedBy = "user",

@@ -1,16 +1,19 @@
 package com.likelion.helfoome.domain.shop.service;
 
+import java.io.IOException;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
 import com.likelion.helfoome.domain.shop.dto.ShopRegisterRequest;
 import com.likelion.helfoome.domain.shop.entity.Shop;
 import com.likelion.helfoome.domain.shop.repository.ShopRepository;
 import com.likelion.helfoome.domain.user.entity.User;
 import com.likelion.helfoome.domain.user.repository.UserRepository;
 import com.likelion.helfoome.global.S3.service.S3Service;
-import java.io.IOException;
-import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
