@@ -31,8 +31,7 @@ public class CartProduct extends BaseTimeEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
+  @OneToOne(mappedBy = "cartProduct", optional = false)
   private User user;
 
   @ManyToOne(fetch = FetchType.LAZY)

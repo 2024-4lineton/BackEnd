@@ -26,10 +26,6 @@ public class UserInfo extends BaseTimeEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
-  private User user;
-
   @Column(name = "phone", nullable = false, unique = true)
   private String phone;
 
@@ -62,4 +58,8 @@ public class UserInfo extends BaseTimeEntity {
 
   @Column(name = "profileImageURL", nullable = false)
   private String profileImageURL;
+
+  @OneToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
+  private User user;
 }

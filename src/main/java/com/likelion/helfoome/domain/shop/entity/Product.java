@@ -1,5 +1,7 @@
 package com.likelion.helfoome.domain.shop.entity;
 
+import com.likelion.helfoome.domain.cart.entity.CartProduct;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -8,10 +10,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import com.likelion.helfoome.global.common.BaseTimeEntity;
 
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,11 +30,6 @@ public class Product extends BaseTimeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  // @JsonIgnore
-  @JoinColumn(name = "shopId", referencedColumnName = "id", nullable = false)
-  private Shop shop;
 
   @Column(name = "productName", nullable = false)
   private String productName;
@@ -55,6 +54,13 @@ public class Product extends BaseTimeEntity {
 
   @Column(name = "realAddr", nullable = false)
   private String realAddr;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "shopId", referencedColumnName = "id", nullable = false)
+  private Shop shop;
+
+  @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<CartProduct> cartProductList;
 
   public void updateQuantity(int newQuantity) {
     if (newQuantity < 0) {
