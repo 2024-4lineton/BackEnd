@@ -27,7 +27,7 @@ public class Shop extends BaseTimeEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
+  private Long id;
 
   @Column(name = "shopName", nullable = false)
   private String shopName;
@@ -59,7 +59,7 @@ public class Shop extends BaseTimeEntity {
   @Column(name = "shopImageURL", nullable = false)
   private String shopImageURL;
 
-  @OneToOne(mappedBy = "shop", optional = false, fetch = FetchType.LAZY)
+  @OneToOne(mappedBy = "shop", optional = false)
   private User user;
 
   @OneToMany(
