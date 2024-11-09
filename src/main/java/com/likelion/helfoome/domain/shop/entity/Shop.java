@@ -1,13 +1,19 @@
 package com.likelion.helfoome.domain.shop.entity;
 
-import java.util.List;
-
-import jakarta.persistence.*;
-
 import com.likelion.helfoome.domain.order.entity.Order;
 import com.likelion.helfoome.domain.user.entity.User;
 import com.likelion.helfoome.global.common.BaseTimeEntity;
-
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +24,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "shop")
 public class Shop extends BaseTimeEntity {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
@@ -52,7 +59,7 @@ public class Shop extends BaseTimeEntity {
   @Column(name = "shopImageURL", nullable = false)
   private String shopImageURL;
 
-  @OneToOne(mappedBy = "shop", optional = false)
+  @OneToOne(mappedBy = "shop", optional = false, fetch = FetchType.LAZY)
   private User user;
 
   @OneToMany(
