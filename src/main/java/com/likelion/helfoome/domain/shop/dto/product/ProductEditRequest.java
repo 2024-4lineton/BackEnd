@@ -5,16 +5,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ProductResponse {
+public class ProductEditRequest {
 
-  private Long shopId;
-  private String shopName;
   private Long productId;
   private String productName;
   private String price;
   private String discountPrice;
   private String discountPercent;
   private Integer quantity;
-  private Boolean isSelling;
-  private String productImgUrl;
+  private String realAddr;
 }

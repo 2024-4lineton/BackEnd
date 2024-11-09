@@ -11,6 +11,8 @@ import com.likelion.helfoome.domain.shop.entity.Shop;
 @Repository
 public interface ShopRepository extends JpaRepository<Shop, Long> {
 
+  Optional<Shop> findById(Long shopId);
+
   Optional<Shop> findByTaxId(String taxId);
 
   Optional<Shop> findByUser_Email(String email);

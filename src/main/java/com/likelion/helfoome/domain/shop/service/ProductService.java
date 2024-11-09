@@ -1,17 +1,9 @@
 package com.likelion.helfoome.domain.shop.service;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.likelion.helfoome.domain.order.entity.Order;
 import com.likelion.helfoome.domain.order.repository.OrderRepository;
 import com.likelion.helfoome.domain.shop.dto.product.OrderInList;
+import com.likelion.helfoome.domain.shop.dto.product.ProductEditRequest;
 import com.likelion.helfoome.domain.shop.dto.product.ProductInList;
 import com.likelion.helfoome.domain.shop.dto.product.ProductList;
 import com.likelion.helfoome.domain.shop.dto.product.ProductManagingResponse;
@@ -26,9 +18,15 @@ import com.likelion.helfoome.domain.shop.repository.ShopRepository;
 import com.likelion.helfoome.domain.user.repository.UserInfoRepository;
 import com.likelion.helfoome.global.S3.service.S3Service;
 import com.likelion.helfoome.global.distance.DistanceService;
-
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -42,9 +40,12 @@ public class ProductService {
   private final S3Service s3Service;
   private final DistanceService distanceService;
 
+
   @Transactional
   public String createProduct(ProductRequest productRequest) throws IOException {
 
+    System.out.println("Shop ID type: " + productRequest.getShopId().getClass().getName());
+    System.out.println("Shop ID from request: " + productRequest.getShopId());
     // Shop 엔티티 조회
     Optional<Shop> shopOptional = shopRepository.findById(productRequest.getShopId());
     if (shopOptional.isEmpty()) {
@@ -56,7 +57,6 @@ public class ProductService {
     Product product = new Product();
     product.setShop(shop);
     product.setProductName(productRequest.getProductName());
-    product.setDescription(productRequest.getDescription());
     product.setPrice(productRequest.getPrice());
     product.setDiscountPrice(productRequest.getDiscountPrice());
     product.setQuantity(productRequest.getQuantity());
@@ -84,8 +84,10 @@ public class ProductService {
             .orElseThrow(() -> new IllegalArgumentException("Invalid productID"));
 
     ProductResponse productResponse = new ProductResponse();
+    productResponse.setShopId(product.getShop().getId());
+    productResponse.setShopName(product.getShop().getShopName());
+    productResponse.setProductId(product.getId());
     productResponse.setProductName(product.getProductName());
-    productResponse.setDescription(product.getDescription());
     productResponse.setPrice(product.getPrice());
     product.setDiscountPrice(product.getDiscountPrice());
     productResponse.setQuantity(product.getQuantity());
@@ -94,6 +96,33 @@ public class ProductService {
     productResponse.setProductImgUrl(product.getProductImageURL());
 
     return productResponse;
+  }
+
+  public String updateProduct(ProductEditRequest request) {
+    Product product = productRepository.findById(request.getProductId()).orElseThrow();
+    if (request.getQuantity() < 0) {
+      throw new IllegalArgumentException("수량은 0 이상이어야 합니다.");
+    }
+    if (request.getQuantity() == 0) {
+      product.setIsSelling(false);
+    }
+    if (request.getProductName() != null) {
+      product.setProductName(request.getProductName());
+    }
+    if (request.getPrice() != null) {
+      product.setPrice(request.getPrice());
+    }
+    if (request.getDiscountPercent() != null) {
+      product.setDiscountPercent(request.getDiscountPercent());
+    }
+    if (request.getDiscountPrice() != null) {
+      product.setDiscountPrice(request.getDiscountPrice());
+    }
+    if (request.getRealAddr() != null) {
+      product.setRealAddr(request.getRealAddr());
+    }
+    productRepository.save(product);
+    return "상품 수정 완료";
   }
 
   public ProductList getSortedProductList(

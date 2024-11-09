@@ -7,11 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.likelion.helfoome.domain.shop.dto.product.ProductEditRequest;
 import com.likelion.helfoome.domain.shop.dto.product.ProductList;
 import com.likelion.helfoome.domain.shop.dto.product.ProductManagingResponse;
 import com.likelion.helfoome.domain.shop.dto.product.ProductRequest;
@@ -65,6 +67,12 @@ public class ProductController {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
     return new ResponseEntity<>(productService.getProductDetail(productId), HttpStatus.OK);
+  }
+
+  @Operation(summary = "상품 수정", description = "수정할거 외에는 null값으로 보내심 됩니다")
+  @GetMapping("/edit")
+  public ResponseEntity<String> editProduct(@RequestBody ProductEditRequest request) {
+    return new ResponseEntity<>(productService.updateProduct(request), HttpStatus.OK);
   }
 
   @Operation(
