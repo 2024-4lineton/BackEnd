@@ -1,10 +1,22 @@
 package com.likelion.helfoome.domain.user.entity;
 
-import com.likelion.helfoome.domain.cart.entity.Cart;
-import com.likelion.helfoome.domain.cart.entity.CartProduct;
-import com.likelion.helfoome.domain.shop.entity.Shop;
+import java.util.List;
+
 import jakarta.persistence.*;
 
+import com.likelion.helfoome.domain.cart.entity.Cart;
+import com.likelion.helfoome.domain.cart.entity.CartProduct;
+import com.likelion.helfoome.domain.post.entity.Article;
+import com.likelion.helfoome.domain.post.entity.ArticleComment;
+import com.likelion.helfoome.domain.post.entity.ArticleLike;
+import com.likelion.helfoome.domain.post.entity.Community;
+import com.likelion.helfoome.domain.post.entity.CommunityComment;
+import com.likelion.helfoome.domain.post.entity.CommunityLike;
+import com.likelion.helfoome.domain.post.entity.Demand;
+import com.likelion.helfoome.domain.post.entity.DemandLike;
+import com.likelion.helfoome.domain.post.entity.Supply;
+import com.likelion.helfoome.domain.post.entity.SupplyLike;
+import com.likelion.helfoome.domain.shop.entity.Shop;
 import com.likelion.helfoome.global.common.BaseTimeEntity;
 
 import lombok.Getter;
@@ -38,6 +50,18 @@ public class User extends BaseTimeEntity {
   private UserInfo userInfo;
 
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+  @JoinColumn(name = "stamp_id")
+  private Stamp stamp;
+
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+  @JoinColumn(name = "notification_id")
+  private Notification notification;
+
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+  @JoinColumn(name = "shop_id")
+  private Shop shop;
+
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
   @JoinColumn(name = "cart_id")
   private Cart cart;
 
@@ -45,9 +69,73 @@ public class User extends BaseTimeEntity {
   @JoinColumn(name = "cartProduct_id")
   private CartProduct cartProduct;
 
-  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-  @JoinColumn(name = "shop_id")
-  private Shop shop;
+  @OneToMany(
+      mappedBy = "user",
+      fetch = FetchType.LAZY,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
+  private List<Article> articleList;
 
+  @OneToMany(
+      mappedBy = "user",
+      fetch = FetchType.LAZY,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
+  private List<ArticleLike> articleLikeList;
 
+  @OneToMany(
+      mappedBy = "user",
+      fetch = FetchType.LAZY,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
+  private List<ArticleComment> articleCommentList;
+
+  @OneToMany(
+      mappedBy = "user",
+      fetch = FetchType.LAZY,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
+  private List<Community> communityList;
+
+  @OneToMany(
+      mappedBy = "user",
+      fetch = FetchType.LAZY,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
+  private List<CommunityLike> communityLikeList;
+
+  @OneToMany(
+      mappedBy = "user",
+      fetch = FetchType.LAZY,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
+  private List<CommunityComment> communityCommentList;
+
+  @OneToMany(
+      mappedBy = "user",
+      fetch = FetchType.LAZY,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
+  private List<Demand> demandList;
+
+  @OneToMany(
+      mappedBy = "user",
+      fetch = FetchType.LAZY,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
+  private List<DemandLike> demandLikeList;
+
+  @OneToMany(
+      mappedBy = "user",
+      fetch = FetchType.LAZY,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
+  private List<Supply> supplyList;
+
+  @OneToMany(
+      mappedBy = "user",
+      fetch = FetchType.LAZY,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
+  private List<SupplyLike> supplyLikeList;
 }

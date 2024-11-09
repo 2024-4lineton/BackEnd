@@ -1,12 +1,13 @@
 package com.likelion.helfoome.domain.shop.entity;
 
-import com.likelion.helfoome.domain.cart.entity.CartProduct;
+import java.util.List;
+
 import jakarta.persistence.*;
 
+import com.likelion.helfoome.domain.order.entity.Order;
 import com.likelion.helfoome.domain.user.entity.User;
 import com.likelion.helfoome.global.common.BaseTimeEntity;
 
-import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,13 +28,13 @@ public class Shop extends BaseTimeEntity {
   @Column(name = "shopType", nullable = false)
   private Integer shopType;
 
-  @Column(name = "marketName", nullable = false)
+  @Column(name = "marketName")
   private String marketName;
 
   @Column(name = "taxId", nullable = false, unique = true)
   private String taxId;
 
-  @Column(name = "businessHours")
+  @Column(name = "businessHours", nullable = false)
   private String businessHours;
 
   @Column(name = "dayOff")
@@ -54,6 +55,17 @@ public class Shop extends BaseTimeEntity {
   @OneToOne(mappedBy = "shop", optional = false)
   private User user;
 
-  @OneToMany(mappedBy = "shop", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(
+      mappedBy = "shop",
+      fetch = FetchType.LAZY,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
   private List<Product> productList;
+
+  @OneToMany(
+      mappedBy = "shop",
+      fetch = FetchType.LAZY,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
+  private List<Order> orderList;
 }

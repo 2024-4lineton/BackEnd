@@ -28,13 +28,13 @@ public class ArticleImg extends BaseTimeEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "articleId", referencedColumnName = "id", nullable = false)
-  private Article article;
-
   @Column(name = "articleImgName", nullable = false)
   private String articleImgName;
 
   @Column(name = "articleImgUrl", nullable = false)
   private String articleImgUrl;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "articleId", referencedColumnName = "id", nullable = false)
+  private Article article;
 }

@@ -28,13 +28,13 @@ public class CommunityImg extends BaseTimeEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "communityId", referencedColumnName = "id", nullable = false)
-  private Community community;
-
   @Column(name = "communityImgName", nullable = false)
   private String communityImgName;
 
   @Column(name = "communityImgUrl", nullable = false)
   private String communityImgUrl;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "communityId", referencedColumnName = "id", nullable = false)
+  private Community community;
 }

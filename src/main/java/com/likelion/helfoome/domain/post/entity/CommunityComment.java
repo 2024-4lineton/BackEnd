@@ -27,6 +27,9 @@ public class CommunityComment extends BaseTimeEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(name = "content", nullable = false)
+  private String content;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
   private User user;
@@ -34,7 +37,4 @@ public class CommunityComment extends BaseTimeEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "communityId", referencedColumnName = "id", nullable = false)
   private Community community;
-
-  @Column(name = "content", nullable = false)
-  private String content;
 }

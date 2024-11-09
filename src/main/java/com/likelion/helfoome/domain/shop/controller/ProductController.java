@@ -36,17 +36,24 @@ public class ProductController {
 
   @Operation(summary = "상품 등록", description = "상품 등록 🌟할인률은 % 제외한 값 보내주세요🌟")
   @PostMapping("/new-product")
-  public ResponseEntity<String> createProduct(@ModelAttribute ProductRequest productRequestDto) {
+  public ResponseEntity<?> createProduct(@ModelAttribute ProductRequest request) {
     log.info("enterProductController");
-    if (productRequestDto.getImages() == null || productRequestDto.getImages().isEmpty()) {
+    if (request.getProductImg() == null || request.getProductImg().isEmpty()) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
     log.info("startMakingProduct");
     try {
-      productService.createProduct(productRequestDto);
-      return new ResponseEntity<>("product", HttpStatus.CREATED);
+      String result = productService.createProduct(request);
+
+      if ("상품이 성공적으로 등록되었습니다.".equals(result)) {
+        return ResponseEntity.ok(result);
+      } else {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("상품 등록에 실패하였습니다.");
+      }
     } catch (IOException e) {
-      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+      log.error("Error occurred while creating the product: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("Error occurred creating the product: " + e.getMessage());
     }
   }
 
