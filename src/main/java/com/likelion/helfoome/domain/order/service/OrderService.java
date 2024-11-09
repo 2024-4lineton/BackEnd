@@ -11,6 +11,7 @@ import com.likelion.helfoome.domain.shop.entity.Product;
 import com.likelion.helfoome.domain.shop.repository.ProductRepository;
 import com.likelion.helfoome.domain.shop.repository.ShopRepository;
 import com.likelion.helfoome.domain.user.repository.UserRepository;
+import com.likelion.helfoome.domain.user.service.StampService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -71,7 +72,8 @@ public class OrderService {
     Order order = orderRepository.findById(orderId).orElseThrow();
     order.setOrderStatus(1);
     orderRepository.save(order);
-    // 여기에 스탬프 생성하는 코드 추가해야함
+    // 스탬프 고치는거 서비스
+    stampService.editStamp(order.getUser());
   }
 
   // 주문 취소
