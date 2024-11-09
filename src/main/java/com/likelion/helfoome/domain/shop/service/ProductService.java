@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.likelion.helfoome.domain.order.entity.Order;
 import com.likelion.helfoome.domain.order.repository.OrderRepository;
 import com.likelion.helfoome.domain.shop.dto.product.OrderInList;
+import com.likelion.helfoome.domain.shop.dto.product.ProductEditRequest;
 import com.likelion.helfoome.domain.shop.dto.product.ProductInList;
 import com.likelion.helfoome.domain.shop.dto.product.ProductList;
 import com.likelion.helfoome.domain.shop.dto.product.ProductManagingResponse;
@@ -48,6 +49,7 @@ public class ProductService {
     // Shop 엔티티 조회
     Optional<Shop> shopOptional = shopRepository.findById(productRequest.getShopId());
     if (shopOptional.isEmpty()) {
+      System.out.println("Invalid shopID: " + productRequest.getShopId());
       throw new IllegalArgumentException("Invalid shopID");
     }
     Shop shop = shopOptional.get();
@@ -56,7 +58,6 @@ public class ProductService {
     Product product = new Product();
     product.setShop(shop);
     product.setProductName(productRequest.getProductName());
-    product.setDescription(productRequest.getDescription());
     product.setPrice(productRequest.getPrice());
     product.setDiscountPrice(productRequest.getDiscountPrice());
     product.setQuantity(productRequest.getQuantity());
@@ -84,8 +85,10 @@ public class ProductService {
             .orElseThrow(() -> new IllegalArgumentException("Invalid productID"));
 
     ProductResponse productResponse = new ProductResponse();
+    productResponse.setShopId(product.getShop().getId());
+    productResponse.setShopName(product.getShop().getShopName());
+    productResponse.setProductId(product.getId());
     productResponse.setProductName(product.getProductName());
-    productResponse.setDescription(product.getDescription());
     productResponse.setPrice(product.getPrice());
     product.setDiscountPrice(product.getDiscountPrice());
     productResponse.setQuantity(product.getQuantity());
@@ -94,6 +97,33 @@ public class ProductService {
     productResponse.setProductImgUrl(product.getProductImageURL());
 
     return productResponse;
+  }
+
+  public String updateProduct(ProductEditRequest request) {
+    Product product = productRepository.findById(request.getProductId()).orElseThrow();
+    if (request.getQuantity() < 0) {
+      throw new IllegalArgumentException("수량은 0 이상이어야 합니다.");
+    }
+    if (request.getQuantity() == 0) {
+      product.setIsSelling(false);
+    }
+    if (request.getProductName() != null) {
+      product.setProductName(request.getProductName());
+    }
+    if (request.getPrice() != null) {
+      product.setPrice(request.getPrice());
+    }
+    if (request.getDiscountPercent() != null) {
+      product.setDiscountPercent(request.getDiscountPercent());
+    }
+    if (request.getDiscountPrice() != null) {
+      product.setDiscountPrice(request.getDiscountPrice());
+    }
+    if (request.getRealAddr() != null) {
+      product.setRealAddr(request.getRealAddr());
+    }
+    productRepository.save(product);
+    return "상품 수정 완료";
   }
 
   public ProductList getSortedProductList(

@@ -11,7 +11,6 @@ public class ProductRequest {
 
   private Long shopId;
   private String productName;
-  private String description;
   private String price;
   private String discountPrice;
   private String discountPercent;

@@ -35,9 +35,6 @@ public class Product extends BaseTimeEntity {
   @Column(name = "productName", nullable = false)
   private String productName;
 
-  @Column(name = "description", nullable = false)
-  private String description;
-
   @Column(name = "price", nullable = false)
   private String price;
 
