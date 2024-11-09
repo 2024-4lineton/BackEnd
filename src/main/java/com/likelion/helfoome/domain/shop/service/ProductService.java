@@ -1,14 +1,5 @@
 package com.likelion.helfoome.domain.shop.service;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.likelion.helfoome.domain.order.entity.Order;
 import com.likelion.helfoome.domain.order.repository.OrderRepository;
 import com.likelion.helfoome.domain.shop.dto.product.OrderInList;
@@ -27,9 +18,15 @@ import com.likelion.helfoome.domain.shop.repository.ShopRepository;
 import com.likelion.helfoome.domain.user.repository.UserInfoRepository;
 import com.likelion.helfoome.global.S3.service.S3Service;
 import com.likelion.helfoome.global.distance.DistanceService;
-
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -46,6 +43,8 @@ public class ProductService {
   @Transactional
   public String createProduct(ProductRequest productRequest) throws IOException {
 
+    System.out.println("Shop ID type: " + productRequest.getShopId().getClass().getName());
+    System.out.println("Shop ID from request: " + productRequest.getShopId());
     // Shop 엔티티 조회
     Optional<Shop> shopOptional = shopRepository.findById(productRequest.getShopId());
     if (shopOptional.isEmpty()) {
