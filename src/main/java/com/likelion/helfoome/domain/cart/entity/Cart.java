@@ -29,7 +29,8 @@ public class Cart extends BaseTimeEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @OneToOne(mappedBy = "cart", optional = false)
+  @OneToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
   private User user;
 
   @OneToMany(
