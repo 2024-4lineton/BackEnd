@@ -21,9 +21,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(
-    name = "cartProduct",
-    uniqueConstraints = {@UniqueConstraint(columnNames = {"cartId", "productId"})})
+@Table(name = "cartProduct")
 public class CartProduct extends BaseTimeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
