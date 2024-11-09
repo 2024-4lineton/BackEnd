@@ -62,9 +62,9 @@ public class PostService {
         article.setTotalLikes(0);
         article.setTotalComments(0);
         articleImg.setArticle(article);
-        imgService.uploadArticleImg(request.getImages(), article);
 
         articleRepository.save(article);
+        imgService.uploadArticleImg(request.getImages(), article);
         break;
       case "community":
         Community community = new Community();
@@ -75,9 +75,9 @@ public class PostService {
         community.setTotalLikes(0);
         community.setTotalComments(0);
         communityImg.setCommunity(community);
-        imgService.uploadCommunityImg(request.getImages(), community);
 
         communityRepository.save(community);
+        imgService.uploadCommunityImg(request.getImages(), community);
         break;
       case "demand":
         Demand demand = new Demand();
@@ -87,9 +87,9 @@ public class PostService {
         demand.setContent(request.getContent());
         demand.setTotalLikes(0);
         demandImg.setDemand(demand);
-        imgService.uploadDemandImg(request.getImages(), demand);
 
         demandRepository.save(demand);
+        imgService.uploadDemandImg(request.getImages(), demand);
         break;
       case "supply":
         Supply supply = new Supply();
@@ -99,9 +99,9 @@ public class PostService {
         supply.setContent(request.getContent());
         supply.setTotalLikes(0);
         supplyImg.setSupply(supply);
-        imgService.uploadSupplyImg(request.getImages(), supply);
 
         supplyRepository.save(supply);
+        imgService.uploadSupplyImg(request.getImages(), supply);
         break;
       default:
         return "글 등록 중 오류가 발생했습니다.";
