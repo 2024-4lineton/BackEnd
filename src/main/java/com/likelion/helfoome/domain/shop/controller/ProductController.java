@@ -34,7 +34,7 @@ public class ProductController {
   private final ProductService productService;
   private final JwtUtil jwtUtil;
 
-  @Operation(summary = "상품 등록", description = "상품 등록")
+  @Operation(summary = "상품 등록", description = "상품 등록 🌟할인률은 % 제외한 값 보내주세요🌟")
   @PostMapping("/new-product")
   public ResponseEntity<String> createProduct(@ModelAttribute ProductRequest productRequestDto) {
     log.info("enterProductController");
