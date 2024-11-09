@@ -27,13 +27,13 @@ public class DemandImg extends BaseTimeEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "demandId", referencedColumnName = "id", nullable = false)
-  private Demand demand;
-
   @Column(name = "demandImgName", nullable = false)
   private String demandImgName;
 
   @Column(name = "demandImgUrl", nullable = false)
   private String demandImgUrl;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "demandId", referencedColumnName = "id", nullable = false)
+  private Demand demand;
 }

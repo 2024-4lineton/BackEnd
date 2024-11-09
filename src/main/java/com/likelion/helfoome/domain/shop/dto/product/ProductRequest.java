@@ -1,7 +1,5 @@
 package com.likelion.helfoome.domain.shop.dto.product;
 
-import java.util.List;
-
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Getter;
@@ -20,5 +18,5 @@ public class ProductRequest {
   private Integer quantity;
   private Boolean isSelling;
   private String realAddr;
-  private List<MultipartFile> images;
+  private MultipartFile productImg;
 }

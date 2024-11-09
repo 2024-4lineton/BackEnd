@@ -27,6 +27,9 @@ public class ArticleComment extends BaseTimeEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(name = "content", nullable = false)
+  private String content;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
   private User user;
@@ -34,7 +37,4 @@ public class ArticleComment extends BaseTimeEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "articleId", referencedColumnName = "id", nullable = false)
   private Article article;
-
-  @Column(name = "content", nullable = false)
-  private String content;
 }
