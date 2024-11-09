@@ -1,18 +1,5 @@
 package com.likelion.helfoome.domain.shop.controller;
 
-import java.io.IOException;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.likelion.helfoome.domain.shop.dto.product.ProductEditRequest;
 import com.likelion.helfoome.domain.shop.dto.product.ProductList;
 import com.likelion.helfoome.domain.shop.dto.product.ProductManagingResponse;
@@ -21,11 +8,23 @@ import com.likelion.helfoome.domain.shop.dto.product.ProductResponse;
 import com.likelion.helfoome.domain.shop.dto.product.SellingProductList;
 import com.likelion.helfoome.domain.shop.service.ProductService;
 import com.likelion.helfoome.global.auth.jwt.JwtUtil;
-
 import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
@@ -70,9 +69,20 @@ public class ProductController {
   }
 
   @Operation(summary = "상품 수정", description = "수정할거 외에는 null값으로 보내심 됩니다")
-  @GetMapping("/edit")
+  @PatchMapping("/edit")
   public ResponseEntity<String> editProduct(@RequestBody ProductEditRequest request) {
     return new ResponseEntity<>(productService.updateProduct(request), HttpStatus.OK);
+  }
+
+  @Operation(summary = "상품 삭제", description = "근데 주문 만들어져 있으면 삭제 안되게 해놓음")
+  @DeleteMapping("/delete")
+  public ResponseEntity<String> deleteProduct(@RequestParam Long id) {
+    String result = productService.deleteProduct(id);
+    if (result.equals("상품이 성공적으로 삭제되었습니다.")) {
+      return ResponseEntity.ok(result);
+    } else {
+      return ResponseEntity.badRequest().body(result);
+    }
   }
 
   @Operation(
