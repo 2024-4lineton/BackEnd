@@ -1,9 +1,14 @@
 package com.likelion.helfoome.domain.user.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.likelion.helfoome.domain.user.entity.Stamp;
 
 @Repository
-public interface StampRepository extends JpaRepository<Stamp, Long> {}
+public interface StampRepository extends JpaRepository<Stamp, Long> {
+
+  Optional<Stamp> findByUser_Email(String userEmail);
+}

@@ -22,6 +22,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "stamp")
 public class Stamp extends BaseTimeEntity {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -30,6 +31,24 @@ public class Stamp extends BaseTimeEntity {
   @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
   private User user;
 
+  @Column(name = "mon", nullable = false)
+  private Boolean mon;
+
   @Column(name = "total", nullable = false)
-  private Integer total;
+  private Boolean tue = false;
+
+  @Column(name = "wed", nullable = false)
+  private Boolean wed = false;
+
+  @Column(name = "thu", nullable = false)
+  private Boolean thu = false;
+
+  @Column(name = "fri", nullable = false)
+  private Boolean fri = false;
+
+  @Column(name = "sat", nullable = false)
+  private Boolean sat = false;
+
+  @Column(name = "sun", nullable = false)
+  private Boolean sun = false;
 }
