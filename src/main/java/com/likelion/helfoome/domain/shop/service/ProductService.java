@@ -9,9 +9,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.likelion.helfoome.domain.Img.entity.ProductImg;
-import com.likelion.helfoome.domain.Img.repository.ProductImgRepository;
-import com.likelion.helfoome.domain.Img.service.ImgService;
 import com.likelion.helfoome.domain.order.entity.Order;
 import com.likelion.helfoome.domain.order.repository.OrderRepository;
 import com.likelion.helfoome.domain.shop.dto.product.OrderInList;
@@ -27,8 +24,7 @@ import com.likelion.helfoome.domain.shop.entity.Shop;
 import com.likelion.helfoome.domain.shop.repository.ProductRepository;
 import com.likelion.helfoome.domain.shop.repository.ShopRepository;
 import com.likelion.helfoome.domain.user.repository.UserInfoRepository;
-import com.likelion.helfoome.domain.user.repository.UserRepository;
-import com.likelion.helfoome.domain.user.service.UserService;
+import com.likelion.helfoome.global.S3.service.S3Service;
 import com.likelion.helfoome.global.distance.DistanceService;
 
 import lombok.RequiredArgsConstructor;
@@ -40,19 +36,16 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductService {
 
   private final ProductRepository productRepository;
-  private final ProductImgRepository productImgRepository;
-  private final ImgService imgService;
   private final ShopRepository shopRepository;
-  private final DistanceService distanceService;
   private final OrderRepository orderRepository;
-  private final UserService userService;
-  private final UserRepository userRepository;
   private final UserInfoRepository userInfoRepository;
+  private final S3Service s3Service;
+  private final DistanceService distanceService;
 
   @Transactional
   public String createProduct(ProductRequest productRequest) throws IOException {
 
-    // Shop 엔티티 조회 (외래키 설정때매)
+    // Shop 엔티티 조회
     Optional<Shop> shopOptional = shopRepository.findById(productRequest.getShopId());
     if (shopOptional.isEmpty()) {
       throw new IllegalArgumentException("Invalid shopID");
@@ -69,16 +62,18 @@ public class ProductService {
     product.setQuantity(productRequest.getQuantity());
     product.setDiscountPercent(productRequest.getDiscountPercent());
     product.setIsSelling(true);
-    // tlqkf가게 주소 아니고 다른주소로 정할수도 있다길래 이 부분 추가
     if (productRequest.getRealAddr() == null) {
       product.setRealAddr(shop.getShopAddr());
     } else {
       product.setRealAddr(productRequest.getRealAddr());
     }
+    product.setProductImageName(productRequest.getProductImg().getOriginalFilename());
+    String imgUrl = s3Service.upload(productRequest.getProductImg(), "productImages");
+    product.setProductImageURL(imgUrl);
+
     productRepository.save(product);
-    // S3에 이미지 업로드 및 ProductImg 엔티티 생성
-    imgService.uploadProductImg(productRequest.getImages(), product);
-    return "가게가 성공적으로 등록되었습니다.";
+
+    return "상품이 성공적으로 등록되었습니다.";
   }
 
   // 상품상세
@@ -87,7 +82,6 @@ public class ProductService {
         productRepository
             .findById(productId)
             .orElseThrow(() -> new IllegalArgumentException("Invalid productID"));
-    Optional<ProductImg> productImg = productImgRepository.findByProductId(product.getId());
 
     ProductResponse productResponse = new ProductResponse();
     productResponse.setProductName(product.getProductName());
@@ -97,7 +91,7 @@ public class ProductService {
     productResponse.setQuantity(product.getQuantity());
     productResponse.setDiscountPercent(product.getDiscountPercent());
     productResponse.setIsSelling(false);
-    productResponse.setProductImgUrl(productImg.get().getProductImgUrl());
+    productResponse.setProductImgUrl(product.getProductImageURL());
 
     return productResponse;
   }
@@ -128,7 +122,6 @@ public class ProductService {
                 })
             .collect(Collectors.toList());
 
-    // 페이징해서 리턴을 하긴 해야하는데 tlqkf 제공해주는 Pagable을 쓸 수가 없잖아 이딴 조건에
     int start = page * pageSize;
     int end = Math.min(start + pageSize, sortedList.size());
     List<ProductInList> pagedList = sortedList.subList(start, end);
@@ -167,8 +160,7 @@ public class ProductService {
           productInList.setDiscountPrice(product.getDiscountPrice());
           Long distance = distanceService.getDistance(userAddr, product.getRealAddr());
           productInList.setDistance(distance);
-          productInList.setImgUrl(
-              productImgRepository.findByProductId(product.getId()).get().getProductImgUrl());
+          productInList.setImgUrl(product.getProductImageURL());
 
           returnProducts.add(productInList);
         }
@@ -210,8 +202,7 @@ public class ProductService {
       productInList.setProductName(product.getProductName());
       productInList.setQuantity(product.getQuantity());
       productInList.setOrders(orderRepository.countByProductId(product.getId()));
-      productInList.setImgUrl(
-          productImgRepository.findByProductId(product.getId()).get().getProductImgUrl());
+      productInList.setImgUrl(product.getProductImageURL());
 
       returnProducts.add(productInList);
     }
@@ -232,8 +223,7 @@ public class ProductService {
       productInList.setProductName(product.getProductName());
       productInList.setQuantity(product.getQuantity());
       productInList.setOrders(orderRepository.countByProductId(product.getId()));
-      productInList.setImgUrl(
-          productImgRepository.findByProductId(product.getId()).get().getProductImgUrl());
+      productInList.setImgUrl(product.getProductImageURL());
       returnProducts.add(productInList);
     }
     SellingProductList productList = new SellingProductList();

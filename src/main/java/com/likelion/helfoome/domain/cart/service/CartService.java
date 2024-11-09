@@ -3,10 +3,8 @@ package com.likelion.helfoome.domain.cart.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springdoc.core.converters.ResponseSupportConverter;
 import org.springframework.stereotype.Service;
 
-import com.likelion.helfoome.domain.Img.repository.ProductImgRepository;
 import com.likelion.helfoome.domain.cart.dto.AddProductRequest;
 import com.likelion.helfoome.domain.cart.dto.CartProductResponse;
 import com.likelion.helfoome.domain.cart.entity.Cart;
@@ -14,7 +12,6 @@ import com.likelion.helfoome.domain.cart.entity.CartProduct;
 import com.likelion.helfoome.domain.cart.repository.CartProductRepository;
 import com.likelion.helfoome.domain.cart.repository.CartRepository;
 import com.likelion.helfoome.domain.shop.repository.ProductRepository;
-import com.likelion.helfoome.domain.shop.service.ProductService;
 import com.likelion.helfoome.domain.user.entity.User;
 import com.likelion.helfoome.domain.user.repository.UserRepository;
 
@@ -29,9 +26,6 @@ public class CartService {
   private final UserRepository userRepository;
   private final CartProductRepository cartProductRepository;
   private final ProductRepository productRepository;
-  private final ResponseSupportConverter responseSupportConverter;
-  private final ProductService productService;
-  private final ProductImgRepository productImgRepository;
 
   // 현재 사용자의 장바구니 생성
   public String createCart(String email) {
@@ -95,10 +89,7 @@ public class CartService {
               cartProduct.getProduct().getProductName(),
               cartProduct.getProduct().getDiscountPrice(),
               cartProduct.getProduct().getIsSelling(),
-              productImgRepository
-                  .findByProductId(cartProduct.getProduct().getId())
-                  .get()
-                  .getProductImgUrl());
+              cartProduct.getProduct().getProductImageURL());
       cartProductResponses.add(cartProductResponse);
     }
 

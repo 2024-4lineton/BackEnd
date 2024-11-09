@@ -9,18 +9,15 @@ import org.springframework.web.multipart.MultipartFile;
 import com.likelion.helfoome.domain.Img.entity.ArticleImg;
 import com.likelion.helfoome.domain.Img.entity.CommunityImg;
 import com.likelion.helfoome.domain.Img.entity.DemandImg;
-import com.likelion.helfoome.domain.Img.entity.ProductImg;
 import com.likelion.helfoome.domain.Img.entity.SupplyImg;
 import com.likelion.helfoome.domain.Img.repository.ArticleImgRepository;
 import com.likelion.helfoome.domain.Img.repository.CommunityImgRepository;
 import com.likelion.helfoome.domain.Img.repository.DemandImgRepository;
-import com.likelion.helfoome.domain.Img.repository.ProductImgRepository;
 import com.likelion.helfoome.domain.Img.repository.SupplyImgRepository;
 import com.likelion.helfoome.domain.post.entity.Article;
 import com.likelion.helfoome.domain.post.entity.Community;
 import com.likelion.helfoome.domain.post.entity.Demand;
 import com.likelion.helfoome.domain.post.entity.Supply;
-import com.likelion.helfoome.domain.shop.entity.Product;
 import com.likelion.helfoome.global.S3.service.S3Service;
 
 import lombok.RequiredArgsConstructor;
@@ -34,24 +31,8 @@ public class ImgService {
   private final ArticleImgRepository articleImgRepository;
   private final CommunityImgRepository communityImgRepository;
   private final DemandImgRepository demandImgRepository;
-  private final ProductImgRepository productImgRepository;
   private final SupplyImgRepository supplyImgRepository;
   private final S3Service s3Service;
-
-  public void uploadProductImg(List<MultipartFile> productImages, Product product)
-      throws IOException {
-    log.info("uploadProductImg");
-    for (MultipartFile productImage : productImages) {
-      log.info("enterProductImg");
-      String productImageUrl = s3Service.upload(productImage, "productImages");
-      ProductImg productImg = new ProductImg();
-      productImg.setProduct(product);
-      productImg.setProductImgName(productImage.getOriginalFilename());
-      productImg.setProductImgUrl(productImageUrl);
-      productImgRepository.save(productImg);
-    }
-    log.info("endProductImg");
-  }
 
   public void uploadArticleImg(List<MultipartFile> articleImages, Article article)
       throws IOException {

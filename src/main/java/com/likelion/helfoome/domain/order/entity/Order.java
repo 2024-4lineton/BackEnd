@@ -24,18 +24,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "orders")
 public class Order extends BaseTimeEntity {
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
-  private User user;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "shopId", referencedColumnName = "id", nullable = false)
-  private Shop shop;
 
   @Column(name = "productId", nullable = false)
   private Long productId;
@@ -57,4 +48,12 @@ public class Order extends BaseTimeEntity {
 
   @Column(name = "totalQuantity", nullable = false)
   private Integer totalQuantity;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
+  private User user;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "shopId", referencedColumnName = "id", nullable = false)
+  private Shop shop;
 }

@@ -4,8 +4,6 @@ import java.util.Random;
 
 import org.springframework.stereotype.Service;
 
-import com.likelion.helfoome.domain.Img.entity.ProductImg;
-import com.likelion.helfoome.domain.Img.repository.ProductImgRepository;
 import com.likelion.helfoome.domain.order.dto.OrderRequest;
 import com.likelion.helfoome.domain.order.entity.Order;
 import com.likelion.helfoome.domain.order.repository.OrderRepository;
@@ -26,19 +24,17 @@ public class OrderService {
   private final UserRepository userRepository;
   private final ShopRepository shopRepository;
   private final ProductRepository productRepository;
-  private final ProductImgRepository productImgRepository;
 
   // 주문테이블 생성 로직
   // 상품 id받아서 shop찾기, user받아서 일단 주문 테이블에 저장
   public String createOrder(OrderRequest orderRequest) {
     Product product = productRepository.findById(orderRequest.getProductId()).orElseThrow();
-    ProductImg productImg = productImgRepository.findByProductId(orderRequest.getProductId()).get();
 
     Order order = new Order();
     order.setUser(userRepository.findByEmail(orderRequest.getUserEmail()).orElseThrow());
     order.setShop(shopRepository.findById(orderRequest.getShopId()).orElseThrow());
     order.setProductId(product.getId());
-    order.setMainImage(productImg.getProductImgUrl());
+    order.setMainImage(product.getProductImageURL());
     order.setOrderStatus(0);
     order.setTotalQuantity(orderRequest.getQuantity());
     order.setTotalPrice(
