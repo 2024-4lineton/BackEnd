@@ -49,7 +49,6 @@ public class ProductService {
     // Shop 엔티티 조회
     Optional<Shop> shopOptional = shopRepository.findById(productRequest.getShopId());
     if (shopOptional.isEmpty()) {
-      System.out.println("Invalid shopID: " + productRequest.getShopId());
       throw new IllegalArgumentException("Invalid shopID");
     }
     Shop shop = shopOptional.get();
