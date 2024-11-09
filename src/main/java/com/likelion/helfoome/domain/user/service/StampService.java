@@ -29,6 +29,9 @@ public class StampService {
     Stamp stamp = new Stamp();
     stamp.setUser(user);
     stampRepository.save(stamp);
+
+    user.setStamp(stamp);
+    userRepository.save(user);
   }
 
   public void editStamp(User user) {

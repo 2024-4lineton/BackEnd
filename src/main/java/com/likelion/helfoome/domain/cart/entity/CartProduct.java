@@ -7,12 +7,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
 import com.likelion.helfoome.domain.shop.entity.Product;
-import com.likelion.helfoome.domain.user.entity.User;
 import com.likelion.helfoome.global.common.BaseTimeEntity;
 
 import lombok.Getter;
@@ -30,10 +28,6 @@ public class CartProduct extends BaseTimeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
-  private User user;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "productId", referencedColumnName = "id", nullable = false)

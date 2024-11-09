@@ -55,6 +55,9 @@ public class UserInfoService {
 
     userInfoRepository.save(newUserInfo);
 
+    user.setUserInfo(newUserInfo);
+    userRepository.save(user);
+
     return "개인정보가 정상적으로 등록되었습니다.";
   }
 

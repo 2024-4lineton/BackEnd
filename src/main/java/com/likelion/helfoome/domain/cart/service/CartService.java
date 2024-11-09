@@ -42,6 +42,9 @@ public class CartService {
 
     cartRepository.save(cart);
 
+    user.setCart(cart);
+    userRepository.save(user);
+
     return "장바구니가 정상적으로 등록되었습니다.";
   }
 
@@ -54,7 +57,6 @@ public class CartService {
     List<CartProduct> cartProductList = cart.getCartProductList();
     CartProduct cartProduct = new CartProduct();
 
-    cartProduct.setUser(cart.getUser());
     cartProduct.setCart(cart);
     cartProduct.setProduct(
         productRepository
