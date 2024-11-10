@@ -93,21 +93,18 @@ public class ProductController {
       description =
           "sort 0, 1, 2면 각각 단거리, 최저가, 최고할인순 "
               + "/  shopType은 0, 1, 2 각각 전통, 골목시장, 브랜드) "
-              + "/ page는 몇 페이지인지, size는 한 페이지 사이즈 어떻게 할건지"
               + "/marketName은 전통시장인 경우에만 시장 이름 넘겨주면 되고 아니면 걍 null값넣던 뭐 넣던 상관 없어요")
   @GetMapping("/productList")
   public ResponseEntity<ProductList> getProductList(
       @RequestParam @RequestHeader("Authorization") String bearerToken,
       @RequestParam Integer shopType,
       @RequestParam int sort,
-      @RequestParam int page,
-      @RequestParam int size,
       @RequestParam String marketName) {
     String token = bearerToken.substring(7);
     Claims claims = jwtUtil.getAllClaimsFromToken(token);
     String email = claims.getId();
     ProductList productList =
-        productService.getSortedProductList(email, shopType, sort, page, size, marketName);
+        productService.getSortedProductList(email, shopType, sort, marketName);
 
     return new ResponseEntity<>(productList, HttpStatus.OK);
   }
