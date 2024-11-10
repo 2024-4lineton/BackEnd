@@ -33,6 +33,7 @@ public class OrderService {
     order.setUser(userRepository.findByEmail(email).orElseThrow());
     order.setShop(shopRepository.findById(shopId).orElseThrow());
     order.setProductId(product.getId());
+    order.setProductName(product.getProductName());
     order.setMainImage(product.getProductImageURL());
     order.setOrderStatus(0);
     order.setTotalPrice(product.getDiscountPrice());
