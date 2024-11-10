@@ -53,6 +53,7 @@ public class OrderController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
+  @Operation(summary = "주문 내역", description = "orderState 0이면 예약 완료, 1이면 주문 확정, 2면 주문 취소")
   @GetMapping("/history")
   public ResponseEntity<List<OrderCompleteList>> getOrderHistory(
       @RequestHeader("Authorization") String bearerToken) {
