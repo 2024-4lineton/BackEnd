@@ -145,7 +145,7 @@ public class ProductService {
   }
 
   public ProductList getSortedProductList(
-      String email, Integer shopType, int sort, int page, int pageSize, String marketName) {
+      String email, Integer shopType, int sort, String marketName) {
     String userAddr =
         userInfoRepository.findByUser_Email(email).orElseThrow().getActivityLocation();
     ProductList productList = getProductList(userAddr, shopType, marketName);
@@ -170,12 +170,8 @@ public class ProductService {
                 })
             .collect(Collectors.toList());
 
-    int start = page * pageSize;
-    int end = Math.min(start + pageSize, sortedList.size());
-    List<ProductInList> pagedList = sortedList.subList(start, end);
-
     ProductList sortedProductList = new ProductList();
-    sortedProductList.setProductInList(pagedList);
+    sortedProductList.setProductInList(sortedList);
 
     return sortedProductList;
   }

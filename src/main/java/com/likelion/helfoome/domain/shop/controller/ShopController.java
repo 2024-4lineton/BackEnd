@@ -1,14 +1,5 @@
 package com.likelion.helfoome.domain.shop.controller;
 
-import com.likelion.helfoome.domain.shop.dto.ShopList;
-import com.likelion.helfoome.domain.shop.dto.ShopRegisterRequest;
-import com.likelion.helfoome.domain.shop.dto.TaxIdRequest;
-import com.likelion.helfoome.domain.shop.service.ShopService;
-import com.likelion.helfoome.global.auth.jwt.JwtUtil;
-import io.jsonwebtoken.Claims;
-import io.swagger.v3.oas.annotations.Operation;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +10,17 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.likelion.helfoome.domain.shop.dto.ShopList;
+import com.likelion.helfoome.domain.shop.dto.ShopRegisterRequest;
+import com.likelion.helfoome.domain.shop.dto.TaxIdRequest;
+import com.likelion.helfoome.domain.shop.service.ShopService;
+import com.likelion.helfoome.global.auth.jwt.JwtUtil;
+
+import io.jsonwebtoken.Claims;
+import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
@@ -76,9 +78,7 @@ public class ShopController {
   }
 
   // 전통시장 정렬 리스트
-  @Operation(
-      summary = "전통시장 리스트 가져오기",
-      description = "sort는 0(거리순) / 1(상품 많은 순)")
+  @Operation(summary = "전통시장 리스트 가져오기", description = "sort는 0(거리순) / 1(상품 많은 순)")
   @GetMapping("/traditional/sorted")
   public ResponseEntity<ShopList> getSortedShops(
       @RequestHeader("Authorization") String bearerToken, @RequestParam int sort) {
