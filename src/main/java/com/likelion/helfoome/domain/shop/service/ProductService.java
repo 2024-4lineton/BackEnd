@@ -1,5 +1,14 @@
 package com.likelion.helfoome.domain.shop.service;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.likelion.helfoome.domain.order.entity.Order;
 import com.likelion.helfoome.domain.order.repository.OrderRepository;
 import com.likelion.helfoome.domain.shop.dto.product.OrderInList;
@@ -18,15 +27,9 @@ import com.likelion.helfoome.domain.shop.repository.ShopRepository;
 import com.likelion.helfoome.domain.user.repository.UserInfoRepository;
 import com.likelion.helfoome.global.S3.service.S3Service;
 import com.likelion.helfoome.global.distance.DistanceService;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -97,7 +100,7 @@ public class ProductService {
     return productResponse;
   }
 
-  //상품 수정
+  // 상품 수정
   public String updateProduct(ProductEditRequest request) {
     Product product = productRepository.findById(request.getProductId()).orElseThrow();
     if (request.getQuantity() < 0) {
@@ -131,12 +134,12 @@ public class ProductService {
     if (productOptional.isEmpty()) {
       return "해당 상품을 찾을 수 없습니다.";
     }
-    //Order에서 해당 productId가 존재하는지 확인
+    // Order에서 해당 productId가 존재하는지 확인
     boolean orderExists = orderRepository.existsByProductId(productId);
     if (orderExists) {
       return "이 상품은 주문 내역에 사용되고 있어 삭제할 수 없습니다.";
     }
-    
+
     productRepository.deleteById(productId);
     return "상품이 성공적으로 삭제되었습니다.";
   }
