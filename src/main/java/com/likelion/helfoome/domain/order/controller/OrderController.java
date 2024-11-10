@@ -41,15 +41,15 @@ public class OrderController {
 
   @Operation(summary = "구매확정", description = "사장님이 누르는 구매확정 버튼")
   @PatchMapping("/confirm")
-  public ResponseEntity<String> confirmOrder(@RequestParam Long postId) {
-    orderService.confirmOrder(postId);
+  public ResponseEntity<String> confirmOrder(@RequestParam Long productId) {
+    orderService.confirmOrder(productId);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @Operation(summary = "주문 취소", description = "사장님이 누르는 구매 취소 버튼")
   @PatchMapping("/discard")
-  public ResponseEntity<String> discardOrder(@RequestParam Long postId) {
-    orderService.discardOrder(postId);
+  public ResponseEntity<String> discardOrder(@RequestParam Long productId) {
+    orderService.discardOrder(productId);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
