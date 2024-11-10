@@ -15,4 +15,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
   Long countByProductId(Long productId);
 
   boolean existsByProductId(Long productId);
+
+  List<Order> findAllByUser_Email(String email);
 }
