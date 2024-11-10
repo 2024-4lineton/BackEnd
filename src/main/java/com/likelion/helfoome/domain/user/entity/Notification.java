@@ -22,6 +22,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "notification")
 public class Notification extends BaseTimeEntity {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -35,4 +36,7 @@ public class Notification extends BaseTimeEntity {
 
   @Column(name = "content", nullable = false)
   private String content;
+
+  @Column(name = "PIN")
+  private String PIN;
 }
