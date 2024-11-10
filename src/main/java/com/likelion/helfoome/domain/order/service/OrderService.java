@@ -36,6 +36,7 @@ public class OrderService {
     order.setProductName(product.getProductName());
     order.setMainImage(product.getProductImageURL());
     order.setOrderStatus(0);
+    order.setTotalQuantity(1);
     order.setTotalPrice(product.getDiscountPrice());
     String pinNumber = generateUniquePin();
     order.setPIN(pinNumber);
