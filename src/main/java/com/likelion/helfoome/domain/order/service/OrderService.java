@@ -1,5 +1,8 @@
 package com.likelion.helfoome.domain.order.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -30,6 +33,16 @@ public class OrderService {
   private final ProductRepository productRepository;
   private final NotificationService notificationService;
   private final StampService stampService;
+
+  // 현재 달에 해당하는 주문 가져오기
+  public Long getOrdersCountForCurrentMonthAndUser(String email) {
+    LocalDate now = LocalDate.now();
+    LocalDateTime startOfMonth = now.withDayOfMonth(1).atStartOfDay();
+    LocalDateTime endOfMonth = now.withDayOfMonth(now.lengthOfMonth()).atTime(LocalTime.MAX);
+
+    return orderRepository.countByOrderStatusAndUser_EmailAndCreatedDateBetween(
+        1, email, startOfMonth, endOfMonth);
+  }
 
   // 주문테이블 생성 로직
   // 상품 id받아서 shop찾기, user받아서 일단 주문 테이블에 저장

@@ -19,4 +19,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
   boolean existsByProductId(Long productId);
 
   List<Order> findAllByUser_Email(String email);
+
+  Long countByOrderStatusAndUser_EmailAndCreatedDateBetween(
+      Integer orderStatus,
+      String email,
+      java.time.LocalDateTime startDate,
+      java.time.LocalDateTime endDate);
 }

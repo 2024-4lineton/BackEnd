@@ -44,6 +44,18 @@ public class OrderController {
     return new ResponseEntity<>(PIN, HttpStatus.OK);
   }
 
+  @Operation(
+      summary = "이번달 구매 수",
+      description = "이번달 구매 수 리턴 / 백엔드에서 현재 날짜 가져와서 지금이 어떤 달이고 뭐 이런거 다 계산합니다옹")
+  @GetMapping("/countCurMonth")
+  public ResponseEntity<Long> getCurMonthCount(@RequestHeader("Authorization") String bearerToken) {
+    String token = bearerToken.substring(7);
+    Claims claims = jwtUtil.getAllClaimsFromToken(token);
+    String email = claims.getId();
+    Long count = orderService.getOrdersCountForCurrentMonthAndUser(email);
+    return new ResponseEntity<>(count, HttpStatus.OK);
+  }
+
   @Operation(summary = "구매확정", description = "사장님이 누르는 구매확정 버튼")
   @PatchMapping("/confirm")
   public ResponseEntity<String> confirmOrder(@RequestParam Long productId) {
