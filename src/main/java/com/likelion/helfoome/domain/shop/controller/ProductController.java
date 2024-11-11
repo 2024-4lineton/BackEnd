@@ -1,6 +1,7 @@
 package com.likelion.helfoome.domain.shop.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.likelion.helfoome.domain.shop.dto.product.LastProductResponse;
 import com.likelion.helfoome.domain.shop.dto.product.ProductEditRequest;
 import com.likelion.helfoome.domain.shop.dto.product.ProductList;
 import com.likelion.helfoome.domain.shop.dto.product.ProductManagingResponse;
@@ -124,9 +126,16 @@ public class ProductController {
   }
 
   @Operation(summary = "판매 종료된 상품(관리자가 보는)", description = "판매 종료인 상품 목록 가져오는거")
-  @GetMapping("/unSelling")
+  @GetMapping("/unselling")
   public ResponseEntity<SellingProductList> getUnSelling(@RequestParam Long shopId) {
     SellingProductList response = productService.getUnSellingProduct(shopId);
+    return new ResponseEntity<>(response, HttpStatus.OK);
+  }
+
+  @Operation(summary = "판매 종료 임박 상품", description = "판매 종료 임박된 상품 상위 5개")
+  @GetMapping("/last-chance")
+  public ResponseEntity<?> getLastProductList(@RequestParam String currentTime) {
+    List<LastProductResponse> response = productService.getLastProductList(currentTime);
     return new ResponseEntity<>(response, HttpStatus.OK);
   }
 }

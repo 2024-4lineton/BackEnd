@@ -2,6 +2,9 @@ package com.likelion.helfoome.domain.user.controller;
 
 import java.util.List;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +50,24 @@ public class UserController {
     }
   }
 
-  @Operation(summary = "사용자 전체 조회", description = "소셜 로그인으로 가입된 사용자 전체 조회")
+  @Operation(summary = "로그아웃", description = "쿠키에 있는 Access Token 파기")
+  @PostMapping("/log-out")
+  public ResponseEntity<?> userLogOut(@RequestBody HttpServletResponse response) {
+    try {
+      // 쿠키에 있는 Access Token 제거
+      Cookie cookie = new Cookie("Authorization", null);
+      cookie.setMaxAge(0); // 쿠키 삭제
+      cookie.setPath("/"); // 해당 경로에 있는 쿠키를 삭제
+      response.addCookie(cookie);
+
+      return ResponseEntity.ok().build();
+    } catch (RuntimeException e) {
+      log.error("Error during log out in controller /api/users/log-out: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+  }
+
+  @Operation(summary = "사용자 전체 조회(관리자용)", description = "소셜 로그인으로 가입된 사용자 전체 조회")
   @GetMapping("/get-all")
   public ResponseEntity<?> getAllUsers() {
     try {

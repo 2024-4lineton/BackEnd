@@ -22,7 +22,7 @@ public class UserService {
   public List<UserResponse> getAllUsers() {
     // UserListResponse를 담을 리스트 생성
     List<UserResponse> responses = new ArrayList<>();
-    UserResponse response = new UserResponse();
+    UserResponse response;
 
     List<User> users = userRepository.findAll();
     for (User user : users) {

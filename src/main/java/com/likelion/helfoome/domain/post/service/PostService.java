@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.likelion.helfoome.domain.Img.entity.ArticleImg;
@@ -115,7 +116,7 @@ public class PostService {
 
     // PostListResponse를 담을 리스트 생성하고
     List<PostResponse> postResponses = new ArrayList<>();
-    PostResponse response = new PostResponse();
+    PostResponse response;
 
     // postType 사용하여 해당하는 게시글 전체 조회
     switch (postType) {
@@ -136,6 +137,7 @@ public class PostService {
                       .getFirst()
                       .getArticleImgUrl(),
                   null);
+          postResponses.add(response);
         }
         break;
       case "community":
@@ -154,6 +156,7 @@ public class PostService {
                       .getFirst()
                       .getCommunityImgUrl(),
                   null);
+          postResponses.add(response);
         }
         break;
       case "demand":
@@ -169,6 +172,7 @@ public class PostService {
                   demand.getCreatedDate(),
                   demandImgRepository.findByDemandId(demand.getId()).getFirst().getDemandImgUrl(),
                   null);
+          postResponses.add(response);
         }
         break;
       case "supply":
@@ -184,12 +188,12 @@ public class PostService {
                   supply.getCreatedDate(),
                   supplyImgRepository.findBySupplyId(supply.getId()).getFirst().getSupplyImgUrl(),
                   null);
+          postResponses.add(response);
         }
         break;
       default:
         log.warn("No post type found: {}", postType);
     }
-    postResponses.add(response);
 
     return postResponses;
   }
@@ -290,5 +294,282 @@ public class PostService {
     }
 
     return response;
+  }
+
+  // 특정 게시물 email로 전체 조회
+  public List<PostResponse> getAllPostByEmail(String postType, String email) {
+    log.info("Post List for email: {}", email);
+
+    // PostListResponse를 담을 리스트 생성하고
+    List<PostResponse> postResponses = new ArrayList<>();
+    PostResponse response;
+
+    // postType 사용하여 해당하는 게시글 전체 조회
+    switch (postType) {
+      case "article":
+        List<Article> articles = articleRepository.findByUser_Email(email);
+
+        for (Article article : articles) {
+          response =
+              new PostResponse(
+                  article.getUser().getNickname(),
+                  article.getTitle(),
+                  article.getContent(),
+                  article.getTotalLikes(),
+                  article.getTotalComments(),
+                  article.getCreatedDate(),
+                  articleImgRepository
+                      .findByArticleId(article.getId())
+                      .getFirst()
+                      .getArticleImgUrl(),
+                  null);
+          postResponses.add(response);
+        }
+        break;
+      case "community":
+        List<Community> communities = communityRepository.findByUser_Email(email);
+        for (Community community : communities) {
+          response =
+              new PostResponse(
+                  community.getUser().getNickname(),
+                  community.getTitle(),
+                  community.getContent(),
+                  community.getTotalLikes(),
+                  community.getTotalComments(),
+                  community.getCreatedDate(),
+                  communityImgRepository
+                      .findByCommunityId(community.getId())
+                      .getFirst()
+                      .getCommunityImgUrl(),
+                  null);
+          postResponses.add(response);
+        }
+        break;
+      case "demand":
+        List<Demand> demands = demandRepository.findByUser_Email(email);
+        for (Demand demand : demands) {
+          response =
+              new PostResponse(
+                  demand.getUser().getNickname(),
+                  demand.getTitle(),
+                  demand.getContent(),
+                  demand.getTotalLikes(),
+                  null,
+                  demand.getCreatedDate(),
+                  demandImgRepository.findByDemandId(demand.getId()).getFirst().getDemandImgUrl(),
+                  null);
+          postResponses.add(response);
+        }
+        break;
+      case "supply":
+        List<Supply> supplies = supplyRepository.findByUser_Email(email);
+        for (Supply supply : supplies) {
+          response =
+              new PostResponse(
+                  supply.getUser().getNickname(),
+                  supply.getTitle(),
+                  supply.getContent(),
+                  supply.getTotalLikes(),
+                  null,
+                  supply.getCreatedDate(),
+                  supplyImgRepository.findBySupplyId(supply.getId()).getFirst().getSupplyImgUrl(),
+                  null);
+          postResponses.add(response);
+        }
+        break;
+      default:
+        log.warn("No post type found: {}", postType);
+    }
+
+    return postResponses;
+  }
+
+  // 최신 게시물 상위 5개조회
+  public List<PostResponse> getLatestPosts(String postType) {
+    List<PostResponse> postResponses = new ArrayList<>();
+    PostResponse response;
+
+    switch (postType) {
+      case "article":
+        List<Article> articleList =
+            articleRepository.findAll(Sort.by(Sort.Direction.DESC, "createdDate")).stream()
+                .limit(5)
+                .toList();
+        for (Article article : articleList) {
+          response =
+              new PostResponse(
+                  article.getUser().getNickname(),
+                  article.getTitle(),
+                  article.getContent(),
+                  article.getTotalLikes(),
+                  article.getTotalComments(),
+                  article.getCreatedDate(),
+                  articleImgRepository
+                      .findByArticleId(article.getId())
+                      .getFirst()
+                      .getArticleImgUrl(),
+                  null);
+          postResponses.add(response);
+        }
+        break;
+      case "community":
+        List<Community> communityList =
+            communityRepository.findAll(Sort.by(Sort.Direction.DESC, "createdDate")).stream()
+                .limit(5)
+                .toList();
+        for (Community community : communityList) {
+          response =
+              new PostResponse(
+                  community.getUser().getNickname(),
+                  community.getTitle(),
+                  community.getContent(),
+                  community.getTotalLikes(),
+                  community.getTotalComments(),
+                  community.getCreatedDate(),
+                  communityImgRepository
+                      .findByCommunityId(community.getId())
+                      .getFirst()
+                      .getCommunityImgUrl(),
+                  null);
+          postResponses.add(response);
+        }
+        break;
+      case "demand":
+        List<Demand> demandList =
+            demandRepository.findAll(Sort.by(Sort.Direction.DESC, "createdDate")).stream()
+                .limit(5)
+                .toList();
+        for (Demand demand : demandList) {
+          response =
+              new PostResponse(
+                  demand.getUser().getNickname(),
+                  demand.getTitle(),
+                  demand.getContent(),
+                  demand.getTotalLikes(),
+                  null,
+                  demand.getCreatedDate(),
+                  demandImgRepository.findByDemandId(demand.getId()).getFirst().getDemandImgUrl(),
+                  null);
+          postResponses.add(response);
+        }
+        break;
+      case "supply":
+        List<Supply> supplyList =
+            supplyRepository.findAll(Sort.by(Sort.Direction.DESC, "createdDate")).stream()
+                .limit(5)
+                .toList();
+        for (Supply supply : supplyList) {
+          response =
+              new PostResponse(
+                  supply.getUser().getNickname(),
+                  supply.getTitle(),
+                  supply.getContent(),
+                  supply.getTotalLikes(),
+                  null,
+                  supply.getCreatedDate(),
+                  supplyImgRepository.findBySupplyId(supply.getId()).getFirst().getSupplyImgUrl(),
+                  null);
+          postResponses.add(response);
+        }
+        break;
+      default:
+        log.warn("No post type found: {}", postType);
+    }
+    return postResponses;
+  }
+
+  // 인기 게시물 상위 5개 조회
+  public List<PostResponse> getHottestPosts(String postType) {
+    List<PostResponse> postResponses = new ArrayList<>();
+    PostResponse response;
+
+    switch (postType) {
+      case "article":
+        List<Article> articleList =
+            articleRepository.findAll(Sort.by(Sort.Direction.DESC, "totalLikes")).stream()
+                .limit(5)
+                .toList();
+
+        for (Article article : articleList) {
+          response =
+              new PostResponse(
+                  article.getUser().getNickname(),
+                  article.getTitle(),
+                  article.getContent(),
+                  article.getTotalLikes(),
+                  article.getTotalComments(),
+                  article.getCreatedDate(),
+                  articleImgRepository
+                      .findByArticleId(article.getId())
+                      .getFirst()
+                      .getArticleImgUrl(),
+                  null);
+          postResponses.add(response);
+        }
+        break;
+      case "community":
+        List<Community> communityList =
+            communityRepository.findAll(Sort.by(Sort.Direction.DESC, "totalLikes")).stream()
+                .limit(5)
+                .toList();
+        for (Community community : communityList) {
+          response =
+              new PostResponse(
+                  community.getUser().getNickname(),
+                  community.getTitle(),
+                  community.getContent(),
+                  community.getTotalLikes(),
+                  community.getTotalComments(),
+                  community.getCreatedDate(),
+                  communityImgRepository
+                      .findByCommunityId(community.getId())
+                      .getFirst()
+                      .getCommunityImgUrl(),
+                  null);
+          postResponses.add(response);
+        }
+        break;
+      case "demand":
+        List<Demand> demandList =
+            demandRepository.findAll(Sort.by(Sort.Direction.DESC, "totalLikes")).stream()
+                .limit(5)
+                .toList();
+        for (Demand demand : demandList) {
+          response =
+              new PostResponse(
+                  demand.getUser().getNickname(),
+                  demand.getTitle(),
+                  demand.getContent(),
+                  demand.getTotalLikes(),
+                  null,
+                  demand.getCreatedDate(),
+                  demandImgRepository.findByDemandId(demand.getId()).getFirst().getDemandImgUrl(),
+                  null);
+          postResponses.add(response);
+        }
+        break;
+      case "supply":
+        List<Supply> supplyList =
+            supplyRepository.findAll(Sort.by(Sort.Direction.DESC, "totalLikes")).stream()
+                .limit(5)
+                .toList();
+        for (Supply supply : supplyList) {
+          response =
+              new PostResponse(
+                  supply.getUser().getNickname(),
+                  supply.getTitle(),
+                  supply.getContent(),
+                  supply.getTotalLikes(),
+                  null,
+                  supply.getCreatedDate(),
+                  supplyImgRepository.findBySupplyId(supply.getId()).getFirst().getSupplyImgUrl(),
+                  null);
+          postResponses.add(response);
+        }
+        break;
+      default:
+        log.warn("No post type found: {}", postType);
+    }
+    return postResponses;
   }
 }

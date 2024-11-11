@@ -8,7 +8,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 
 import com.likelion.helfoome.domain.shop.entity.Product;
 import com.likelion.helfoome.global.common.BaseTimeEntity;
