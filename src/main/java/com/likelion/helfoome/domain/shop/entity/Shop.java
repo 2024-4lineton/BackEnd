@@ -1,7 +1,9 @@
 package com.likelion.helfoome.domain.shop.entity;
 
-import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.likelion.helfoome.domain.order.entity.Order;
+import com.likelion.helfoome.domain.user.entity.User;
+import com.likelion.helfoome.global.common.BaseTimeEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,11 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-
-import com.likelion.helfoome.domain.order.entity.Order;
-import com.likelion.helfoome.domain.user.entity.User;
-import com.likelion.helfoome.global.common.BaseTimeEntity;
-
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -74,6 +72,7 @@ public class Shop extends BaseTimeEntity {
       orphanRemoval = true)
   private List<Product> productList;
 
+  @JsonManagedReference
   @OneToMany(
       mappedBy = "shop",
       fetch = FetchType.LAZY,
