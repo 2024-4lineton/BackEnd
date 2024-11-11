@@ -1,6 +1,5 @@
 package com.likelion.helfoome.domain.order.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.likelion.helfoome.domain.shop.entity.Shop;
 import com.likelion.helfoome.domain.user.entity.User;
 import com.likelion.helfoome.global.common.BaseTimeEntity;
@@ -55,6 +54,6 @@ public class Order extends BaseTimeEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "shopId", referencedColumnName = "id", nullable = false)
-  @JsonBackReference
+
   private Shop shop;
 }

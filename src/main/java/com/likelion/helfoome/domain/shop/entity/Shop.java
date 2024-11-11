@@ -1,6 +1,6 @@
 package com.likelion.helfoome.domain.shop.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.likelion.helfoome.domain.order.entity.Order;
 import com.likelion.helfoome.domain.user.entity.User;
 import com.likelion.helfoome.global.common.BaseTimeEntity;
@@ -63,6 +63,7 @@ public class Shop extends BaseTimeEntity {
 
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
+  @JsonIgnore
   private User user;
 
   @OneToMany(
@@ -72,7 +73,7 @@ public class Shop extends BaseTimeEntity {
       orphanRemoval = true)
   private List<Product> productList;
 
-  @JsonManagedReference
+
   @OneToMany(
       mappedBy = "shop",
       fetch = FetchType.LAZY,
