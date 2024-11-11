@@ -101,7 +101,7 @@ public class ProductController {
       @RequestHeader("Authorization") String bearerToken,
       @RequestParam Integer shopType,
       @RequestParam int sort,
-      @RequestParam String marketName) {
+      String marketName) {
     String token = bearerToken.substring(7);
     Claims claims = jwtUtil.getAllClaimsFromToken(token);
     String email = claims.getId();
