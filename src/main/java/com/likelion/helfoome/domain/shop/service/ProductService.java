@@ -1,18 +1,5 @@
 package com.likelion.helfoome.domain.shop.service;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.likelion.helfoome.domain.order.entity.Order;
 import com.likelion.helfoome.domain.order.repository.OrderRepository;
 import com.likelion.helfoome.domain.shop.dto.product.MainProductResponse;
@@ -34,9 +21,19 @@ import com.likelion.helfoome.domain.user.repository.UserInfoRepository;
 import com.likelion.helfoome.domain.user.repository.UserRepository;
 import com.likelion.helfoome.global.S3.service.S3Service;
 import com.likelion.helfoome.global.distance.DistanceService;
-
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -111,12 +108,16 @@ public class ProductService {
   // 상품 수정
   public String updateProduct(ProductEditRequest request) {
     Product product = productRepository.findById(request.getProductId()).orElseThrow();
-    if (request.getQuantity() < 0) {
-      throw new IllegalArgumentException("수량은 0 이상이어야 합니다.");
+
+    if (request.getQuantity() != null) {
+      if (request.getQuantity() < 0) {
+        throw new IllegalArgumentException("수량은 0 이상이어야 합니다.");
+      }
+      if (request.getQuantity() == 0) {
+        product.setIsSelling(false);
+      }
     }
-    if (request.getQuantity() == 0) {
-      product.setIsSelling(false);
-    }
+
     if (request.getProductName() != null) {
       product.setProductName(request.getProductName());
     }
