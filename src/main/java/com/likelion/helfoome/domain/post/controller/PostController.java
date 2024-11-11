@@ -89,4 +89,58 @@ public class PostController {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
+
+  @Operation(summary = "사용자 게시물 전체 조회", description = "Post Type으로 사용자 게시물(내가 쓴 글) 전체 조회")
+  @GetMapping("/{postType}/email")
+  public ResponseEntity<?> getAllPost(
+      @PathVariable String postType, @RequestHeader("Authorization") String bearerToken) {
+    try {
+      String token = bearerToken.substring(7);
+      Claims claims = jwtUtil.getAllClaimsFromToken(token);
+      String email = claims.getId();
+
+      List<PostResponse> postResponses = postService.getAllPostByEmail(postType, email);
+      if (postResponses.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("게시물이 존재하지 않습니다.");
+      } else {
+        return ResponseEntity.ok(postResponses);
+      }
+    } catch (RuntimeException e) {
+      log.error(
+          "Error during fetching user's post list in controller /api/post: {}", e.getMessage());
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
+
+  @Operation(summary = "최신글 조회", description = "Post별 최신 게시물 상위 5개 조회")
+  @GetMapping("/latest/{postType}")
+  public ResponseEntity<?> getLatestPostById(@PathVariable String postType) {
+    try {
+      List<PostResponse> postResponses = postService.getLatestPosts(postType);
+      if (postResponses.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("게시물이 존재하지 않습니다.");
+      } else {
+        return ResponseEntity.ok(postResponses);
+      }
+    } catch (RuntimeException e) {
+      log.error("Error during fetching post in controller /api/post/latest: {}", e.getMessage());
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
+
+  @Operation(summary = "인기글 조회", description = "Post별 인기 게시물 상위 5개 조회")
+  @GetMapping("/hottest/{postType}")
+  public ResponseEntity<?> getHottestPostById(@PathVariable String postType) {
+    try {
+      List<PostResponse> postResponses = postService.getHottestPosts(postType);
+      if (postResponses.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("게시물이 존재하지 않습니다.");
+      } else {
+        return ResponseEntity.ok(postResponses);
+      }
+    } catch (RuntimeException e) {
+      log.error("Error during fetching post in controller /api/post/hottest: {}", e.getMessage());
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
 }

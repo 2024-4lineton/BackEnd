@@ -2,6 +2,7 @@ package com.likelion.helfoome.domain.shop.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.likelion.helfoome.domain.order.entity.Order;
 import com.likelion.helfoome.domain.order.repository.OrderRepository;
+import com.likelion.helfoome.domain.shop.dto.product.LastProductResponse;
 import com.likelion.helfoome.domain.shop.dto.product.OrderInList;
 import com.likelion.helfoome.domain.shop.dto.product.ProductEditRequest;
 import com.likelion.helfoome.domain.shop.dto.product.ProductInList;
@@ -273,5 +275,37 @@ public class ProductService {
     SellingProductList productList = new SellingProductList();
     productList.setProductInList(returnProducts);
     return productList;
+  }
+
+  public List<LastProductResponse> getLastProductList(String currentTime) {
+    List<Shop> shops = shopRepository.findAll();
+
+    List<Shop> sortedShops =
+        shops.stream()
+            .sorted(
+                Comparator.comparing(
+                    shop -> {
+                      String endTime = shop.getBusinessHours().split(", ")[1].replaceAll(":", "");
+                      return Integer.parseInt(endTime)
+                          - Integer.parseInt(currentTime.replaceAll(":", ""));
+                    }))
+            .toList();
+
+    List<LastProductResponse> lastProductResponses = new ArrayList<>();
+    LastProductResponse response;
+    for (Shop shop : sortedShops) {
+      response =
+          new LastProductResponse(
+              shop.getShopName(),
+              shop.getProductList().getFirst().getId(),
+              shop.getProductList().getFirst().getProductName(),
+              shop.getProductList().getFirst().getDiscountPrice(),
+              shop.getProductList().getFirst().getDiscountPercent(),
+              shop.getProductList().getFirst().getProductImageURL());
+
+      lastProductResponses.add(response);
+    }
+
+    return lastProductResponses;
   }
 }

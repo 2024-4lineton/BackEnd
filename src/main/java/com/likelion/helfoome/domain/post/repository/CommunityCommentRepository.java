@@ -10,4 +10,6 @@ import com.likelion.helfoome.domain.post.entity.CommunityComment;
 @Repository
 public interface CommunityCommentRepository extends JpaRepository<CommunityComment, Long> {
   List<CommunityComment> findByCommunityId(Long id);
+
+  List<CommunityComment> findByUser_Email(String email);
 }

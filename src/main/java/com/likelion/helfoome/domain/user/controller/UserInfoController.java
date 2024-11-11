@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.likelion.helfoome.domain.cart.service.CartService;
 import com.likelion.helfoome.domain.user.dto.UserInfoRegisterRequest;
 import com.likelion.helfoome.domain.user.dto.UserInfoResponse;
 import com.likelion.helfoome.domain.user.service.StampService;
@@ -29,6 +30,7 @@ public class UserInfoController {
   private final UserInfoService userInfoService;
   private final StampService stampService;
   private final JwtUtil jwtUtil;
+  private final CartService cartService;
 
   // 사용자 첫 로그인 확인
   @Operation(summary = "사용자 첫 로그인 확인", description = "사용자 첫 로그인 확인")
@@ -63,6 +65,7 @@ public class UserInfoController {
 
       if ("개인정보가 정상적으로 등록되었습니다.".equals(result)) {
         stampService.createStamp(email); // 정보 정상 등록시 Stamp생성
+        cartService.createCart(email);
         return ResponseEntity.ok(result);
       } else {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(result);

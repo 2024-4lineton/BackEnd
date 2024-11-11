@@ -10,4 +10,6 @@ import com.likelion.helfoome.domain.post.entity.ArticleComment;
 @Repository
 public interface ArticleCommentRepository extends JpaRepository<ArticleComment, Long> {
   List<ArticleComment> findByArticleId(Long articleId);
+
+  List<ArticleComment> findByUser_Email(String email);
 }

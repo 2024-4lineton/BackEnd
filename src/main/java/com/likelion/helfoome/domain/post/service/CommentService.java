@@ -73,11 +73,11 @@ public class CommentService {
 
   // 특정 게시물의 댓글 조회
   public List<CommentResponse> getAllComments(String postType, Long postId) {
-    log.info("Post List for postId: {}", postId);
+    log.info("Comment List for postId: {}", postId);
 
     // CommentListResponse를 담을 리스트 생성하고
     List<CommentResponse> responses = new ArrayList<>();
-    CommentResponse response = new CommentResponse();
+    CommentResponse response;
 
     // postType 사용하여 해당하는 게시글 전체 조회
     switch (postType) {
@@ -105,7 +105,47 @@ public class CommentService {
         }
         break;
       default:
-        log.warn("No post Id found: {}", postId);
+        log.warn("No comment by post Id found: {}", postId);
+    }
+
+    return responses;
+  }
+
+  // 특정 게시물의 댓글 조회
+  public List<CommentResponse> getAllCommentsByEmail(String postType, String email) {
+    log.info("Comment List for email: {}", email);
+
+    // CommentListResponse를 담을 리스트 생성하고
+    List<CommentResponse> responses = new ArrayList<>();
+    CommentResponse response;
+
+    // postType 사용하여 해당하는 게시글 전체 조회
+    switch (postType) {
+      case "article":
+        List<ArticleComment> articleComments = articleCommentRepository.findByUser_Email(email);
+        for (ArticleComment articleComment : articleComments) {
+          response =
+              new CommentResponse(
+                  articleComment.getUser().getNickname(),
+                  articleComment.getContent(),
+                  articleComment.getCreatedDate());
+          responses.add(response);
+        }
+        break;
+      case "community":
+        List<CommunityComment> communityComments =
+            communityCommentRepository.findByUser_Email(email);
+        for (CommunityComment communityComment : communityComments) {
+          response =
+              new CommentResponse(
+                  communityComment.getUser().getNickname(),
+                  communityComment.getContent(),
+                  communityComment.getCreatedDate());
+          responses.add(response);
+        }
+        break;
+      default:
+        log.warn("No comment by email found: {}", email);
     }
 
     return responses;
