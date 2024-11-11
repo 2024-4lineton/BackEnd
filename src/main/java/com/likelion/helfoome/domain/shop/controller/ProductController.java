@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.likelion.helfoome.domain.shop.dto.product.LastProductResponse;
+import com.likelion.helfoome.domain.shop.dto.product.MainProductResponse;
 import com.likelion.helfoome.domain.shop.dto.product.ProductEditRequest;
 import com.likelion.helfoome.domain.shop.dto.product.ProductList;
 import com.likelion.helfoome.domain.shop.dto.product.ProductManagingResponse;
@@ -98,7 +98,7 @@ public class ProductController {
               + "/marketName은 전통시장인 경우에만 시장 이름 넘겨주면 되고 아니면 걍 null값넣던 뭐 넣던 상관 없어요")
   @GetMapping("/productList")
   public ResponseEntity<ProductList> getProductList(
-      @RequestParam @RequestHeader("Authorization") String bearerToken,
+      @RequestHeader("Authorization") String bearerToken,
       @RequestParam Integer shopType,
       @RequestParam int sort,
       @RequestParam String marketName) {
@@ -135,7 +135,19 @@ public class ProductController {
   @Operation(summary = "판매 종료 임박 상품", description = "판매 종료 임박된 상품 상위 5개")
   @GetMapping("/last-chance")
   public ResponseEntity<?> getLastProductList(@RequestParam String currentTime) {
-    List<LastProductResponse> response = productService.getLastProductList(currentTime);
+    List<MainProductResponse> response = productService.getLastProductList(currentTime);
+    return new ResponseEntity<>(response, HttpStatus.OK);
+  }
+
+  @Operation(summary = "랜덤 추천 상품", description = "판매 종료 임박된 상품 상위 5개")
+  @GetMapping("/recommand")
+  public ResponseEntity<?> getRandomProductList(
+      @RequestHeader("Authorization") String bearerToken) {
+    String token = bearerToken.substring(7);
+    Claims claims = jwtUtil.getAllClaimsFromToken(token);
+    String email = claims.getId();
+
+    List<MainProductResponse> response = productService.getRandomProductList(email);
     return new ResponseEntity<>(response, HttpStatus.OK);
   }
 }

@@ -3,8 +3,11 @@ package com.likelion.helfoome.domain.shop.service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -12,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.likelion.helfoome.domain.order.entity.Order;
 import com.likelion.helfoome.domain.order.repository.OrderRepository;
-import com.likelion.helfoome.domain.shop.dto.product.LastProductResponse;
+import com.likelion.helfoome.domain.shop.dto.product.MainProductResponse;
 import com.likelion.helfoome.domain.shop.dto.product.OrderInList;
 import com.likelion.helfoome.domain.shop.dto.product.ProductEditRequest;
 import com.likelion.helfoome.domain.shop.dto.product.ProductInList;
@@ -26,7 +29,9 @@ import com.likelion.helfoome.domain.shop.entity.Product;
 import com.likelion.helfoome.domain.shop.entity.Shop;
 import com.likelion.helfoome.domain.shop.repository.ProductRepository;
 import com.likelion.helfoome.domain.shop.repository.ShopRepository;
+import com.likelion.helfoome.domain.user.entity.User;
 import com.likelion.helfoome.domain.user.repository.UserInfoRepository;
+import com.likelion.helfoome.domain.user.repository.UserRepository;
 import com.likelion.helfoome.global.S3.service.S3Service;
 import com.likelion.helfoome.global.distance.DistanceService;
 
@@ -41,6 +46,7 @@ public class ProductService {
   private final ProductRepository productRepository;
   private final ShopRepository shopRepository;
   private final OrderRepository orderRepository;
+  private final UserRepository userRepository;
   private final UserInfoRepository userInfoRepository;
   private final S3Service s3Service;
   private final DistanceService distanceService;
@@ -277,7 +283,7 @@ public class ProductService {
     return productList;
   }
 
-  public List<LastProductResponse> getLastProductList(String currentTime) {
+  public List<MainProductResponse> getLastProductList(String currentTime) {
     List<Shop> shops = shopRepository.findAll();
 
     List<Shop> sortedShops =
@@ -291,11 +297,11 @@ public class ProductService {
                     }))
             .toList();
 
-    List<LastProductResponse> lastProductResponses = new ArrayList<>();
-    LastProductResponse response;
+    List<MainProductResponse> mainProductResponses = new ArrayList<>();
+    MainProductResponse response;
     for (Shop shop : sortedShops) {
       response =
-          new LastProductResponse(
+          new MainProductResponse(
               shop.getShopName(),
               shop.getProductList().getFirst().getId(),
               shop.getProductList().getFirst().getProductName(),
@@ -303,9 +309,48 @@ public class ProductService {
               shop.getProductList().getFirst().getDiscountPercent(),
               shop.getProductList().getFirst().getProductImageURL());
 
-      lastProductResponses.add(response);
+      mainProductResponses.add(response);
     }
 
-    return lastProductResponses;
+    return mainProductResponses;
+  }
+
+  public List<MainProductResponse> getRandomProductList(String email) {
+    User user =
+        userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+
+    List<Product> productList =
+        productRepository.findByRealAddrStartingWith(
+            user.getUserInfo().getActivityLocation().substring(0, 3));
+
+    List<MainProductResponse> mainProductResponses = new ArrayList<>();
+    MainProductResponse response;
+    Set<Integer> set = new HashSet<>();
+    Random random = new Random();
+
+    while (set.size() < 5) {
+      int number = random.nextInt(productList.size());
+      set.add(number);
+
+      if (set.size() == productList.size()) {
+        break;
+      }
+    }
+    List<Integer> numberList = new ArrayList<>(set);
+
+    for (int i = 0; i < 5; i++) {
+      Product product = productList.get(numberList.get(i));
+      response =
+          new MainProductResponse(
+              product.getShop().getShopName(),
+              product.getId(),
+              product.getProductName(),
+              product.getDiscountPrice(),
+              product.getDiscountPercent(),
+              product.getProductImageURL());
+
+      mainProductResponses.add(response);
+    }
+    return mainProductResponses;
   }
 }

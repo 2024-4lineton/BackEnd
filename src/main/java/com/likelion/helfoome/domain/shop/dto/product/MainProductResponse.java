@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LastProductResponse {
+public class MainProductResponse {
   private String shop;
   private Long productId;
   private String productName;
