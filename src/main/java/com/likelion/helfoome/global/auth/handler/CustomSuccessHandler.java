@@ -26,7 +26,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
   private static final String AUTHORIZATION_COOKIE = "Authorization";
   private static final String DEFAULT_ROLE = "ROLE_USER";
-  private static final String REDIRECT_URL = "https://metalog.store/swagger-ui/index.html";
+  private static final String REDIRECT_URL = "https://localhost:3000/";
   private static final int COOKIE_MAX_AGE = 60 * 60; // 1시간
 
   @Override
