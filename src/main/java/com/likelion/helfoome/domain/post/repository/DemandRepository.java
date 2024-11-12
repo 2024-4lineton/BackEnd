@@ -10,4 +10,6 @@ import com.likelion.helfoome.domain.post.entity.Demand;
 @Repository
 public interface DemandRepository extends JpaRepository<Demand, Long> {
   List<Demand> findByUser_Email(String email);
+
+  List<Demand> findByContentContaining(String keyword);
 }

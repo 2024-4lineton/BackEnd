@@ -17,4 +17,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
   Integer countByShopIdAndIsSellingTrue(Long shopId);
 
   List<Product> findByRealAddrStartingWith(String prefix);
+
+  List<Product> findByProductNameContaining(String prefix);
 }
