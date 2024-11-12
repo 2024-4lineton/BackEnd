@@ -1,8 +1,7 @@
 package com.likelion.helfoome.domain.shop.entity;
 
-import java.util.List;
-
-import jakarta.persistence.CascadeType;
+import com.likelion.helfoome.domain.shop.dto.product.ProductResponse;
+import com.likelion.helfoome.global.common.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,12 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-
-import com.likelion.helfoome.domain.cart.entity.CartProduct;
-import com.likelion.helfoome.global.common.BaseTimeEntity;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -63,12 +57,6 @@ public class Product extends BaseTimeEntity {
   @JoinColumn(name = "shopId", referencedColumnName = "id", nullable = false)
   private Shop shop;
 
-  @OneToMany(
-      mappedBy = "product",
-      fetch = FetchType.LAZY,
-      cascade = CascadeType.ALL,
-      orphanRemoval = true)
-  private List<CartProduct> cartProductList;
 
   public void updateQuantity(int newQuantity) {
     if (newQuantity < 0) {
@@ -78,5 +66,20 @@ public class Product extends BaseTimeEntity {
       this.isSelling = false;
     }
     this.quantity = newQuantity;
+  }
+
+  public ProductResponse toProductResponse() {
+    ProductResponse response = new ProductResponse();
+    response.setShopId(this.shop.getId());
+    response.setShopName(this.shop.getShopName()); // Shop 엔티티에 이름 필드가 있다고 가정
+    response.setProductId(this.id);
+    response.setProductName(this.productName);
+    response.setPrice(this.price);
+    response.setDiscountPrice(this.discountPrice);
+    response.setDiscountPercent(this.discountPercent);
+    response.setQuantity(this.quantity);
+    response.setIsSelling(this.isSelling);
+    response.setProductImgUrl(this.productImageURL);
+    return response;
   }
 }
