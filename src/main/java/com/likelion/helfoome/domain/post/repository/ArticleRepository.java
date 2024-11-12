@@ -10,4 +10,6 @@ import com.likelion.helfoome.domain.post.entity.Article;
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, Long> {
   List<Article> findByUser_Email(String email);
+
+  List<Article> findByContentContaining(String keyword);
 }

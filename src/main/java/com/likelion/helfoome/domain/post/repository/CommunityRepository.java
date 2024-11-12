@@ -10,4 +10,6 @@ import com.likelion.helfoome.domain.post.entity.Community;
 @Repository
 public interface CommunityRepository extends JpaRepository<Community, Long> {
   List<Community> findByUser_Email(String email);
+
+  List<Community> findByContentContaining(String keyword);
 }
