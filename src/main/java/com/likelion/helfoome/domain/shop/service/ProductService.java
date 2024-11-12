@@ -320,41 +320,38 @@ public class ProductService {
   }
 
   public List<MainProductResponse> getRandomProductList(String email) {
-    User user =
-        userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+    User user = userRepository.findByEmail(email)
+        .orElseThrow(() -> new RuntimeException("User not found"));
 
-    List<Product> productList =
-        productRepository.findByRealAddrStartingWith(
-            user.getUserInfo().getActivityLocation().substring(0, 3));
+    List<Product> productList = productRepository.findByRealAddrStartingWith(
+        user.getUserInfo().getActivityLocation().substring(0, 3));
 
     List<MainProductResponse> mainProductResponses = new ArrayList<>();
     MainProductResponse response;
     Set<Integer> set = new HashSet<>();
     Random random = new Random();
 
-    while (set.size() < 5) {
+    int selectionSize = Math.min(5, productList.size()); // 최대 5개, productList 크기만큼만 선택
+
+    while (set.size() < selectionSize) {
       int number = random.nextInt(productList.size());
       set.add(number);
-
-      if (set.size() == productList.size()) {
-        break;
-      }
     }
-    List<Integer> numberList = new ArrayList<>(set);
 
-    for (int i = 0; i < 5; i++) {
-      Product product = productList.get(numberList.get(i));
-      response =
-          new MainProductResponse(
-              product.getShop().getShopName(),
-              product.getId(),
-              product.getProductName(),
-              product.getDiscountPrice(),
-              product.getDiscountPercent(),
-              product.getProductImageURL());
-
+    for (Integer index : set) {
+      Product product = productList.get(index);
+      response = new MainProductResponse(
+          product.getShop().getShopName(),
+          product.getId(),
+          product.getProductName(),
+          product.getDiscountPrice(),
+          product.getDiscountPercent(),
+          product.getProductImageURL()
+      );
       mainProductResponses.add(response);
     }
+
     return mainProductResponses;
   }
+
 }
