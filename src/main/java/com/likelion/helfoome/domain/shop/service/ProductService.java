@@ -1,6 +1,8 @@
 package com.likelion.helfoome.domain.shop.service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.likelion.helfoome.domain.order.entity.Order;
 import com.likelion.helfoome.domain.order.repository.OrderRepository;
+import com.likelion.helfoome.domain.shop.dto.product.LastProduct;
 import com.likelion.helfoome.domain.shop.dto.product.MainProductResponse;
 import com.likelion.helfoome.domain.shop.dto.product.OrderInList;
 import com.likelion.helfoome.domain.shop.dto.product.ProductEditRequest;
@@ -287,7 +290,7 @@ public class ProductService {
     return productList;
   }
 
-  public List<MainProductResponse> getLastProductList(String currentTime) {
+  public List<LastProduct> getLastProductList(String currentTime) {
     List<Shop> shops = shopRepository.findAll();
 
     List<Shop> sortedShops =
@@ -301,17 +304,27 @@ public class ProductService {
                     }))
             .toList();
 
-    List<MainProductResponse> mainProductResponses = new ArrayList<>();
-    MainProductResponse response;
+    List<LastProduct> mainProductResponses = new ArrayList<>();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+    LastProduct response;
     for (Shop shop : sortedShops) {
+      String[] businessHours = shop.getBusinessHours().split(", ");
+      String endTimeString = businessHours[1];
+      LocalDateTime endTime =
+          LocalDateTime.now()
+              .withHour(Integer.parseInt(endTimeString.substring(0, 2)))
+              .withMinute(Integer.parseInt(endTimeString.substring(3, 5)))
+              .withSecond(0);
+      String formattedEndTime = endTime.format(formatter);
       response =
-          new MainProductResponse(
+          new LastProduct(
               shop.getShopName(),
               shop.getProductList().getFirst().getId(),
               shop.getProductList().getFirst().getProductName(),
               shop.getProductList().getFirst().getDiscountPrice(),
               shop.getProductList().getFirst().getDiscountPercent(),
-              shop.getProductList().getFirst().getProductImageURL());
+              shop.getProductList().getFirst().getProductImageURL(),
+              formattedEndTime);
 
       mainProductResponses.add(response);
     }
