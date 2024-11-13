@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class UserService {
+
   private final UserRepository userRepository;
 
   // 가입된 사용자 전체 조회
@@ -31,5 +32,9 @@ public class UserService {
     }
 
     return responses;
+  }
+
+  public String getUserRole(String email) {
+    return userRepository.findByEmail(email).orElseThrow().getUserRole();
   }
 }
