@@ -1,7 +1,13 @@
 package com.likelion.helfoome.domain.order.controller;
 
+import com.likelion.helfoome.domain.order.dto.OrderCompleteList;
+import com.likelion.helfoome.domain.order.service.OrderService;
+import com.likelion.helfoome.global.auth.jwt.JwtUtil;
+import io.jsonwebtoken.Claims;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
-
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,15 +17,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.likelion.helfoome.domain.order.dto.OrderCompleteList;
-import com.likelion.helfoome.domain.order.service.OrderService;
-import com.likelion.helfoome.global.auth.jwt.JwtUtil;
-
-import io.jsonwebtoken.Claims;
-import io.swagger.v3.oas.annotations.Operation;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
@@ -58,15 +55,15 @@ public class OrderController {
 
   @Operation(summary = "구매확정", description = "사장님이 누르는 구매확정 버튼")
   @PatchMapping("/confirm")
-  public ResponseEntity<String> confirmOrder(@RequestParam Long productId) {
-    orderService.confirmOrder(productId);
+  public ResponseEntity<String> confirmOrder(@RequestParam Long orderId) {
+    orderService.confirmOrder(orderId);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @Operation(summary = "주문 취소", description = "사장님이 누르는 구매 취소 버튼")
   @PatchMapping("/discard")
-  public ResponseEntity<String> discardOrder(@RequestParam Long productId) {
-    orderService.discardOrder(productId);
+  public ResponseEntity<String> discardOrder(@RequestParam Long orderId) {
+    orderService.discardOrder(orderId);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
