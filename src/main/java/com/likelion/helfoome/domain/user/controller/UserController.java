@@ -7,7 +7,12 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.likelion.helfoome.domain.user.dto.UserResponse;
 import com.likelion.helfoome.domain.user.service.UserService;
@@ -15,6 +20,7 @@ import com.likelion.helfoome.global.auth.dto.AuthResponse;
 import com.likelion.helfoome.global.auth.dto.RefreshTokenRequest;
 import com.likelion.helfoome.global.auth.jwt.JwtUtil;
 
+import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
+
   private final JwtUtil jwtUtil;
   private final UserService userService;
 
@@ -81,5 +88,18 @@ public class UserController {
       log.error("Error during fetching user list in controller /api/user: {}", e.getMessage());
       return ResponseEntity.badRequest().body(e.getMessage());
     }
+  }
+
+  @Operation(
+      summary = "사용자 role 조회",
+      description = "ROLE_USER : 일반 사용자, ROLE_SELLER : 판매자, ROLE_ADMIN : 관리자")
+  @GetMapping("/getUserRole")
+  public ResponseEntity<String> getUSerRole(@RequestHeader("Authorization") String bearerToken) {
+    String token = bearerToken.substring(7);
+    Claims claims = jwtUtil.getAllClaimsFromToken(token);
+    String email = claims.getId();
+    String response = userService.getUserRole(email);
+
+    return new ResponseEntity<>(response, HttpStatus.OK);
   }
 }
