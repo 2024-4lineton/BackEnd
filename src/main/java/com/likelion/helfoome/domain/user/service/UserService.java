@@ -19,6 +19,11 @@ public class UserService {
 
   private final UserRepository userRepository;
 
+  public Boolean isNicknameExist(String nickname) {
+    userRepository.findByEmail(nickname).orElseThrow(() -> new RuntimeException("User not found"));
+    return userRepository.findByNickname(nickname).isEmpty();
+  }
+
   // 가입된 사용자 전체 조회
   public List<UserResponse> getAllUsers() {
     // UserListResponse를 담을 리스트 생성

@@ -320,11 +320,12 @@ public class ProductService {
   }
 
   public List<MainProductResponse> getRandomProductList(String email) {
-    User user = userRepository.findByEmail(email)
-        .orElseThrow(() -> new RuntimeException("User not found"));
+    User user =
+        userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
 
-    List<Product> productList = productRepository.findByRealAddrStartingWith(
-        user.getUserInfo().getActivityLocation().substring(0, 3));
+    List<Product> productList =
+        productRepository.findByRealAddrStartingWith(
+            user.getUserInfo().getActivityLocation().substring(0, 3));
 
     List<MainProductResponse> mainProductResponses = new ArrayList<>();
     MainProductResponse response;
@@ -340,18 +341,17 @@ public class ProductService {
 
     for (Integer index : set) {
       Product product = productList.get(index);
-      response = new MainProductResponse(
-          product.getShop().getShopName(),
-          product.getId(),
-          product.getProductName(),
-          product.getDiscountPrice(),
-          product.getDiscountPercent(),
-          product.getProductImageURL()
-      );
+      response =
+          new MainProductResponse(
+              product.getShop().getShopName(),
+              product.getId(),
+              product.getProductName(),
+              product.getDiscountPrice(),
+              product.getDiscountPercent(),
+              product.getProductImageURL());
       mainProductResponses.add(response);
     }
 
     return mainProductResponses;
   }
-
 }

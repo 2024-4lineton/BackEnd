@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.likelion.helfoome.domain.user.dto.UserResponse;
@@ -54,6 +55,17 @@ public class UserController {
       log.error(
           "Error during token refresh in controller /api/users/refresh-token: {}", e.getMessage());
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+  }
+
+  @Operation(summary = "닉네임 중복 확인", description = "이미 존재하는 닉네임인지 확인")
+  @PostMapping("/nickname")
+  public Boolean checkNickname(@RequestParam String nickname) {
+    try {
+      return userService.isNicknameExist(nickname);
+    } catch (Exception e) {
+      log.error("Error occurred while checking nickname exist: {}", e.getMessage());
+      return null;
     }
   }
 
