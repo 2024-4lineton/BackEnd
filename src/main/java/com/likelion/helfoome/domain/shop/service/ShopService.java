@@ -7,9 +7,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.likelion.helfoome.domain.shop.dto.ShopInList;
-import com.likelion.helfoome.domain.shop.dto.ShopList;
 import com.likelion.helfoome.domain.shop.dto.ShopRegisterRequest;
+import com.likelion.helfoome.domain.shop.dto.TradShopInList;
+import com.likelion.helfoome.domain.shop.dto.TradShopList;
 import com.likelion.helfoome.domain.shop.entity.Shop;
 import com.likelion.helfoome.domain.shop.repository.ProductRepository;
 import com.likelion.helfoome.domain.shop.repository.ShopRepository;
@@ -72,23 +72,24 @@ public class ShopService {
     return "가게가 성공적으로 등록되었습니다.";
   }
 
-  public ShopList getSortedShopList(String email, int sort) {
+  public TradShopList getSortedShopList(String email, int sort) {
     UserInfo userInfo =
         userInfoRepository
             .findByUser_Email(email)
             .orElseThrow(() -> new RuntimeException("User not found"));
     String userAddr = userInfo.getActivityLocation();
     // 10KM 내에 있는 TradShop 조회
-    List<ShopInList> shopInLists =
+    List<TradShopInList> shopInLists =
         tradShopRepository.findAll().stream()
             .filter(
                 tradShop ->
                     distanceService.getDistance(userAddr, tradShop.getTradShopAddr()) <= 10000)
             .map(
                 tradShop -> {
-                  ShopInList shopInList = new ShopInList();
+                  TradShopInList shopInList = new TradShopInList();
                   shopInList.setShopId(tradShop.getId());
                   shopInList.setShopName(tradShop.getShopName());
+                  shopInList.setDescription(tradShop.getDescription());
                   shopInList.setDistance(
                       distanceService.getDistance(userAddr, tradShop.getTradShopAddr()));
                   shopInList.setProductCount(
@@ -99,7 +100,7 @@ public class ShopService {
             .collect(Collectors.toList());
 
     // 정렬(sort 0: 가까운순, 1: 상품 많은 순)
-    List<ShopInList> sortedList =
+    List<TradShopInList> sortedList =
         shopInLists.stream()
             .sorted(
                 (s1, s2) -> {
@@ -114,7 +115,7 @@ public class ShopService {
                 })
             .collect(Collectors.toList());
 
-    ShopList shopList = new ShopList();
+    TradShopList shopList = new TradShopList();
     shopList.setShopInList(sortedList);
 
     return shopList;
