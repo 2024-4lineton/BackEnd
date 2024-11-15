@@ -295,43 +295,47 @@ public class ProductService {
 
     List<Shop> sortedShops =
         shops.stream()
-            .sorted(Comparator.comparing(shop -> {
-              try {
-                // 비즈니스 시간 파싱
-                String[] businessHours = shop.getBusinessHours().split(", ");
-                if (businessHours.length < 2) {
-                  return Integer.MAX_VALUE;  // 비즈니스 시간이 잘못된 경우, 뒤로 밀기
-                }
+            .sorted(
+                Comparator.comparing(
+                    shop -> {
+                      try {
+                        // 비즈니스 시간 파싱
+                        String[] businessHours = shop.getBusinessHours().split(", ");
+                        if (businessHours.length < 2) {
+                          return Integer.MAX_VALUE; // 비즈니스 시간이 잘못된 경우, 뒤로 밀기
+                        }
 
-                String endTime = businessHours[1].replaceAll(":", "");
-                int shopEndTime = Integer.parseInt(endTime);
-                int currentParsedTime = Integer.parseInt(currentTime.replaceAll(":", ""));
+                        String endTime = businessHours[1].replaceAll(":", "");
+                        int shopEndTime = Integer.parseInt(endTime);
+                        int currentParsedTime = Integer.parseInt(currentTime.replaceAll(":", ""));
 
-                // 현재 시간이 종료 시간보다 늦으면 최대값 반환
-                if (currentParsedTime > shopEndTime) {
-                  return Integer.MAX_VALUE;
-                }
+                        // 현재 시간이 종료 시간보다 늦으면 최대값 반환
+                        if (currentParsedTime > shopEndTime) {
+                          return Integer.MAX_VALUE;
+                        }
 
-                return Math.abs(shopEndTime - currentParsedTime);  // 종료 시간과 현재 시간 차이의 절대값
-              } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-                e.printStackTrace();  // 예외 로깅
-                return Integer.MAX_VALUE;  // 예외 발생 시 뒤로 밀기
-              }
-            }))
+                        return Math.abs(shopEndTime - currentParsedTime); // 종료 시간과 현재 시간 차이의 절대값
+                      } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                        e.printStackTrace(); // 예외 로깅
+                        return Integer.MAX_VALUE; // 예외 발생 시 뒤로 밀기
+                      }
+                    }))
             .toList();
-
-    sortedShops.forEach(shop -> {
-      System.out.println("Shop Name: " + shop.getShopName());
-      System.out.println("Business Hours: " + shop.getBusinessHours());
-      System.out.println("Products: ");
-      shop.getProductList().forEach(product -> System.out.println("  " + product));
-      System.out.println("--------------------------");
-    });
 
     List<LastProduct> mainProductResponses = new ArrayList<>();
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-    LastProduct response;
+
     for (Shop shop : sortedShops) {
+      // 제품이 존재하는지 확인
+      if (shop.getProductList() == null || shop.getProductList().isEmpty()) {
+        // 제품이 없으면 기본 값을 사용하거나 건너뜀
+        continue; // 또는 LastProduct 기본값을 추가할 수도 있음
+      }
+
+      // 첫 번째 제품 가져오기
+      Product firstProduct = shop.getProductList().getFirst();
+
+      // 종료 시간 파싱
       String[] businessHours = shop.getBusinessHours().split(", ");
       String endTimeString = businessHours[1];
       LocalDateTime endTime =
@@ -340,16 +344,19 @@ public class ProductService {
               .withMinute(Integer.parseInt(endTimeString.substring(3, 5)))
               .withSecond(0);
       String formattedEndTime = endTime.format(formatter);
-      response =
+
+      // LastProduct 객체 생성
+      LastProduct response =
           new LastProduct(
               shop.getShopName(),
-              shop.getProductList().getFirst().getId(),
-              shop.getProductList().getFirst().getProductName(),
-              shop.getProductList().getFirst().getDiscountPrice(),
-              shop.getProductList().getFirst().getDiscountPercent(),
-              shop.getProductList().getFirst().getProductImageURL(),
+              firstProduct.getId(),
+              firstProduct.getProductName(),
+              firstProduct.getDiscountPrice(),
+              firstProduct.getDiscountPercent(),
+              firstProduct.getProductImageURL(),
               formattedEndTime);
 
+      // 결과 리스트에 추가
       mainProductResponses.add(response);
     }
 
