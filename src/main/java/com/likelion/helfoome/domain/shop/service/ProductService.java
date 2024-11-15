@@ -320,7 +320,13 @@ public class ProductService {
             }))
             .toList();
 
-    System.out.println(sortedShops);
+    sortedShops.forEach(shop -> {
+      System.out.println("Shop Name: " + shop.getShopName());
+      System.out.println("Business Hours: " + shop.getBusinessHours());
+      System.out.println("Products: ");
+      shop.getProductList().forEach(product -> System.out.println("  " + product));
+      System.out.println("--------------------------");
+    });
 
     List<LastProduct> mainProductResponses = new ArrayList<>();
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
