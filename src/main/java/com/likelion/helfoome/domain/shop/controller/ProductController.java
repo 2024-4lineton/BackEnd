@@ -140,7 +140,7 @@ public class ProductController {
     return new ResponseEntity<>(response, HttpStatus.OK);
   }
 
-  @Operation(summary = "랜덤 추천 상품", description = "판매 종료 임박된 상품 상위 5개")
+  @Operation(summary = "랜덤 추천 상품", description = "사용자 활동 지역 기준 랜덤 상품 5개")
   @GetMapping("/recommand")
   public ResponseEntity<?> getRandomProductList(
       @RequestHeader("Authorization") String bearerToken) {
