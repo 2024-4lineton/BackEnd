@@ -338,11 +338,18 @@ public class ProductService {
       // 종료 시간 파싱
       String[] businessHours = shop.getBusinessHours().split(", ");
       String endTimeString = businessHours[1];
+
+      // 종료 시간이 24시인 경우, 00시로 변환
+      int hour = Integer.parseInt(endTimeString.substring(0, 2));
+      if (hour == 24) {
+        hour = 0;  // 24시를 00시로 변환
+      }
       LocalDateTime endTime =
           LocalDateTime.now()
-              .withHour(Integer.parseInt(endTimeString.substring(0, 2)))
+              .withHour(hour)
               .withMinute(Integer.parseInt(endTimeString.substring(3, 5)))
               .withSecond(0);
+
       String formattedEndTime = endTime.format(formatter);
 
       // LastProduct 객체 생성
