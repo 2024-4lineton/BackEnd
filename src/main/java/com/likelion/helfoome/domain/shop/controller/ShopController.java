@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.likelion.helfoome.domain.shop.dto.ShopList;
 import com.likelion.helfoome.domain.shop.dto.ShopRegisterRequest;
 import com.likelion.helfoome.domain.shop.dto.TaxIdRequest;
+import com.likelion.helfoome.domain.shop.dto.TradShopList;
 import com.likelion.helfoome.domain.shop.service.ShopService;
 import com.likelion.helfoome.global.auth.jwt.JwtUtil;
 
@@ -81,12 +81,12 @@ public class ShopController {
   // 전통시장 정렬 리스트
   @Operation(summary = "전통시장 리스트 가져오기", description = "sort는 0(거리순) / 1(상품 많은 순)")
   @GetMapping("/traditional/sorted")
-  public ResponseEntity<ShopList> getSortedShops(
+  public ResponseEntity<TradShopList> getSortedShops(
       @RequestHeader("Authorization") String bearerToken, @RequestParam int sort) {
     String token = bearerToken.substring(7);
     Claims claims = jwtUtil.getAllClaimsFromToken(token);
     String email = claims.getId();
-    ShopList response = shopService.getSortedShopList(email, sort);
+    TradShopList response = shopService.getSortedShopList(email, sort);
     return new ResponseEntity<>(response, HttpStatus.OK);
   }
 

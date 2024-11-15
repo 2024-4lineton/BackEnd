@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.likelion.helfoome.domain.shop.dto.product.LastProduct;
 import com.likelion.helfoome.domain.shop.dto.product.MainProductResponse;
 import com.likelion.helfoome.domain.shop.dto.product.ProductEditRequest;
 import com.likelion.helfoome.domain.shop.dto.product.ProductList;
@@ -135,7 +136,7 @@ public class ProductController {
   @Operation(summary = "판매 종료 임박 상품", description = "판매 종료 임박된 상품 상위 5개")
   @GetMapping("/last-chance")
   public ResponseEntity<?> getLastProductList(@RequestParam String currentTime) {
-    List<MainProductResponse> response = productService.getLastProductList(currentTime);
+    List<LastProduct> response = productService.getLastProductList(currentTime);
     return new ResponseEntity<>(response, HttpStatus.OK);
   }
 
