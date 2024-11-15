@@ -295,14 +295,32 @@ public class ProductService {
 
     List<Shop> sortedShops =
         shops.stream()
-            .sorted(
-                Comparator.comparing(
-                    shop -> {
-                      String endTime = shop.getBusinessHours().split(", ")[1].replaceAll(":", "");
-                      return Integer.parseInt(endTime)
-                          - Integer.parseInt(currentTime.replaceAll(":", ""));
-                    }))
+            .sorted(Comparator.comparing(shop -> {
+              try {
+                // 비즈니스 시간 파싱
+                String[] businessHours = shop.getBusinessHours().split(", ");
+                if (businessHours.length < 2) {
+                  return Integer.MAX_VALUE;  // 비즈니스 시간이 잘못된 경우, 뒤로 밀기
+                }
+
+                String endTime = businessHours[1].replaceAll(":", "");
+                int shopEndTime = Integer.parseInt(endTime);
+                int currentParsedTime = Integer.parseInt(currentTime.replaceAll(":", ""));
+
+                // 현재 시간이 종료 시간보다 늦으면 최대값 반환
+                if (currentParsedTime > shopEndTime) {
+                  return Integer.MAX_VALUE;
+                }
+
+                return Math.abs(shopEndTime - currentParsedTime);  // 종료 시간과 현재 시간 차이의 절대값
+              } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                e.printStackTrace();  // 예외 로깅
+                return Integer.MAX_VALUE;  // 예외 발생 시 뒤로 밀기
+              }
+            }))
             .toList();
+
+    System.out.println(sortedShops);
 
     List<LastProduct> mainProductResponses = new ArrayList<>();
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
