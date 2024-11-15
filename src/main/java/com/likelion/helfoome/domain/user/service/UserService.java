@@ -20,7 +20,6 @@ public class UserService {
   private final UserRepository userRepository;
 
   public Boolean isNicknameExist(String nickname) {
-    userRepository.findByEmail(nickname).orElseThrow(() -> new RuntimeException("User not found"));
     return userRepository.findByNickname(nickname).isEmpty();
   }
 
