@@ -71,7 +71,7 @@ public class UserController {
 
   @Operation(summary = "로그아웃", description = "쿠키에 있는 Access Token 파기")
   @PostMapping("/log-out")
-  public ResponseEntity<?> userLogOut(@RequestBody HttpServletResponse response) {
+  public ResponseEntity<?> userLogOut(HttpServletResponse response) {
     try {
       // 쿠키에 있는 Access Token 제거
       Cookie cookie = new Cookie("Authorization", null);
