@@ -67,6 +67,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     cookie.setMaxAge(COOKIE_MAX_AGE);
     // cookie.setHttpOnly(true);
     cookie.setPath("/"); // 쿠키 적용 경로 설정
+    cookie.setDomain("metalog.store");
     // cookie.setSecure(true); // HTTPS 환경에서만 사용할 경우 설정
 
     return cookie;
