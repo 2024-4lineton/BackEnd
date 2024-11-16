@@ -59,6 +59,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     // 인증 성공 후 리다이렉트
     response.sendRedirect(REDIRECT_URL);
+    response.addHeader(AUTHORIZATION_COOKIE, accessToken);
   }
 
   private Cookie createCookie(String value) {
