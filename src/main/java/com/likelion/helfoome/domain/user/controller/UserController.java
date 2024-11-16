@@ -71,10 +71,10 @@ public class UserController {
   }
 
   @Operation(summary = "액세스 토큰 반환", description = "쿠키에 있는 Access Token String으로 가져오기")
-  @PostMapping("/access-token")
-  public String getAccessToken(HttpServletRequest request) {
+  @GetMapping("/access-token")
+  public String getAccessToken(HttpServletResponse response) {
     try {
-      final String authorizationHeader = request.getHeader("Authorization");
+      final String authorizationHeader = response.getHeader("Authorization");
       String jwt = null;
 
       // Bearer 토큰인지 확인하고, JWT 토큰에서 Email 추출
