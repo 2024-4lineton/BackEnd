@@ -106,6 +106,7 @@ public class ProductService {
     productResponse.setQuantity(product.getQuantity());
     productResponse.setDiscountPercent(product.getDiscountPercent());
     productResponse.setIsSelling(false);
+    productResponse.setRealAddr(product.getRealAddr());
     productResponse.setProductImgUrl(product.getProductImageURL());
 
     return productResponse;
