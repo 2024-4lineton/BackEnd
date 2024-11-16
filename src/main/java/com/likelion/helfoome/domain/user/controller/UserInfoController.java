@@ -33,7 +33,7 @@ public class UserInfoController {
   private final CartService cartService;
 
   // 사용자 첫 로그인 확인
-  @Operation(summary = "사용자 첫 로그인 확인", description = "사용자 첫 로그인 확인")
+  @Operation(summary = "사용자 첫 로그인 확인", description = "사용자 첫 로그인 확인 첫 로그인일 경우 True")
   @PostMapping("/check-first-login")
   public Boolean userInfoRegister(@RequestHeader("Authorization") String bearerToken) {
     try {

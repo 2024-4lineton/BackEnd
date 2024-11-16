@@ -16,5 +16,6 @@ public class ProductResponse {
   private String discountPercent;
   private Integer quantity;
   private Boolean isSelling;
+  private String realAddr;
   private String productImgUrl;
 }

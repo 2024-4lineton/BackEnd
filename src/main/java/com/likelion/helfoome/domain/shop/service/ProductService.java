@@ -106,6 +106,7 @@ public class ProductService {
     productResponse.setQuantity(product.getQuantity());
     productResponse.setDiscountPercent(product.getDiscountPercent());
     productResponse.setIsSelling(false);
+    productResponse.setRealAddr(product.getRealAddr());
     productResponse.setProductImgUrl(product.getProductImageURL());
 
     return productResponse;
@@ -342,7 +343,7 @@ public class ProductService {
       // 종료 시간이 24시인 경우, 00시로 변환
       int hour = Integer.parseInt(endTimeString.substring(0, 2));
       if (hour == 24) {
-        hour = 0;  // 24시를 00시로 변환
+        hour = 0; // 24시를 00시로 변환
       }
       LocalDateTime endTime =
           LocalDateTime.now()
