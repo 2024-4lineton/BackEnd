@@ -81,6 +81,9 @@ public class UserController {
       if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
         jwt = authorizationHeader.substring(7);
       }
+
+      System.out.println(jwt);
+
       return jwt;
     } catch (RuntimeException e) {
       log.error("Error during token in controller /api/users/access-token: {}", e.getMessage());
