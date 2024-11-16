@@ -3,6 +3,7 @@ package com.likelion.helfoome.domain.user.controller;
 import java.util.List;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
@@ -69,9 +70,26 @@ public class UserController {
     }
   }
 
+  @Operation(summary = "액세스 토큰 반환", description = "쿠키에 있는 Access Token String으로 가져오기")
+  @GetMapping("/access-token")
+  public String getAccessToken(HttpServletRequest request) {
+    Cookie[] cookies = request.getCookies();
+
+    if (cookies == null || cookies.length == 0) {
+      return "cookie error";
+    }
+
+    for (Cookie cookie : cookies) {
+      if (cookie.getName().equals("Authorization")) {
+        return cookie.getValue();
+      }
+    }
+    return "null cookies";
+  }
+
   @Operation(summary = "로그아웃", description = "쿠키에 있는 Access Token 파기")
   @PostMapping("/log-out")
-  public ResponseEntity<?> userLogOut(@RequestBody HttpServletResponse response) {
+  public ResponseEntity<?> userLogOut(HttpServletResponse response) {
     try {
       // 쿠키에 있는 Access Token 제거
       Cookie cookie = new Cookie("Authorization", null);

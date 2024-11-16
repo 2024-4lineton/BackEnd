@@ -38,11 +38,7 @@ public class SecurityConfig {
                     request -> {
                       CorsConfiguration configuration = new CorsConfiguration();
 
-                      configuration.setAllowedOrigins(
-                          Arrays.asList(
-                              "http://localhost:3000",
-                              "http://localhost:8080",
-                              "https://metalog.store"));
+                      configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
                       configuration.setAllowedMethods(Collections.singletonList("*"));
                       configuration.setAllowCredentials(true);
                       configuration.setAllowedHeaders(Collections.singletonList("*"));
@@ -74,7 +70,8 @@ public class SecurityConfig {
                         "/api/distance",
                         "/api/order/**",
                         "/api/stamp/**",
-                        "/api/notice/**")
+                        "/api/notice/**",
+                        "/api/users/access-token")
                     .permitAll()
                     .requestMatchers("/api/v1/user/*")
                     .hasRole("USER || SELLER")

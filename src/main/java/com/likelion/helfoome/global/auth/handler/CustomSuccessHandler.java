@@ -59,14 +59,15 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     // 인증 성공 후 리다이렉트
     response.sendRedirect(REDIRECT_URL);
+    response.addHeader(AUTHORIZATION_COOKIE, accessToken);
   }
 
   private Cookie createCookie(String value) {
     Cookie cookie = new Cookie(CustomSuccessHandler.AUTHORIZATION_COOKIE, value);
     cookie.setMaxAge(COOKIE_MAX_AGE);
-    cookie.setHttpOnly(true);
+    // cookie.setHttpOnly(true);
     cookie.setPath("/"); // 쿠키 적용 경로 설정
-    cookie.setSecure(true); // HTTPS 환경에서만 사용할 경우 설정
+    // cookie.setSecure(true); // HTTPS 환경에서만 사용할 경우 설정
 
     return cookie;
   }
