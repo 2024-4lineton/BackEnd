@@ -3,6 +3,7 @@ package com.likelion.helfoome.domain.user.controller;
 import java.util.List;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
@@ -65,6 +66,24 @@ public class UserController {
       return userService.isNicknameExist(nickname);
     } catch (Exception e) {
       log.error("Error occurred while checking nickname exist: {}", e.getMessage());
+      return null;
+    }
+  }
+
+  @Operation(summary = "액세스 토큰 반환", description = "쿠키에 있는 Access Token String으로 가져오기")
+  @PostMapping("/access-token")
+  public String getAccessToken(HttpServletRequest request) {
+    try {
+      final String authorizationHeader = request.getHeader("Authorization");
+      String jwt = null;
+
+      // Bearer 토큰인지 확인하고, JWT 토큰에서 Email 추출
+      if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+        jwt = authorizationHeader.substring(7);
+      }
+      return jwt;
+    } catch (RuntimeException e) {
+      log.error("Error during token in controller /api/users/access-token: {}", e.getMessage());
       return null;
     }
   }
