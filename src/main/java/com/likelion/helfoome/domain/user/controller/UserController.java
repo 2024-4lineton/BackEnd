@@ -72,22 +72,29 @@ public class UserController {
 
   @Operation(summary = "액세스 토큰 반환", description = "쿠키에 있는 Access Token String으로 가져오기")
   @GetMapping("/access-token")
-  public String getAccessToken(HttpServletResponse response) {
+  public ResponseEntity<?> getAccessToken(@RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
     try {
-      final String authorizationHeader = response.getHeader("Authorization");
-      String jwt = null;
-
-      // Bearer 토큰인지 확인하고, JWT 토큰에서 Email 추출
-      if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-        jwt = authorizationHeader.substring(7);
+      // Authorization 헤더가 없거나 잘못된 형식인 경우 처리
+      if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+        log.error("Authorization header is missing or invalid.");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Authorization header is missing or invalid.");
       }
 
-      System.out.println(jwt);
+      // Bearer 토큰에서 JWT 추출
+      String jwt = authorizationHeader.substring(7); // "Bearer " 이후의 부분이 JWT
 
-      return jwt;
+      // JWT가 비어 있지 않은지 확인
+      if (jwt.isEmpty()) {
+        log.error("JWT token is empty.");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("JWT token is empty.");
+      }
+
+      // JWT가 유효한 경우 반환
+      return ResponseEntity.ok().body(jwt);
+
     } catch (RuntimeException e) {
-      log.error("Error during token in controller /api/users/access-token: {}", e.getMessage());
-      return null;
+      log.error("Error during token extraction: {}", e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the token.");
     }
   }
 
